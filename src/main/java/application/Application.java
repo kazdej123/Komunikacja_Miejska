@@ -10,14 +10,13 @@ final class Application {
     public static void main(final String[] args) {
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-            EventQueue.invokeLater(Application::new);
+            EventQueue.invokeLater(() -> {
+                final View view = new DefaultView();
+                view.showLoginWindow();
+            });
         } catch (final Exception e) {
             e.printStackTrace();
+            System.exit(-1);
         }
-    }
-
-    private Application() {
-        final View view = new DefaultView();
-        view.showLoginWindow();
     }
 }
