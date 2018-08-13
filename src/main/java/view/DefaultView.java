@@ -37,7 +37,7 @@ import java.util.List;
 
 import static java.awt.Component.CENTER_ALIGNMENT;
 
-public final class MainView implements View {
+public final class DefaultView implements View {
     @Override
     public final void showLoginWindow() {
         final JDialog dialog = new JDialog((Frame) null, "Okno logowania", true);

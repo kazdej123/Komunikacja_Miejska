@@ -1,6 +1,6 @@
 package application;
 
-import view.MainView;
+import view.DefaultView;
 import view.View;
 
 import javax.swing.UIManager;
@@ -17,7 +17,7 @@ final class Application {
     }
 
     private Application() {
-        final View view = new MainView();
+        final View view = new DefaultView();
         view.showLoginWindow();
     }
 }

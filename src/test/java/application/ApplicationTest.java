@@ -1,7 +1,7 @@
 package application;
 
 import org.junit.Test;
-import view.MainView;
+import view.DefaultView;
 import view.View;
 
 import javax.swing.UIManager;
@@ -13,7 +13,7 @@ public final class ApplicationTest {
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
             EventQueue.invokeLater(() -> {
-                final View view = new MainView();
+                final View view = new DefaultView();
                 view.showLoginWindow();
             });
         } catch (final Exception e) {
