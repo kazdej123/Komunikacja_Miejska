@@ -12,7 +12,7 @@ final class Application {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
             EventQueue.invokeLater(() -> {
                 final View view = new DefaultView();
-                view.showLoginWindow();
+                view.showLoginDialog();
             });
         } catch (final Exception e) {
             e.printStackTrace();

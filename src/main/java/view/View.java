@@ -1,5 +1,5 @@
 package view;
 
 public interface View {
-    void showLoginWindow();
+    void showLoginDialog();
 }

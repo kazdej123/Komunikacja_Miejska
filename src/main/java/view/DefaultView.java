@@ -43,7 +43,7 @@ public final class DefaultView implements View {
     private static final String FONT_NAME = "Tahoma";
 
     @Override
-    public final void showLoginWindow() {
+    public final void showLoginDialog() {
         final JDialog dialog = new JDialog((Frame) null, "Okno logowania", true);
 
         final Controller controller = null;
@@ -84,20 +84,24 @@ public final class DefaultView implements View {
                 tablePanel.setName(ALL);
 
                 final JTable table = new JTable(new AbstractTableModel() {
-                    // TODO
                     @Override
-                    public int getRowCount() {
-                        return 0;
+                    public final int getColumnCount() {
+                        return 0; // TODO
                     }
 
                     @Override
-                    public int getColumnCount() {
-                        return 0;
+                    public final String getColumnName(final int columnIndex) {
+                        return null; // TODO
                     }
 
                     @Override
-                    public Object getValueAt(int rowIndex, int columnIndex) {
-                        return null;
+                    public final int getRowCount() {
+                        return 0; // TODO
+                    }
+
+                    @Override
+                    public final Object getValueAt(final int rowIndex, final int columnIndex) {
+                        return null; // TODO
                     }
                 });
                 table.setAutoCreateRowSorter(true);
