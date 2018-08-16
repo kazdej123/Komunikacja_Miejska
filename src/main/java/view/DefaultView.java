@@ -43,6 +43,21 @@ import java.util.List;
 public final class DefaultView implements View {
     private static final String FONT_NAME = "Tahoma";
 
+    @FunctionalInterface
+    private interface RowCountGetter {
+        int getRowCount();
+    }
+
+    @FunctionalInterface
+    private interface ValueGetter {
+        Object getValueAt();
+    }
+
+    @FunctionalInterface
+    private interface TableViewShowingHandler {
+        void showTableView();
+    }
+
     @Override
     public final void showLoginDialog() {
         final JDialog dialog = new JDialog((Frame) null, "Okno logowania", true);
@@ -69,7 +84,16 @@ public final class DefaultView implements View {
                 tabbedPane.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
 
                 final List<JPanel> mainPanelsList = new ArrayList<>();
+                /*mainPanelsList.add(createMainPanel(controller));
                 mainPanelsList.add(createMainPanel(controller));
+                mainPanelsList.add(createMainPanel(controller));
+                mainPanelsList.add(createMainPanel(controller));
+                mainPanelsList.add(createMainPanel(controller));
+                mainPanelsList.add(createMainPanel(controller));
+                mainPanelsList.add(createMainPanel(controller));
+                mainPanelsList.add(createMainPanel(controller));
+                mainPanelsList.add(createMainPanel(controller));
+                mainPanelsList.add(createMainPanel(controller));*/
 
                 for (int i = 0; i < mainPanelsList.size(); i++) {
                     tabbedPane.add(mainPanelsList.get(i));
@@ -132,25 +156,20 @@ public final class DefaultView implements View {
         return groupLayout.createParallelGroup(GroupLayout.Alignment.BASELINE);
     }
 
-    private static JPanel createMainPanel(final Controller controller) {
+    private static JPanel createMainPanel(final String name, final String[] columnNames, final RowCountGetter rowCountGetter, final ValueGetter valueGetter, final TableViewShowingHandler tableViewShowingHandler) {
         final JPanel mainPanel = createDoubleBufferedPanel(new BorderLayout());
 
-        final String string = "Gminy";
-
-        mainPanel.setName(string);
+        mainPanel.setName(name);
 
         final JPanel cardsPanel = createDoubleBufferedPanel(new CardLayout());
 
         final JPanel tablePanel = createDoubleBufferedPanel(new BorderLayout());
 
-        final String ALL = "All";
+        final String all = "All";
 
-        tablePanel.setName(ALL);
+        tablePanel.setName(all);
 
         final JTable table = new JTable(new AbstractTableModel() {
-            private final String[] columnNames = {"Id gminy", "Nazwa gminy"};
-            private final Model model = null;
-
             @Override
             public final int getColumnCount() {
                 return columnNames.length;
@@ -163,16 +182,12 @@ public final class DefaultView implements View {
 
             @Override
             public final int getRowCount() {
-                if (model != null) {
-                    return model.getRowCount();
-                } else {
-                    return 0;
-                }
+                return rowCountGetter.getRowCount();
             }
 
             @Override
             public final Object getValueAt(final int rowIndex, final int columnIndex) {
-                return model.getValueAt();
+                return valueGetter.getValueAt();
             }
         });
         table.setAutoCreateRowSorter(true);
@@ -189,7 +204,7 @@ public final class DefaultView implements View {
 
         tablePanel.add(internalButtonsPanel, BorderLayout.SOUTH);
 
-        cardsPanel.add(tablePanel, ALL);
+        cardsPanel.add(tablePanel, all);
 
         mainPanel.add(cardsPanel, BorderLayout.CENTER);
 
@@ -198,16 +213,10 @@ public final class DefaultView implements View {
 
         final Dimension dimension = new Dimension(270, 50);
 
-        buttonsPanel.add(createLabel("Wyświetl " + string.toLowerCase(), dimension));
+        buttonsPanel.add(createLabel("Wyświetl " + name.toLowerCase(), dimension));
         buttonsPanel.add(Box.createRigidArea(new Dimension(0, 15)));
 
-        final JButton button = createAdjustedButton("wszystkie", e1 -> {
-            if (controller != null) {
-                controller.showGminy();
-            } else {
-                ((CardLayout)cardsPanel.getLayout()).show(cardsPanel, ALL);
-            }
-        });
+        final JButton button = createAdjustedButton("wszystkie", e1 -> tableViewShowingHandler.showTableView());
         setDefaultJComponentProperties(button, dimension);
 
         buttonsPanel.add(button);
