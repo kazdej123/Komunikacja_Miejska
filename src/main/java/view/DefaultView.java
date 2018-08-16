@@ -1,6 +1,7 @@
 package view;
 
 import controller.Controller;
+import model.Model;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
@@ -84,19 +85,26 @@ public final class DefaultView implements View {
                 tablePanel.setName(ALL);
 
                 final JTable table = new JTable(new AbstractTableModel() {
+                    private final String[] columnNames = {"Id gminy", "Nazwa gminy"};
+
                     @Override
                     public final int getColumnCount() {
-                        return 0; // TODO
+                        return columnNames.length;
                     }
 
                     @Override
                     public final String getColumnName(final int columnIndex) {
-                        return null; // TODO
+                        return columnNames[columnIndex];
                     }
 
                     @Override
                     public final int getRowCount() {
-                        return 0; // TODO
+                        final Model model = null;
+                        if (model != null) {
+                            return model.getRowCount();
+                        } else {
+                            return 0;
+                        }
                     }
 
                     @Override
@@ -203,6 +211,10 @@ public final class DefaultView implements View {
         }
     }
 
+    private static GroupLayout.ParallelGroup createBaselineGroup(@NotNull final GroupLayout groupLayout) {
+        return groupLayout.createParallelGroup(GroupLayout.Alignment.BASELINE);
+    }
+
     @NotNull
     @Contract("_ -> new")
     private static JPanel createDoubleBufferedPanel(final LayoutManager layout) {
@@ -235,9 +247,5 @@ public final class DefaultView implements View {
     private static void setDefaultJComponentProperties(@NotNull final JComponent component, final Dimension dimension) {
         component.setAlignmentX(Component.CENTER_ALIGNMENT);
         component.setPreferredSize(dimension);
-    }
-
-    private static GroupLayout.ParallelGroup createBaselineGroup(@NotNull final GroupLayout groupLayout) {
-        return groupLayout.createParallelGroup(GroupLayout.Alignment.BASELINE);
     }
 }
