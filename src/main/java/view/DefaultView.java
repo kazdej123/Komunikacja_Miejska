@@ -86,6 +86,7 @@ public final class DefaultView implements View {
 
                 final JTable table = new JTable(new AbstractTableModel() {
                     private final String[] columnNames = {"Id gminy", "Nazwa gminy"};
+                    private final Model model = null;
 
                     @Override
                     public final int getColumnCount() {
@@ -99,7 +100,6 @@ public final class DefaultView implements View {
 
                     @Override
                     public final int getRowCount() {
-                        final Model model = null;
                         if (model != null) {
                             return model.getRowCount();
                         } else {
@@ -109,7 +109,7 @@ public final class DefaultView implements View {
 
                     @Override
                     public final Object getValueAt(final int rowIndex, final int columnIndex) {
-                        return null; // TODO
+                        return model.getValueAt();
                     }
                 });
                 table.setAutoCreateRowSorter(true);
