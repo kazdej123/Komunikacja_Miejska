@@ -69,90 +69,7 @@ public final class DefaultView implements View {
                 tabbedPane.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
 
                 final List<JPanel> mainPanelsList = new ArrayList<>();
-
-                final JPanel mainPanel = createDoubleBufferedPanel(new BorderLayout());
-
-                final String string = "Gminy";
-
-                mainPanel.setName(string);
-
-                final JPanel cardsPanel = createDoubleBufferedPanel(new CardLayout());
-
-                final JPanel tablePanel = createDoubleBufferedPanel(new BorderLayout());
-
-                final String ALL = "All";
-
-                tablePanel.setName(ALL);
-
-                final JTable table = new JTable(new AbstractTableModel() {
-                    private final String[] columnNames = {"Id gminy", "Nazwa gminy"};
-                    private final Model model = null;
-
-                    @Override
-                    public final int getColumnCount() {
-                        return columnNames.length;
-                    }
-
-                    @Override
-                    public final String getColumnName(final int columnIndex) {
-                        return columnNames[columnIndex];
-                    }
-
-                    @Override
-                    public final int getRowCount() {
-                        if (model != null) {
-                            return model.getRowCount();
-                        } else {
-                            return 0;
-                        }
-                    }
-
-                    @Override
-                    public final Object getValueAt(final int rowIndex, final int columnIndex) {
-                        return model.getValueAt();
-                    }
-                });
-                table.setAutoCreateRowSorter(true);
-
-                final JScrollPane scrollPane = new JScrollPane(table);
-                setEmptyBorder(scrollPane, 20, 10, 10, 10);
-
-                tablePanel.add(scrollPane, BorderLayout.CENTER);
-
-                final JPanel internalButtonsPanel = createDoubleBufferedPanel(new FlowLayout());
-                internalButtonsPanel.add(createAdjustedButton("Dodaj rekord", null));
-                internalButtonsPanel.add(createAdjustedButton("Usuń rekordy", null));
-                setEmptyBorder(internalButtonsPanel, 10, 10, 80, 10);
-
-                tablePanel.add(internalButtonsPanel, BorderLayout.SOUTH);
-
-                cardsPanel.add(tablePanel, ALL);
-
-                mainPanel.add(cardsPanel, BorderLayout.CENTER);
-
-                final JPanel buttonsPanel = createDoubleBufferedPanel(null);
-                buttonsPanel.setLayout(new BoxLayout(buttonsPanel, BoxLayout.Y_AXIS));
-
-                final Dimension dimension = new Dimension(270, 50);
-
-                buttonsPanel.add(createLabel("Wyświetl " + string.toLowerCase(), dimension));
-                buttonsPanel.add(Box.createRigidArea(new Dimension(0, 15)));
-
-                final JButton button = createAdjustedButton("wszystkie", e1 -> {
-                    if (controller != null) {
-                        controller.showGminy();
-                    } else {
-                        ((CardLayout)cardsPanel.getLayout()).show(cardsPanel, ALL);
-                    }
-                });
-                setDefaultJComponentProperties(button, dimension);
-
-                buttonsPanel.add(button);
-                setEmptyBorder(buttonsPanel, 30, 20, 30, 50);
-
-                mainPanel.add(buttonsPanel, BorderLayout.EAST);
-
-                mainPanelsList.add(mainPanel);
+                mainPanelsList.add(createMainPanel(controller));
 
                 for (int i = 0; i < mainPanelsList.size(); i++) {
                     tabbedPane.add(mainPanelsList.get(i));
@@ -213,6 +130,91 @@ public final class DefaultView implements View {
 
     private static GroupLayout.ParallelGroup createBaselineGroup(@NotNull final GroupLayout groupLayout) {
         return groupLayout.createParallelGroup(GroupLayout.Alignment.BASELINE);
+    }
+
+    private static JPanel createMainPanel(final Controller controller) {
+        final JPanel mainPanel = createDoubleBufferedPanel(new BorderLayout());
+
+        final String string = "Gminy";
+
+        mainPanel.setName(string);
+
+        final JPanel cardsPanel = createDoubleBufferedPanel(new CardLayout());
+
+        final JPanel tablePanel = createDoubleBufferedPanel(new BorderLayout());
+
+        final String ALL = "All";
+
+        tablePanel.setName(ALL);
+
+        final JTable table = new JTable(new AbstractTableModel() {
+            private final String[] columnNames = {"Id gminy", "Nazwa gminy"};
+            private final Model model = null;
+
+            @Override
+            public final int getColumnCount() {
+                return columnNames.length;
+            }
+
+            @Override
+            public final String getColumnName(final int columnIndex) {
+                return columnNames[columnIndex];
+            }
+
+            @Override
+            public final int getRowCount() {
+                if (model != null) {
+                    return model.getRowCount();
+                } else {
+                    return 0;
+                }
+            }
+
+            @Override
+            public final Object getValueAt(final int rowIndex, final int columnIndex) {
+                return model.getValueAt();
+            }
+        });
+        table.setAutoCreateRowSorter(true);
+
+        final JScrollPane scrollPane = new JScrollPane(table);
+        setEmptyBorder(scrollPane, 20, 10, 10, 10);
+
+        tablePanel.add(scrollPane, BorderLayout.CENTER);
+
+        final JPanel internalButtonsPanel = createDoubleBufferedPanel(new FlowLayout());
+        internalButtonsPanel.add(createAdjustedButton("Dodaj rekord", null));
+        internalButtonsPanel.add(createAdjustedButton("Usuń rekordy", null));
+        setEmptyBorder(internalButtonsPanel, 10, 10, 80, 10);
+
+        tablePanel.add(internalButtonsPanel, BorderLayout.SOUTH);
+
+        cardsPanel.add(tablePanel, ALL);
+
+        mainPanel.add(cardsPanel, BorderLayout.CENTER);
+
+        final JPanel buttonsPanel = createDoubleBufferedPanel(null);
+        buttonsPanel.setLayout(new BoxLayout(buttonsPanel, BoxLayout.Y_AXIS));
+
+        final Dimension dimension = new Dimension(270, 50);
+
+        buttonsPanel.add(createLabel("Wyświetl " + string.toLowerCase(), dimension));
+        buttonsPanel.add(Box.createRigidArea(new Dimension(0, 15)));
+
+        final JButton button = createAdjustedButton("wszystkie", e1 -> {
+            if (controller != null) {
+                controller.showGminy();
+            } else {
+                ((CardLayout)cardsPanel.getLayout()).show(cardsPanel, ALL);
+            }
+        });
+        setDefaultJComponentProperties(button, dimension);
+
+        buttonsPanel.add(button);
+        setEmptyBorder(buttonsPanel, 30, 20, 30, 50);
+
+        mainPanel.add(buttonsPanel, BorderLayout.EAST);
+        return mainPanel;
     }
 
     @NotNull
