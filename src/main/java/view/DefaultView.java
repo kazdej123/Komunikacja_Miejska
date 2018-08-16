@@ -84,16 +84,10 @@ public final class DefaultView implements View {
                 tabbedPane.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
 
                 final List<JPanel> mainPanelsList = new ArrayList<>();
-                /*mainPanelsList.add(createMainPanel(controller));
-                mainPanelsList.add(createMainPanel(controller));
-                mainPanelsList.add(createMainPanel(controller));
-                mainPanelsList.add(createMainPanel(controller));
-                mainPanelsList.add(createMainPanel(controller));
-                mainPanelsList.add(createMainPanel(controller));
-                mainPanelsList.add(createMainPanel(controller));
-                mainPanelsList.add(createMainPanel(controller));
-                mainPanelsList.add(createMainPanel(controller));
-                mainPanelsList.add(createMainPanel(controller));*/
+
+                final Model model = null;
+
+                mainPanelsList.add(createMainPanel("Gminy", () -> model.getGminyRowCount(), () -> model.getGminyValueAt(), () -> controller.showGminy(), "Id gminy", "Nazwa gminy"));
 
                 for (int i = 0; i < mainPanelsList.size(); i++) {
                     tabbedPane.add(mainPanelsList.get(i));
@@ -156,7 +150,7 @@ public final class DefaultView implements View {
         return groupLayout.createParallelGroup(GroupLayout.Alignment.BASELINE);
     }
 
-    private static JPanel createMainPanel(final String name, final String[] columnNames, final RowCountGetter rowCountGetter, final ValueGetter valueGetter, final TableViewShowingHandler tableViewShowingHandler) {
+    private static JPanel createMainPanel(final String name, final RowCountGetter rowCountGetter, final ValueGetter valueGetter, final TableViewShowingHandler tableViewShowingHandler, final String... columnNames) {
         final JPanel mainPanel = createDoubleBufferedPanel(new BorderLayout());
 
         mainPanel.setName(name);
@@ -182,7 +176,11 @@ public final class DefaultView implements View {
 
             @Override
             public final int getRowCount() {
-                return rowCountGetter.getRowCount();
+                try {
+                    return rowCountGetter.getRowCount();
+                } catch (final Exception e) {
+                    return 0;
+                }
             }
 
             @Override
@@ -216,7 +214,13 @@ public final class DefaultView implements View {
         buttonsPanel.add(createLabel("Wyświetl " + name.toLowerCase(), dimension));
         buttonsPanel.add(Box.createRigidArea(new Dimension(0, 15)));
 
-        final JButton button = createAdjustedButton("wszystkie", e1 -> tableViewShowingHandler.showTableView());
+        final JButton button = createAdjustedButton("wszystkie", e1 -> {
+            try {
+                tableViewShowingHandler.showTableView();
+            } catch (final Exception e) {
+                ((CardLayout)cardsPanel.getLayout()).show(cardsPanel, all);
+            }
+        });
         setDefaultJComponentProperties(button, dimension);
 
         buttonsPanel.add(button);

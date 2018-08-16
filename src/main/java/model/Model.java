@@ -1,7 +1,7 @@
 package model;
 
 public interface Model {
-    int getRowCount();
+    int getGminyRowCount();
 
-    Object getValueAt();
+    Object getGminyValueAt();
 }
