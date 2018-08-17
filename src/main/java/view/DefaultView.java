@@ -79,10 +79,49 @@ public final class DefaultView implements View {
                 tabbedPane.setDoubleBuffered(true);
                 tabbedPane.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
 
-                final String fontName = "Tahoma";
                 final Model model = null;
+                final String fontName = "Tahoma";
 
-                tabbedPane.add(createMainPanel("Gminy", fontName, () -> model.getGminyRowCount(), () -> model.getGminyValueAt(), () -> controller.showGminy(), "Id gminy", "Nazwa gminy"));
+                final String idGminy = "Id gminy";
+                final String nazwaGminy = "Nazwa gminy";
+                final String idMiejscowosci = "Id miejscowości";
+                final String nazwaMiejscowosci = "Nazwa miejscowości";
+                final String gmina = "Gmina";
+                final String idUlicy = "Id ulicy";
+                final String nazwaUlicy = "Nazwa ulicy";
+                final String miejscowosc = "Miejscowość";
+                final String idPrzystanku = "Id przystanku";
+                final String nazwaPrzystanku = "Nazwa przystanku";
+                final String ulica = "Ulica";
+                final String typPrzystanku = "Typ przystanku";
+                final String nrLinii = "Nr linii";
+                final String autobusCzyTramwaj = "Autobus czy tramwaj";
+                final String dziennaCzyNocna = "Dzienna czy nocna";
+                final String liniaWaznaOd = "Linia ważna od";
+                final String dodatkoweInformacje = "Informacje";
+                final String idPodlinii = "Id podlinii";
+                final String linia = "Linia";
+                final String idRozkladu = "Id rozkładu";
+                final String podlinia = "Podlinia";
+                final String przystanek = "Przystanek";
+                final String nrPorzadkowy = "Nr porządkowy";
+                final String idDnia = "Id dnia";
+                final String nazwaDnia = "Nazwa dnia";
+                final String dzienKursowania = "Dzień";
+                final String godzina = "Godzina";
+                final String dataModyfikacji = "Data modyfikacji";
+                final String tresc = "Treść";
+
+                tabbedPane.add(createMainPanel("Gminy", fontName, () -> model.getGminyRowCount(), () -> model.getGminyValueAt(), () -> controller.showGminy(), idGminy, nazwaGminy));
+                tabbedPane.add(createMainPanel("Miejscowości", fontName, () -> model.getMiejscowosciRowCount(), () -> model.getMiejscowosciValueAt(), () -> controller.showMiejscowosci(), idMiejscowosci, nazwaMiejscowosci, gmina));
+                tabbedPane.add(createMainPanel("Ulice", fontName, () -> model.getUliceRowCount(), () -> model.getUliceValueAt(), () -> controller.showUlice(), idUlicy, nazwaUlicy, miejscowosc, gmina));
+                tabbedPane.add(createMainPanel("Przystanki", fontName, () -> model.getPrzystankiRowCount(), () -> model.getPrzystankiValueAt(), () -> controller.showPrzystanki(), idPrzystanku, nazwaPrzystanku, ulica, miejscowosc, gmina, typPrzystanku));
+                tabbedPane.add(createMainPanel("Linie", fontName, () -> model.getLinieRowCount(), () -> model.getLinieValueAt(), () -> controller.showLinie(), nrLinii, autobusCzyTramwaj, dziennaCzyNocna, liniaWaznaOd, dodatkoweInformacje));
+                tabbedPane.add(createMainPanel("Podlinie", fontName, () -> model.getPodlinieRowCount(), () -> model.getPodlinieValueAt(), () -> controller.showPodlinie(), idPodlinii, linia, dodatkoweInformacje));
+                tabbedPane.add(createMainPanel("Rozkłady jazdy", fontName, () -> model.getRozkladyJazdyRowCount(), () -> model.getRozkladyJazdyValueAt(), () -> controller.showRozkladyJazdy(), nrPorzadkowy, idRozkladu, podlinia, idPrzystanku, przystanek, ulica, miejscowosc, gmina, typPrzystanku));
+                tabbedPane.add(createMainPanel("Dni kursowania", fontName, () -> model.getDniKursowaniaRowCount(), () -> model.getDniKursowaniaValueAt(), () -> controller.showDniKursowania(), idDnia, nazwaDnia));
+                tabbedPane.add(createMainPanel("Kursy", fontName, () -> model.getKursyRowCount(), () -> model.getKursyValueAt(), () -> controller.showKursy(), podlinia, idPrzystanku, przystanek, ulica, miejscowosc, gmina, typPrzystanku, dzienKursowania, godzina, dodatkoweInformacje));
+                tabbedPane.add(createMainPanel("Logi", fontName, () -> model.getLogiRowCount(), () -> model.getLogiValueAt(), () -> controller.showLogi(), dataModyfikacji, tresc));
 
                 for (int i = 0; i < tabbedPane.getTabCount(); i++) {
                     tabbedPane.setTabComponentAt(i, createLabel(tabbedPane.getTitleAt(i), fontName, new Dimension(180, 50)));
