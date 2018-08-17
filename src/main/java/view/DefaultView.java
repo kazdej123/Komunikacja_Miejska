@@ -37,8 +37,6 @@ import java.awt.Window;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.util.ArrayList;
-import java.util.List;
 
 public final class DefaultView implements View {
     private static final String FONT_NAME = "Tahoma";
@@ -82,6 +80,10 @@ public final class DefaultView implements View {
                 final JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.LEFT);
                 tabbedPane.setDoubleBuffered(true);
                 tabbedPane.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
+
+                final Model model = null;
+
+                tabbedPane.add(createMainPanel("Gminy", () -> model.getGminyRowCount(), () -> model.getGminyValueAt(), () -> controller.showGminy(), "Id gminy", "Nazwa gminy"));
 
                 for (int i = 0; i < tabbedPane.getTabCount(); i++) {
                     tabbedPane.setTabComponentAt(i, createLabel(tabbedPane.getTitleAt(i), new Dimension(180, 50)));
@@ -145,16 +147,28 @@ public final class DefaultView implements View {
 
     private static JPanel createMainPanel(final String name, final RowCountGetter rowCountGetter, final ValueGetter valueGetter, final TableViewShowingHandler tableViewShowingHandler, final String... columnNames) {
         final JPanel mainPanel = createDoubleBufferedPanel(new BorderLayout());
-
         mainPanel.setName(name);
 
         final JPanel cardsPanel = createDoubleBufferedPanel(new CardLayout());
 
+        mainPanel.add(cardsPanel, BorderLayout.CENTER);
+
+        final JPanel buttonsPanel = createDoubleBufferedPanel(null);
+        buttonsPanel.setLayout(new BoxLayout(buttonsPanel, BoxLayout.Y_AXIS));
+
+        final Dimension dimension = new Dimension(270, 50);
+
+        buttonsPanel.add(createLabel("Wyświetl " + name.toLowerCase(), dimension));
+        setEmptyBorder(buttonsPanel, 30, 20, 30, 50);
+
+        mainPanel.add(buttonsPanel, BorderLayout.EAST);
+        addTableView("All", cardsPanel, "wszystkie", dimension, buttonsPanel, rowCountGetter, valueGetter, tableViewShowingHandler, columnNames);
+        return mainPanel;
+    }
+
+    private static void addTableView(final String name, final JPanel cardsPanel, final String text, final Dimension dimension, final JPanel buttonsPanel, final RowCountGetter rowCountGetter, final ValueGetter valueGetter, final TableViewShowingHandler tableViewShowingHandler, final String... columnNames) {
         final JPanel tablePanel = createDoubleBufferedPanel(new BorderLayout());
-
-        final String all = "All";
-
-        tablePanel.setName(all);
+        tablePanel.setName(name);
 
         final JTable table = new JTable(new AbstractTableModel() {
             @Override
@@ -171,7 +185,7 @@ public final class DefaultView implements View {
             public final int getRowCount() {
                 try {
                     return rowCountGetter.getRowCount();
-                } catch (final Exception e) {
+                } catch (final NullPointerException e) {
                     return 0;
                 }
             }
@@ -195,32 +209,19 @@ public final class DefaultView implements View {
 
         tablePanel.add(internalButtonsPanel, BorderLayout.SOUTH);
 
-        cardsPanel.add(tablePanel, all);
+        cardsPanel.add(tablePanel);
 
-        mainPanel.add(cardsPanel, BorderLayout.CENTER);
-
-        final JPanel buttonsPanel = createDoubleBufferedPanel(null);
-        buttonsPanel.setLayout(new BoxLayout(buttonsPanel, BoxLayout.Y_AXIS));
-
-        final Dimension dimension = new Dimension(270, 50);
-
-        buttonsPanel.add(createLabel("Wyświetl " + name.toLowerCase(), dimension));
-        buttonsPanel.add(Box.createRigidArea(new Dimension(0, 15)));
-
-        final JButton button = createAdjustedButton("wszystkie", e1 -> {
+        final JButton button = createAdjustedButton(text, e1 -> {
             try {
                 tableViewShowingHandler.showTableView();
-            } catch (final Exception e) {
-                ((CardLayout)cardsPanel.getLayout()).show(cardsPanel, all);
+            } catch (final NullPointerException e) {
+                ((CardLayout)cardsPanel.getLayout()).show(cardsPanel, name);
             }
         });
         setDefaultJComponentProperties(button, dimension);
 
+        buttonsPanel.add(Box.createRigidArea(new Dimension(0, 15)));
         buttonsPanel.add(button);
-        setEmptyBorder(buttonsPanel, 30, 20, 30, 50);
-
-        mainPanel.add(buttonsPanel, BorderLayout.EAST);
-        return mainPanel;
     }
 
     @NotNull
