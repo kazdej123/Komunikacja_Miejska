@@ -83,14 +83,7 @@ public final class DefaultView implements View {
                 tabbedPane.setDoubleBuffered(true);
                 tabbedPane.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
 
-                final List<JPanel> mainPanelsList = new ArrayList<>();
-
-                final Model model = null;
-
-                mainPanelsList.add(createMainPanel("Gminy", () -> model.getGminyRowCount(), () -> model.getGminyValueAt(), () -> controller.showGminy(), "Id gminy", "Nazwa gminy"));
-
-                for (int i = 0; i < mainPanelsList.size(); i++) {
-                    tabbedPane.add(mainPanelsList.get(i));
+                for (int i = 0; i < tabbedPane.getTabCount(); i++) {
                     tabbedPane.setTabComponentAt(i, createLabel(tabbedPane.getTitleAt(i), new Dimension(180, 50)));
                 }
                 frame.add(tabbedPane);
