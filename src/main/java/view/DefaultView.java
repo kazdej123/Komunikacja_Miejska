@@ -39,8 +39,6 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
 public final class DefaultView implements View {
-    private static final String FONT_NAME = "Tahoma";
-
     @FunctionalInterface
     private interface RowCountGetter {
         int getRowCount();
@@ -81,12 +79,13 @@ public final class DefaultView implements View {
                 tabbedPane.setDoubleBuffered(true);
                 tabbedPane.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
 
+                final String fontName = "Tahoma";
                 final Model model = null;
 
-                tabbedPane.add(createMainPanel("Gminy", () -> model.getGminyRowCount(), () -> model.getGminyValueAt(), () -> controller.showGminy(), "Id gminy", "Nazwa gminy"));
+                tabbedPane.add(createMainPanel("Gminy", fontName, () -> model.getGminyRowCount(), () -> model.getGminyValueAt(), () -> controller.showGminy(), "Id gminy", "Nazwa gminy"));
 
                 for (int i = 0; i < tabbedPane.getTabCount(); i++) {
-                    tabbedPane.setTabComponentAt(i, createLabel(tabbedPane.getTitleAt(i), new Dimension(180, 50)));
+                    tabbedPane.setTabComponentAt(i, createLabel(tabbedPane.getTitleAt(i), fontName, new Dimension(180, 50)));
                 }
                 frame.add(tabbedPane);
                 addWindowClosingListener(frame, controller);
@@ -145,7 +144,7 @@ public final class DefaultView implements View {
         return groupLayout.createParallelGroup(GroupLayout.Alignment.BASELINE);
     }
 
-    private static JPanel createMainPanel(final String name, final RowCountGetter rowCountGetter, final ValueGetter valueGetter, final TableViewShowingHandler tableViewShowingHandler, final String... columnNames) {
+    private static JPanel createMainPanel(final String name, final String fontName, final RowCountGetter rowCountGetter, final ValueGetter valueGetter, final TableViewShowingHandler tableViewShowingHandler, final String... columnNames) {
         final JPanel mainPanel = createDoubleBufferedPanel(new BorderLayout());
         mainPanel.setName(name);
 
@@ -158,15 +157,15 @@ public final class DefaultView implements View {
 
         final Dimension dimension = new Dimension(270, 50);
 
-        buttonsPanel.add(createLabel("Wyświetl " + name.toLowerCase(), dimension));
+        buttonsPanel.add(createLabel("Wyświetl " + name.toLowerCase(), fontName, dimension));
         setEmptyBorder(buttonsPanel, 30, 20, 30, 50);
 
         mainPanel.add(buttonsPanel, BorderLayout.EAST);
-        addTableView("All", cardsPanel, "wszystkie", dimension, buttonsPanel, rowCountGetter, valueGetter, tableViewShowingHandler, columnNames);
+        addTableView("All", cardsPanel, "wszystkie", fontName, dimension, buttonsPanel, rowCountGetter, valueGetter, tableViewShowingHandler, columnNames);
         return mainPanel;
     }
 
-    private static void addTableView(final String name, final JPanel cardsPanel, final String text, final Dimension dimension, final JPanel buttonsPanel, final RowCountGetter rowCountGetter, final ValueGetter valueGetter, final TableViewShowingHandler tableViewShowingHandler, final String... columnNames) {
+    private static void addTableView(final String name, final JPanel cardsPanel, final String text, final String fontName, final Dimension dimension, final JPanel buttonsPanel, final RowCountGetter rowCountGetter, final ValueGetter valueGetter, final TableViewShowingHandler tableViewShowingHandler, final String... columnNames) {
         final JPanel tablePanel = createDoubleBufferedPanel(new BorderLayout());
         tablePanel.setName(name);
 
@@ -203,15 +202,15 @@ public final class DefaultView implements View {
         tablePanel.add(scrollPane, BorderLayout.CENTER);
 
         final JPanel internalButtonsPanel = createDoubleBufferedPanel(new FlowLayout());
-        internalButtonsPanel.add(createAdjustedButton("Dodaj rekord", null));
-        internalButtonsPanel.add(createAdjustedButton("Usuń rekordy", null));
+        internalButtonsPanel.add(createAdjustedButton("Dodaj rekord", fontName, null));
+        internalButtonsPanel.add(createAdjustedButton("Usuń rekordy", fontName, null));
         setEmptyBorder(internalButtonsPanel, 10, 10, 80, 10);
 
         tablePanel.add(internalButtonsPanel, BorderLayout.SOUTH);
 
         cardsPanel.add(tablePanel);
 
-        final JButton button = createAdjustedButton(text, e1 -> {
+        final JButton button = createAdjustedButton(text, fontName, e1 -> {
             try {
                 tableViewShowingHandler.showTableView();
             } catch (final NullPointerException e) {
@@ -234,9 +233,9 @@ public final class DefaultView implements View {
         component.setBorder(BorderFactory.createEmptyBorder(top, left, bottom, right));
     }
 
-    private static JButton createAdjustedButton(final String text, final ActionListener actionListener) {
+    private static JButton createAdjustedButton(final String text, final String fontName, final ActionListener actionListener) {
         final JButton button = createButton(text, actionListener);
-        button.setFont(new Font(FONT_NAME, Font.PLAIN, 20));
+        button.setFont(new Font(fontName, Font.PLAIN, 20));
         return button;
     }
 
@@ -246,10 +245,10 @@ public final class DefaultView implements View {
         return button;
     }
 
-    private static JLabel createLabel(final String text, final Dimension dimension) {
+    private static JLabel createLabel(final String text, final String fontName, final Dimension dimension) {
         final JLabel label = new JLabel(text, SwingConstants.CENTER);
         setDefaultJComponentProperties(label, dimension);
-        label.setFont(new Font(FONT_NAME, Font.BOLD, 20));
+        label.setFont(new Font(fontName, Font.BOLD, 20));
         return label;
     }
 
