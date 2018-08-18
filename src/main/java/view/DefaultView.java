@@ -27,6 +27,8 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
 public final class DefaultView implements View {
+    static final String FONT_NAME = "Tahoma";
+
     @Override
     public final void showLoginDialog() {
         final JDialog dialog = new JDialog((Frame) null, "Okno logowania", true);
@@ -53,7 +55,6 @@ public final class DefaultView implements View {
                 tabbedPane.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
 
                 final Model model = null;
-                final String fontName = "Tahoma";
 
                 final String idGminy = "Id gminy";
                 final String nazwaGminy = "Nazwa gminy";
@@ -100,20 +101,20 @@ public final class DefaultView implements View {
                 final JPanel buttonsPanel = miejscowosciMainPanel.getButtonsPanel();
                 miejscowosciMainPanel.addTableView("MiejscowosciByGminy", fontName, cardsPanel, "w danej gminie", dimension, buttonsPanel, () -> model.getMiejscowosciByGminyRowCount(), () -> model.getMiejscowosciByGminyValueAt(), () -> controller.showMiejscowosciByGminy());*/
 
-                final MainPanel gminyMainPanel = new MainPanel("Gminy", fontName, () -> model.getGminyRowCount(), () -> model.getGminyValueAt(), () -> controller.showGminy(), idGminy, nazwaGminy);
+                /*final MainPanel gminyMainPanel = new MainPanel("Gminy", () -> model.getGminyRowCount(), () -> model.getGminyValueAt(), () -> controller.showGminy(), idGminy, nazwaGminy);
 
-                final MainPanel miejscowosciMainPanel = new MainPanel("Miejscowości", fontName, () -> model.getMiejscowosciRowCount(), () -> model.getMiejscowosciValueAt(), () -> controller.showMiejscowosci(), idMiejscowosci, nazwaMiejscowosci, gmina);
-                final MainPanel uliceMainPanel = new MainPanel("Ulice", fontName, () -> model.getUliceRowCount(), () -> model.getUliceValueAt(), () -> controller.showUlice(), idUlicy, nazwaUlicy, miejscowosc, gmina);
-                final MainPanel przystankiMainPanel = new MainPanel("Przystanki", fontName, () -> model.getPrzystankiRowCount(), () -> model.getPrzystankiValueAt(), () -> controller.showPrzystanki(), idPrzystanku, nazwaPrzystanku, ulica, miejscowosc, gmina, typPrzystanku);
-                final MainPanel linieMainPanel = new MainPanel("Linie", fontName, () -> model.getLinieRowCount(), () -> model.getLinieValueAt(), () -> controller.showLinie(), nrLinii, autobusCzyTramwaj, dziennaCzyNocna, liniaWaznaOd, dodatkoweInformacje);
-                final MainPanel podlinieMainPanel = new MainPanel("Podlinie", fontName, () -> model.getPodlinieRowCount(), () -> model.getPodlinieValueAt(), () -> controller.showPodlinie(), idPodlinii, linia, dodatkoweInformacje);
-                final MainPanel rozkladyJazdyMainPanel = new MainPanel("Rozkłady jazdy", fontName, () -> model.getRozkladyJazdyRowCount(), () -> model.getRozkladyJazdyValueAt(), () -> controller.showRozkladyJazdy(), nrPorzadkowy, idRozkladu, podlinia, idPrzystanku, przystanek, ulica, miejscowosc, gmina, typPrzystanku);
-                final MainPanel dniKursowaniaMainPanel = new MainPanel("Dni kursowania", fontName, () -> model.getDniKursowaniaRowCount(), () -> model.getDniKursowaniaValueAt(), () -> controller.showDniKursowania(), idDnia, nazwaDnia);
-                final MainPanel kursyMainPanel = new MainPanel("Kursy", fontName, () -> model.getKursyRowCount(), () -> model.getKursyValueAt(), () -> controller.showKursy(), podlinia, idPrzystanku, przystanek, ulica, miejscowosc, gmina, typPrzystanku, dzienKursowania, godzina, dodatkoweInformacje);
-                final MainPanel logiMainPanel = new MainPanel("Logi", fontName, () -> model.getLogiRowCount(), () -> model.getLogiValueAt(), () -> controller.showLogi(), dataModyfikacji, tresc);
+                final MainPanel miejscowosciMainPanel = new MainPanel("Miejscowości", () -> model.getMiejscowosciRowCount(), () -> model.getMiejscowosciValueAt(), () -> controller.showMiejscowosci(), idMiejscowosci, nazwaMiejscowosci, gmina);
+                final MainPanel uliceMainPanel = new MainPanel("Ulice", () -> model.getUliceRowCount(), () -> model.getUliceValueAt(), () -> controller.showUlice(), idUlicy, nazwaUlicy, miejscowosc, gmina);
+                final MainPanel przystankiMainPanel = new MainPanel("Przystanki", () -> model.getPrzystankiRowCount(), () -> model.getPrzystankiValueAt(), () -> controller.showPrzystanki(), idPrzystanku, nazwaPrzystanku, ulica, miejscowosc, gmina, typPrzystanku);
+                final MainPanel linieMainPanel = new MainPanel("Linie", () -> model.getLinieRowCount(), () -> model.getLinieValueAt(), () -> controller.showLinie(), nrLinii, autobusCzyTramwaj, dziennaCzyNocna, liniaWaznaOd, dodatkoweInformacje);
+                final MainPanel podlinieMainPanel = new MainPanel("Podlinie", () -> model.getPodlinieRowCount(), () -> model.getPodlinieValueAt(), () -> controller.showPodlinie(), idPodlinii, linia, dodatkoweInformacje);
+                final MainPanel rozkladyJazdyMainPanel = new MainPanel("Rozkłady jazdy", () -> model.getRozkladyJazdyRowCount(), () -> model.getRozkladyJazdyValueAt(), () -> controller.showRozkladyJazdy(), nrPorzadkowy, idRozkladu, podlinia, idPrzystanku, przystanek, ulica, miejscowosc, gmina, typPrzystanku);
+                final MainPanel dniKursowaniaMainPanel = new MainPanel("Dni kursowania", () -> model.getDniKursowaniaRowCount(), () -> model.getDniKursowaniaValueAt(), () -> controller.showDniKursowania(), idDnia, nazwaDnia);
+                final MainPanel kursyMainPanel = new MainPanel("Kursy", () -> model.getKursyRowCount(), () -> model.getKursyValueAt(), () -> controller.showKursy(), podlinia, idPrzystanku, przystanek, ulica, miejscowosc, gmina, typPrzystanku, dzienKursowania, godzina, dodatkoweInformacje);
+                final MainPanel logiMainPanel = new MainPanel("Logi", () -> model.getLogiRowCount(), () -> model.getLogiValueAt(), () -> controller.showLogi(), dataModyfikacji, tresc);*/
 
                 for (int i = 0; i < tabbedPane.getTabCount(); i++) {
-                    tabbedPane.setTabComponentAt(i, createLabel(tabbedPane.getTitleAt(i), fontName, new Dimension(180, 50)));
+                    tabbedPane.setTabComponentAt(i, createLabel(tabbedPane.getTitleAt(i), new Dimension(180, 50)));
                 }
                 frame.add(tabbedPane);
                 addWindowClosingListener(frame, controller);
@@ -178,10 +179,10 @@ public final class DefaultView implements View {
         return button;
     }
 
-    static JLabel createLabel(final String text, final String fontName, final Dimension dimension) {
+    static JLabel createLabel(final String text, final Dimension dimension) {
         final JLabel label = new JLabel(text, SwingConstants.CENTER);
         setDefaultJComponentProperties(label, dimension);
-        label.setFont(new Font(fontName, Font.BOLD, 20));
+        label.setFont(new Font(FONT_NAME, Font.BOLD, 20));
         return label;
     }
 
