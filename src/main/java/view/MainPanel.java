@@ -1,45 +1,49 @@
 package view;
 
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.table.AbstractTableModel;
-import java.awt.BorderLayout;
-import java.awt.CardLayout;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
+import org.jetbrains.annotations.NotNull;
 
-import static view.DefaultView.*;
+import javax.swing.*;
+import javax.swing.table.AbstractTableModel;
+import java.awt.*;
+import java.awt.event.ActionListener;
 
 final class MainPanel extends JPanel {
+    @FunctionalInterface
+    interface RowCountGetter {
+        int getRowCount();
+    }
+
+    @FunctionalInterface
+    interface ValueGetter {
+        Object getValueAt();
+    }
+
+    @FunctionalInterface
+    interface TableViewShowingHandler {
+        void showTableView();
+    }
+
     private static final JPanel cardsPanel = createDoubleBufferedPanel(new CardLayout());
     private static final JPanel buttonsPanel = createDoubleBufferedPanel(null);
 
-    MainPanel(final String name, final String fontName, final DefaultView.RowCountGetter rowCountGetter, final DefaultView.ValueGetter valueGetter, final DefaultView.TableViewShowingHandler tableViewShowingHandler, final String... columnNames) {
+    MainPanel(final String name, final String fontName, final RowCountGetter rowCountGetter, final ValueGetter valueGetter, final TableViewShowingHandler tableViewShowingHandler, final String... columnNames) {
         super(new BorderLayout(), true);
-        this.setName(name);
+        setName(name);
+        add(cardsPanel, BorderLayout.CENTER);
 
-        final JPanel cardsPanel = createDoubleBufferedPanel(new CardLayout());
-
-        this.add(cardsPanel, BorderLayout.CENTER);
-
-        final JPanel buttonsPanel = createDoubleBufferedPanel(null);
         buttonsPanel.setLayout(new BoxLayout(buttonsPanel, BoxLayout.Y_AXIS));
 
         final Dimension dimension = new Dimension(270, 50);
 
-        buttonsPanel.add(createLabel("Wyświetl " + name.toLowerCase(), fontName, dimension));
+        buttonsPanel.add(DefaultView.createLabel("Wyświetl " + name.toLowerCase(), fontName, dimension));
         setEmptyBorder(buttonsPanel, 30, 20, 30, 50);
 
-        this.add(buttonsPanel, BorderLayout.EAST);
-        //addTableView("All", cardsPanel, "wszystkie", fontName, dimension, buttonsPanel, rowCountGetter, valueGetter, tableViewShowingHandler, columnNames);
+        add(buttonsPanel, BorderLayout.EAST);
+
         addTableView("wszystkie", fontName, cardsPanel, "wszystkie", dimension, buttonsPanel, rowCountGetter, valueGetter, tableViewShowingHandler);
     }
 
-    static final void addTableView(final String name, final String fontName, final JPanel cardsPanel, final String text, final Dimension dimension, final JPanel buttonsPanel, final DefaultView.RowCountGetter rowCountGetter, final DefaultView.ValueGetter valueGetter, final TableViewShowingHandler tableViewShowingHandler, final String... columnNames) {
+    static final void addTableView(final String name, final String fontName, final JPanel cardsPanel, final String text, final Dimension dimension, final JPanel buttonsPanel, final RowCountGetter rowCountGetter, final ValueGetter valueGetter, final TableViewShowingHandler tableViewShowingHandler, final String... columnNames) {
         final JPanel tablePanel = createDoubleBufferedPanel(new BorderLayout());
         tablePanel.setName(name);
 
@@ -91,17 +95,23 @@ final class MainPanel extends JPanel {
                 ((CardLayout)cardsPanel.getLayout()).show(cardsPanel, name);
             }
         });
-        setDefaultJComponentProperties(button, dimension);
+        DefaultView.setDefaultJComponentProperties(button, dimension);
 
         buttonsPanel.add(Box.createRigidArea(new Dimension(0, 15)));
         buttonsPanel.add(button);
     }
 
-    public JPanel getCardsPanel() {
-        return cardsPanel;
+    private static JPanel createDoubleBufferedPanel(final LayoutManager layout) {
+        return new JPanel(layout, true);
     }
 
-    public JPanel getButtonsPanel() {
-        return buttonsPanel;
+    private static void setEmptyBorder(@NotNull final JComponent component, final int top, final int left, final int bottom, final int right) {
+        component.setBorder(BorderFactory.createEmptyBorder(top, left, bottom, right));
+    }
+
+    private static JButton createAdjustedButton(final String text, final String fontName, final ActionListener actionListener) {
+        final JButton button = DefaultView.createButton(text, actionListener);
+        button.setFont(new Font(fontName, Font.PLAIN, 20));
+        return button;
     }
 }

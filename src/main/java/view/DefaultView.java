@@ -2,36 +2,24 @@ package view;
 
 import controller.Controller;
 import model.Model;
-import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
-import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
 import javax.swing.GroupLayout;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JRootPane;
-import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
-import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.WindowConstants;
-import javax.swing.table.AbstractTableModel;
-import java.awt.BorderLayout;
-import java.awt.CardLayout;
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Frame;
-import java.awt.LayoutManager;
 import java.awt.Toolkit;
 import java.awt.Window;
 import java.awt.event.ActionListener;
@@ -39,21 +27,6 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
 public final class DefaultView implements View {
-    @FunctionalInterface
-    interface RowCountGetter {
-        int getRowCount();
-    }
-
-    @FunctionalInterface
-    interface ValueGetter {
-        Object getValueAt();
-    }
-
-    @FunctionalInterface
-    interface TableViewShowingHandler {
-        void showTableView();
-    }
-
     @Override
     public final void showLoginDialog() {
         final JDialog dialog = new JDialog((Frame) null, "Okno logowania", true);
@@ -112,22 +85,32 @@ public final class DefaultView implements View {
                 final String dataModyfikacji = "Data modyfikacji";
                 final String tresc = "Treść";
 
-                final MainPanel miejscowosciMainPanel = new MainPanel("Gminy", fontName, () -> model.getMiejscowosciByGminyRowCount(), () -> model.getMiejscowosciByGminyValueAt(), () -> controller.showMiejscowosciByGminy(), idMiejscowosci, nazwaMiejscowosci);
+                final String gminy = "Gminy";
+                final String miejscowosci = "Miejscowosci";
+                final String ulice = "Ulice";
+                final String przystanki = "Przystanki";
+                final String linie = "Linie";
+                final String podlinie = "Podlinie";
+                final String rozkladyJazdy = "RozkladyJazdy";
+                final String dniKursowania = "DniKursowania";
+
+                /*final MainPanel MainPanel = new MainPanel("Gminy", fontName, () -> model.getMiejscowosciByGminyRowCount(), () -> model.getMiejscowosciByGminyValueAt(), () -> controller.showMiejscowosciByGminy(), idMiejscowosci, nazwaMiejscowosci);
                 final JPanel cardsPanel = miejscowosciMainPanel.getCardsPanel();
                 final Dimension dimension = new Dimension(270, 50);
                 final JPanel buttonsPanel = miejscowosciMainPanel.getButtonsPanel();
-                miejscowosciMainPanel.addTableView("MiejscowosciByGminy", fontName, cardsPanel, "w danej gminie", dimension, buttonsPanel, () -> model.getMiejscowosciByGminyRowCount(), () -> model.getMiejscowosciByGminyValueAt(), () -> controller.showMiejscowosciByGminy());
+                miejscowosciMainPanel.addTableView("MiejscowosciByGminy", fontName, cardsPanel, "w danej gminie", dimension, buttonsPanel, () -> model.getMiejscowosciByGminyRowCount(), () -> model.getMiejscowosciByGminyValueAt(), () -> controller.showMiejscowosciByGminy());*/
 
-                tabbedPane.add(createMainPanel("Gminy", fontName, () -> model.getGminyRowCount(), () -> model.getGminyValueAt(), () -> controller.showGminy(), idGminy, nazwaGminy));
-                tabbedPane.add(createMainPanel("Miejscowości", fontName, () -> model.getMiejscowosciRowCount(), () -> model.getMiejscowosciValueAt(), () -> controller.showMiejscowosci(), idMiejscowosci, nazwaMiejscowosci, gmina));
-                tabbedPane.add(createMainPanel("Ulice", fontName, () -> model.getUliceRowCount(), () -> model.getUliceValueAt(), () -> controller.showUlice(), idUlicy, nazwaUlicy, miejscowosc, gmina));
-                tabbedPane.add(createMainPanel("Przystanki", fontName, () -> model.getPrzystankiRowCount(), () -> model.getPrzystankiValueAt(), () -> controller.showPrzystanki(), idPrzystanku, nazwaPrzystanku, ulica, miejscowosc, gmina, typPrzystanku));
-                tabbedPane.add(createMainPanel("Linie", fontName, () -> model.getLinieRowCount(), () -> model.getLinieValueAt(), () -> controller.showLinie(), nrLinii, autobusCzyTramwaj, dziennaCzyNocna, liniaWaznaOd, dodatkoweInformacje));
-                tabbedPane.add(createMainPanel("Podlinie", fontName, () -> model.getPodlinieRowCount(), () -> model.getPodlinieValueAt(), () -> controller.showPodlinie(), idPodlinii, linia, dodatkoweInformacje));
-                tabbedPane.add(createMainPanel("Rozkłady jazdy", fontName, () -> model.getRozkladyJazdyRowCount(), () -> model.getRozkladyJazdyValueAt(), () -> controller.showRozkladyJazdy(), nrPorzadkowy, idRozkladu, podlinia, idPrzystanku, przystanek, ulica, miejscowosc, gmina, typPrzystanku));
-                tabbedPane.add(createMainPanel("Dni kursowania", fontName, () -> model.getDniKursowaniaRowCount(), () -> model.getDniKursowaniaValueAt(), () -> controller.showDniKursowania(), idDnia, nazwaDnia));
-                tabbedPane.add(createMainPanel("Kursy", fontName, () -> model.getKursyRowCount(), () -> model.getKursyValueAt(), () -> controller.showKursy(), podlinia, idPrzystanku, przystanek, ulica, miejscowosc, gmina, typPrzystanku, dzienKursowania, godzina, dodatkoweInformacje));
-                tabbedPane.add(createMainPanel("Logi", fontName, () -> model.getLogiRowCount(), () -> model.getLogiValueAt(), () -> controller.showLogi(), dataModyfikacji, tresc));
+                final MainPanel gminyMainPanel = new MainPanel("Gminy", fontName, () -> model.getGminyRowCount(), () -> model.getGminyValueAt(), () -> controller.showGminy(), idGminy, nazwaGminy);
+
+                final MainPanel miejscowosciMainPanel = new MainPanel("Miejscowości", fontName, () -> model.getMiejscowosciRowCount(), () -> model.getMiejscowosciValueAt(), () -> controller.showMiejscowosci(), idMiejscowosci, nazwaMiejscowosci, gmina);
+                final MainPanel uliceMainPanel = new MainPanel("Ulice", fontName, () -> model.getUliceRowCount(), () -> model.getUliceValueAt(), () -> controller.showUlice(), idUlicy, nazwaUlicy, miejscowosc, gmina);
+                final MainPanel przystankiMainPanel = new MainPanel("Przystanki", fontName, () -> model.getPrzystankiRowCount(), () -> model.getPrzystankiValueAt(), () -> controller.showPrzystanki(), idPrzystanku, nazwaPrzystanku, ulica, miejscowosc, gmina, typPrzystanku);
+                final MainPanel linieMainPanel = new MainPanel("Linie", fontName, () -> model.getLinieRowCount(), () -> model.getLinieValueAt(), () -> controller.showLinie(), nrLinii, autobusCzyTramwaj, dziennaCzyNocna, liniaWaznaOd, dodatkoweInformacje);
+                final MainPanel podlinieMainPanel = new MainPanel("Podlinie", fontName, () -> model.getPodlinieRowCount(), () -> model.getPodlinieValueAt(), () -> controller.showPodlinie(), idPodlinii, linia, dodatkoweInformacje);
+                final MainPanel rozkladyJazdyMainPanel = new MainPanel("Rozkłady jazdy", fontName, () -> model.getRozkladyJazdyRowCount(), () -> model.getRozkladyJazdyValueAt(), () -> controller.showRozkladyJazdy(), nrPorzadkowy, idRozkladu, podlinia, idPrzystanku, przystanek, ulica, miejscowosc, gmina, typPrzystanku);
+                final MainPanel dniKursowaniaMainPanel = new MainPanel("Dni kursowania", fontName, () -> model.getDniKursowaniaRowCount(), () -> model.getDniKursowaniaValueAt(), () -> controller.showDniKursowania(), idDnia, nazwaDnia);
+                final MainPanel kursyMainPanel = new MainPanel("Kursy", fontName, () -> model.getKursyRowCount(), () -> model.getKursyValueAt(), () -> controller.showKursy(), podlinia, idPrzystanku, przystanek, ulica, miejscowosc, gmina, typPrzystanku, dzienKursowania, godzina, dodatkoweInformacje);
+                final MainPanel logiMainPanel = new MainPanel("Logi", fontName, () -> model.getLogiRowCount(), () -> model.getLogiValueAt(), () -> controller.showLogi(), dataModyfikacji, tresc);
 
                 for (int i = 0; i < tabbedPane.getTabCount(); i++) {
                     tabbedPane.setTabComponentAt(i, createLabel(tabbedPane.getTitleAt(i), fontName, new Dimension(180, 50)));
@@ -189,100 +172,7 @@ public final class DefaultView implements View {
         return groupLayout.createParallelGroup(GroupLayout.Alignment.BASELINE);
     }
 
-    private static JPanel createMainPanel(final String name, final String fontName, final RowCountGetter rowCountGetter, final ValueGetter valueGetter, final TableViewShowingHandler tableViewShowingHandler, final String... columnNames) {
-        final JPanel mainPanel = createDoubleBufferedPanel(new BorderLayout());
-        mainPanel.setName(name);
-
-        final JPanel cardsPanel = createDoubleBufferedPanel(new CardLayout());
-
-        mainPanel.add(cardsPanel, BorderLayout.CENTER);
-
-        final JPanel buttonsPanel = createDoubleBufferedPanel(null);
-        buttonsPanel.setLayout(new BoxLayout(buttonsPanel, BoxLayout.Y_AXIS));
-
-        final Dimension dimension = new Dimension(270, 50);
-
-        buttonsPanel.add(createLabel("Wyświetl " + name.toLowerCase(), fontName, dimension));
-        setEmptyBorder(buttonsPanel, 30, 20, 30, 50);
-
-        mainPanel.add(buttonsPanel, BorderLayout.EAST);
-        addTableView("All", cardsPanel, "wszystkie", fontName, dimension, buttonsPanel, rowCountGetter, valueGetter, tableViewShowingHandler, columnNames);
-        return mainPanel;
-    }
-
-    private static void addTableView(final String name, final JPanel cardsPanel, final String text, final String fontName, final Dimension dimension, final JPanel buttonsPanel, final RowCountGetter rowCountGetter, final ValueGetter valueGetter, final TableViewShowingHandler tableViewShowingHandler, final String... columnNames) {
-        final JPanel tablePanel = createDoubleBufferedPanel(new BorderLayout());
-        tablePanel.setName(name);
-
-        final JTable table = new JTable(new AbstractTableModel() {
-            @Override
-            public final int getColumnCount() {
-                return columnNames.length;
-            }
-
-            @Override
-            public final String getColumnName(final int columnIndex) {
-                return columnNames[columnIndex];
-            }
-
-            @Override
-            public final int getRowCount() {
-                try {
-                    return rowCountGetter.getRowCount();
-                } catch (final NullPointerException e) {
-                    return 0;
-                }
-            }
-
-            @Override
-            public final Object getValueAt(final int rowIndex, final int columnIndex) {
-                return valueGetter.getValueAt();
-            }
-        });
-        table.setAutoCreateRowSorter(true);
-
-        final JScrollPane scrollPane = new JScrollPane(table);
-        setEmptyBorder(scrollPane, 20, 10, 10, 10);
-
-        tablePanel.add(scrollPane, BorderLayout.CENTER);
-
-        final JPanel internalButtonsPanel = createDoubleBufferedPanel(new FlowLayout());
-        internalButtonsPanel.add(createAdjustedButton("Dodaj rekord", fontName, null));
-        internalButtonsPanel.add(createAdjustedButton("Usuń rekordy", fontName, null));
-        setEmptyBorder(internalButtonsPanel, 10, 10, 80, 10);
-
-        tablePanel.add(internalButtonsPanel, BorderLayout.SOUTH);
-
-        cardsPanel.add(tablePanel);
-
-        final JButton button = createAdjustedButton(text, fontName, e1 -> {
-            try {
-                tableViewShowingHandler.showTableView();
-            } catch (final NullPointerException e) {
-                ((CardLayout)cardsPanel.getLayout()).show(cardsPanel, name);
-            }
-        });
-        setDefaultJComponentProperties(button, dimension);
-
-        buttonsPanel.add(Box.createRigidArea(new Dimension(0, 15)));
-        buttonsPanel.add(button);
-    }
-
-    static JPanel createDoubleBufferedPanel(final LayoutManager layout) {
-        return new JPanel(layout, true);
-    }
-
-    static void setEmptyBorder(@NotNull final JComponent component, final int top, final int left, final int bottom, final int right) {
-        component.setBorder(BorderFactory.createEmptyBorder(top, left, bottom, right));
-    }
-
-    static JButton createAdjustedButton(final String text, final String fontName, final ActionListener actionListener) {
-        final JButton button = createButton(text, actionListener);
-        button.setFont(new Font(fontName, Font.PLAIN, 20));
-        return button;
-    }
-
-    private static JButton createButton(final String text, final ActionListener actionListener) {
+    static JButton createButton(final String text, final ActionListener actionListener) {
         final JButton button = new JButton(text);
         button.addActionListener(actionListener);
         return button;
