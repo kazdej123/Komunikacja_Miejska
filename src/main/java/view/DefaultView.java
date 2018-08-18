@@ -40,17 +40,17 @@ import java.awt.event.WindowEvent;
 
 public final class DefaultView implements View {
     @FunctionalInterface
-    private interface RowCountGetter {
+    interface RowCountGetter {
         int getRowCount();
     }
 
     @FunctionalInterface
-    private interface ValueGetter {
+    interface ValueGetter {
         Object getValueAt();
     }
 
     @FunctionalInterface
-    private interface TableViewShowingHandler {
+    interface TableViewShowingHandler {
         void showTableView();
     }
 
@@ -111,6 +111,12 @@ public final class DefaultView implements View {
                 final String godzina = "Godzina";
                 final String dataModyfikacji = "Data modyfikacji";
                 final String tresc = "Treść";
+
+                final MainPanel miejscowosciMainPanel = new MainPanel("Gminy", fontName, () -> model.getMiejscowosciByGminyRowCount(), () -> model.getMiejscowosciByGminyValueAt(), () -> controller.showMiejscowosciByGminy(), idMiejscowosci, nazwaMiejscowosci);
+                final JPanel cardsPanel = miejscowosciMainPanel.getCardsPanel();
+                final Dimension dimension = new Dimension(270, 50);
+                final JPanel buttonsPanel = miejscowosciMainPanel.getButtonsPanel();
+                miejscowosciMainPanel.addTableView("MiejscowosciByGminy", fontName, cardsPanel, "w danej gminie", dimension, buttonsPanel, () -> model.getMiejscowosciByGminyRowCount(), () -> model.getMiejscowosciByGminyValueAt(), () -> controller.showMiejscowosciByGminy());
 
                 tabbedPane.add(createMainPanel("Gminy", fontName, () -> model.getGminyRowCount(), () -> model.getGminyValueAt(), () -> controller.showGminy(), idGminy, nazwaGminy));
                 tabbedPane.add(createMainPanel("Miejscowości", fontName, () -> model.getMiejscowosciRowCount(), () -> model.getMiejscowosciValueAt(), () -> controller.showMiejscowosci(), idMiejscowosci, nazwaMiejscowosci, gmina));
@@ -262,17 +268,15 @@ public final class DefaultView implements View {
         buttonsPanel.add(button);
     }
 
-    @NotNull
-    @Contract("_ -> new")
-    private static JPanel createDoubleBufferedPanel(final LayoutManager layout) {
+    static JPanel createDoubleBufferedPanel(final LayoutManager layout) {
         return new JPanel(layout, true);
     }
 
-    private static void setEmptyBorder(@NotNull final JComponent component, final int top, final int left, final int bottom, final int right) {
+    static void setEmptyBorder(@NotNull final JComponent component, final int top, final int left, final int bottom, final int right) {
         component.setBorder(BorderFactory.createEmptyBorder(top, left, bottom, right));
     }
 
-    private static JButton createAdjustedButton(final String text, final String fontName, final ActionListener actionListener) {
+    static JButton createAdjustedButton(final String text, final String fontName, final ActionListener actionListener) {
         final JButton button = createButton(text, actionListener);
         button.setFont(new Font(fontName, Font.PLAIN, 20));
         return button;
@@ -284,14 +288,14 @@ public final class DefaultView implements View {
         return button;
     }
 
-    private static JLabel createLabel(final String text, final String fontName, final Dimension dimension) {
+    static JLabel createLabel(final String text, final String fontName, final Dimension dimension) {
         final JLabel label = new JLabel(text, SwingConstants.CENTER);
         setDefaultJComponentProperties(label, dimension);
         label.setFont(new Font(fontName, Font.BOLD, 20));
         return label;
     }
 
-    private static void setDefaultJComponentProperties(@NotNull final JComponent component, final Dimension dimension) {
+    static void setDefaultJComponentProperties(@NotNull final JComponent component, final Dimension dimension) {
         component.setAlignmentX(Component.CENTER_ALIGNMENT);
         component.setPreferredSize(dimension);
     }
