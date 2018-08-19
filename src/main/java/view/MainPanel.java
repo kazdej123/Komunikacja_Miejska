@@ -95,7 +95,7 @@ final class MainPanel extends JPanel {
 
         tablePanel.add(internalButtonsPanel, BorderLayout.SOUTH);
 
-        cardsPanel.add(tablePanel);
+        cardsPanel.add(tablePanel, name);
 
         final JButton button = createAdjustedButton(text, e1 -> {
             try {
