@@ -2,15 +2,28 @@ package view;
 
 import org.jetbrains.annotations.NotNull;
 
-import javax.swing.*;
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JComponent;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.table.AbstractTableModel;
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.CardLayout;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.LayoutManager;
 import java.awt.event.ActionListener;
 
 final class MainPanel extends JPanel {
-    private static final JPanel cardsPanel = createDoubleBufferedPanel(new CardLayout());
-    private static final JPanel buttonsPanel = createDoubleBufferedPanel(null);
     private static final Dimension buttonDimension = new Dimension(270, 50);
+
+    private final JPanel cardsPanel = createDoubleBufferedPanel(new CardLayout());
+    private final JPanel buttonsPanel = createDoubleBufferedPanel(null);
 
     @FunctionalInterface
     interface RowCountGetter {
@@ -23,7 +36,7 @@ final class MainPanel extends JPanel {
     }
 
     @FunctionalInterface
-    interface TableViewShowingHandler {
+    interface TableViewShower {
         void showTableView();
     }
 
@@ -37,11 +50,9 @@ final class MainPanel extends JPanel {
         setEmptyBorder(buttonsPanel, 30, 20, 30, 50);
 
         add(buttonsPanel, BorderLayout.EAST);
-
-        //addTableView("wszystkie", cardsPanel, "wszystkie", dimension, buttonsPanel, rowCountGetter, valueGetter, tableViewShowingHandler);
     }
 
-    static final void addTableView(final String name, final RowCountGetter rowCountGetter, final ValueGetter valueGetter, final String text, final TableViewShowingHandler tableViewShowingHandler, final String... columnNames) {
+    final void addTableView(final String name, final RowCountGetter rowCountGetter, final ValueGetter valueGetter, final String text, final TableViewShower tableViewShower, final String... columnNames) {
         final JPanel tablePanel = createDoubleBufferedPanel(new BorderLayout());
         tablePanel.setName(name);
 
@@ -88,7 +99,7 @@ final class MainPanel extends JPanel {
 
         final JButton button = createAdjustedButton(text, e1 -> {
             try {
-                tableViewShowingHandler.showTableView();
+                tableViewShower.showTableView();
             } catch (final NullPointerException e) {
                 ((CardLayout)cardsPanel.getLayout()).show(cardsPanel, name);
             }

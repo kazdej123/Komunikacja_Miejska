@@ -29,6 +29,8 @@ import java.awt.event.WindowEvent;
 public final class DefaultView implements View {
     static final String FONT_NAME = "Tahoma";
 
+    private final JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.LEFT);
+
     @Override
     public final void showLoginDialog() {
         final JDialog dialog = new JDialog((Frame) null, "Okno logowania", true);
@@ -50,7 +52,6 @@ public final class DefaultView implements View {
 
                 final JFrame frame = new JFrame("Komunikacja miejska");
 
-                final JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.LEFT);
                 tabbedPane.setDoubleBuffered(true);
                 tabbedPane.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
 
@@ -72,7 +73,7 @@ public final class DefaultView implements View {
                 final String autobusCzyTramwaj = "Autobus czy tramwaj";
                 final String dziennaCzyNocna = "Dzienna czy nocna";
                 final String liniaWaznaOd = "Linia ważna od";
-                final String dodatkoweInformacje = "Informacje";
+                final String uwagi = "Uwagi";
                 final String idPodlinii = "Id podlinii";
                 final String linia = "Linia";
                 final String idRozkladu = "Id rozkładu";
@@ -95,23 +96,56 @@ public final class DefaultView implements View {
                 final String rozkladyJazdy = "RozkladyJazdy";
                 final String dniKursowania = "DniKursowania";
 
-                /*final MainPanel MainPanel = new MainPanel("Gminy", fontName, () -> model.getMiejscowosciByGminyRowCount(), () -> model.getMiejscowosciByGminyValueAt(), () -> controller.showMiejscowosciByGminy(), idMiejscowosci, nazwaMiejscowosci);
-                final JPanel cardsPanel = miejscowosciMainPanel.getCardsPanel();
-                final Dimension dimension = new Dimension(270, 50);
-                final JPanel buttonsPanel = miejscowosciMainPanel.getButtonsPanel();
-                miejscowosciMainPanel.addTableView("MiejscowosciByGminy", fontName, cardsPanel, "w danej gminie", dimension, buttonsPanel, () -> model.getMiejscowosciByGminyRowCount(), () -> model.getMiejscowosciByGminyValueAt(), () -> controller.showMiejscowosciByGminy());*/
+                final MainPanel gminyMainPanel = new MainPanel("Gminy");
+                addMainPanel(gminyMainPanel, () -> model.getGminyRowCount(), () -> model.getGminyValueAt(), () -> controller.showGminy(), idGminy, nazwaGminy);
 
-                /*final MainPanel gminyMainPanel = new MainPanel("Gminy", () -> model.getGminyRowCount(), () -> model.getGminyValueAt(), () -> controller.showGminy(), idGminy, nazwaGminy);
+                final MainPanel miejscowosciMainPanel = new MainPanel("Miejscowości");
+                miejscowosciMainPanel.addTableView(gminy, () -> model.getMiejscowosciByGminyRowCount(), () -> model.getMiejscowosciByGminyValueAt(), "w danej gminie", () -> controller.showMiejscowosciByGminy(), idMiejscowosci, nazwaMiejscowosci);
+                addMainPanel(miejscowosciMainPanel, () -> model.getMiejscowosciRowCount(), () -> model.getMiejscowosciValueAt(), () -> controller.showMiejscowosci(), idMiejscowosci, nazwaMiejscowosci, gmina);
 
-                final MainPanel miejscowosciMainPanel = new MainPanel("Miejscowości", () -> model.getMiejscowosciRowCount(), () -> model.getMiejscowosciValueAt(), () -> controller.showMiejscowosci(), idMiejscowosci, nazwaMiejscowosci, gmina);
-                final MainPanel uliceMainPanel = new MainPanel("Ulice", () -> model.getUliceRowCount(), () -> model.getUliceValueAt(), () -> controller.showUlice(), idUlicy, nazwaUlicy, miejscowosc, gmina);
-                final MainPanel przystankiMainPanel = new MainPanel("Przystanki", () -> model.getPrzystankiRowCount(), () -> model.getPrzystankiValueAt(), () -> controller.showPrzystanki(), idPrzystanku, nazwaPrzystanku, ulica, miejscowosc, gmina, typPrzystanku);
-                final MainPanel linieMainPanel = new MainPanel("Linie", () -> model.getLinieRowCount(), () -> model.getLinieValueAt(), () -> controller.showLinie(), nrLinii, autobusCzyTramwaj, dziennaCzyNocna, liniaWaznaOd, dodatkoweInformacje);
-                final MainPanel podlinieMainPanel = new MainPanel("Podlinie", () -> model.getPodlinieRowCount(), () -> model.getPodlinieValueAt(), () -> controller.showPodlinie(), idPodlinii, linia, dodatkoweInformacje);
-                final MainPanel rozkladyJazdyMainPanel = new MainPanel("Rozkłady jazdy", () -> model.getRozkladyJazdyRowCount(), () -> model.getRozkladyJazdyValueAt(), () -> controller.showRozkladyJazdy(), nrPorzadkowy, idRozkladu, podlinia, idPrzystanku, przystanek, ulica, miejscowosc, gmina, typPrzystanku);
-                final MainPanel dniKursowaniaMainPanel = new MainPanel("Dni kursowania", () -> model.getDniKursowaniaRowCount(), () -> model.getDniKursowaniaValueAt(), () -> controller.showDniKursowania(), idDnia, nazwaDnia);
-                final MainPanel kursyMainPanel = new MainPanel("Kursy", () -> model.getKursyRowCount(), () -> model.getKursyValueAt(), () -> controller.showKursy(), podlinia, idPrzystanku, przystanek, ulica, miejscowosc, gmina, typPrzystanku, dzienKursowania, godzina, dodatkoweInformacje);
-                final MainPanel logiMainPanel = new MainPanel("Logi", () -> model.getLogiRowCount(), () -> model.getLogiValueAt(), () -> controller.showLogi(), dataModyfikacji, tresc);*/
+                final MainPanel uliceMainPanel = new MainPanel("Ulice");
+                uliceMainPanel.addTableView(miejscowosci, () -> model.getUliceByMiejscowosciRowCount(), () -> model.getUliceByMiejscowosciValueAt(), "w danej miejscowości", () -> controller.showUliceByMiejscowosci(), idUlicy, nazwaUlicy);
+                uliceMainPanel.addTableView(gminy, () -> model.getUliceByGminyRowCount(), () -> model.getUliceByGminyValueAt(), "w danej gminie", () -> controller.showUliceByGminy(), idUlicy, nazwaUlicy, miejscowosc);
+                addMainPanel(uliceMainPanel, () -> model.getUliceRowCount(), () -> model.getUliceValueAt(), () -> controller.showUlice(), idUlicy, nazwaUlicy, miejscowosc, gmina);
+
+                final MainPanel przystankiMainPanel = new MainPanel("Przystanki");
+                przystankiMainPanel.addTableView(ulice, () -> model.getPrzystankiByUliceRowCount(), () -> model.getPrzystankiByUliceValueAt(), "przy danej ulicy", () -> controller.showPrzystankiByUlice(), idPrzystanku, nazwaPrzystanku, typPrzystanku);
+                przystankiMainPanel.addTableView(miejscowosci, () -> model.getPrzystankiByMiejscowosciRowCount(), () -> model.getPrzystankiByMiejscowosciValueAt(), "w danej miejscowości", () -> controller.showPrzystankiByMiejscowosci(), idPrzystanku, nazwaPrzystanku, ulica, typPrzystanku);
+                przystankiMainPanel.addTableView(gminy, () -> model.getPrzystankiByGminyRowCount(), () -> model.getPrzystankiByGminyValueAt(), "w danej gminie", () -> controller.showPrzystankiByGminy(), idPrzystanku, nazwaPrzystanku, ulica, miejscowosc, typPrzystanku);
+                addMainPanel(przystankiMainPanel, () -> model.getPrzystankiRowCount(), () -> model.getPrzystankiValueAt(), () -> controller.showPrzystanki(), idPrzystanku, nazwaPrzystanku, ulica, miejscowosc, gmina, typPrzystanku);
+
+                final MainPanel linieMainPanel = new MainPanel("Linie");
+                addMainPanel(linieMainPanel, () -> model.getLinieRowCount(), () -> model.getLinieValueAt(), () -> controller.showLinie(), nrLinii, autobusCzyTramwaj, dziennaCzyNocna, liniaWaznaOd, uwagi);
+
+                final MainPanel podlinieMainPanel = new MainPanel("Podlinie");
+                podlinieMainPanel.addTableView(linie, () -> model.getPodlinieByLinieRowCount(), () -> model.getPodlinieByLinieValueAt(), "danej linii", () -> controller.showPodlinieByLinie(), idPodlinii, uwagi);
+                addMainPanel(podlinieMainPanel, () -> model.getPodlinieRowCount(), () -> model.getPodlinieValueAt(), () -> controller.showPodlinie(), idPodlinii, linia, uwagi);
+
+                final MainPanel rozkladyJazdyMainPanel = new MainPanel("Rozkłady jazdy");
+                rozkladyJazdyMainPanel.addTableView(podlinie, () -> model.getRozkladyJazdyByPodlinieRowCount(), () -> model.getRozkladyJazdyByPodlinieValueAt(), "danej podlinii", () -> controller.showRozkladyJazdyByPodlinie(), nrPorzadkowy, idRozkladu, idPrzystanku, przystanek, ulica, miejscowosc, gmina, typPrzystanku);
+                rozkladyJazdyMainPanel.addTableView(linie, () -> model.getRozkladyJazdyByLinieRowCount(), () -> model.getRozkladyJazdyByLinieValueAt(), "danej linii", () -> controller.showRozkladyJazdyByLinie(), nrPorzadkowy, idRozkladu, podlinia, idPrzystanku, przystanek, ulica, miejscowosc, gmina, typPrzystanku);
+                rozkladyJazdyMainPanel.addTableView(przystanki, () -> model.getRozkladyJazdyByPrzystankiRowCount(), () -> model.getRozkladyJazdyByPrzystankiValueAt(), "na danym przystanku", () -> controller.showRozkladyJazdyByPrzystanki(), nrPorzadkowy, idRozkladu, podlinia, linia);
+                rozkladyJazdyMainPanel.addTableView(ulice, () -> model.getRozkladyJazdyByUliceRowCount(), () -> model.getRozkladyJazdyByUliceValueAt(), "przy danej ulicy", () -> controller.showRozkladyJazdyByUlice(), nrPorzadkowy, idRozkladu, podlinia, linia, idPrzystanku, przystanek, typPrzystanku);
+                rozkladyJazdyMainPanel.addTableView(miejscowosci, () -> model.getRozkladyJazdyByMiejscowosciRowCount(), () -> model.getRozkladyJazdyByMiejscowosciValueAt(), "w danej miejscowości", () -> controller.showRozkladyJazdyByMiejscowosci(), nrPorzadkowy, idRozkladu, podlinia, linia, idPrzystanku, przystanek, ulica, typPrzystanku);
+                rozkladyJazdyMainPanel.addTableView(gminy, () -> model.getRozkladyJazdyByGminyRowCount(), () -> model.getRozkladyJazdyByGminyValueAt(), "w danej gminie", () -> controller.showRozkladyJazdyByGminy(), nrPorzadkowy, idRozkladu, podlinia, linia, idPrzystanku, przystanek, ulica, miejscowosc, typPrzystanku);
+                addMainPanel(rozkladyJazdyMainPanel, () -> model.getRozkladyJazdyRowCount(), () -> model.getRozkladyJazdyValueAt(), () -> controller.showRozkladyJazdy(), nrPorzadkowy, idRozkladu, podlinia, linia, idPrzystanku, przystanek, ulica, miejscowosc, gmina, typPrzystanku);
+
+                final MainPanel dniKursowaniaMainPanel = new MainPanel("Dni kursowania");
+                addMainPanel(dniKursowaniaMainPanel, () -> model.getDniKursowaniaRowCount(), () -> model.getDniKursowaniaValueAt(), () -> controller.showDniKursowania(), idDnia, nazwaDnia);
+
+                final MainPanel kursyMainPanel = new MainPanel("Kursy");
+                kursyMainPanel.addTableView(dniKursowania, () -> model.getKursyByDniKursowaniaRowCount(), () -> model.getKursyByDniKursowaniaValueAt(), "w danym dniu kursowania", () -> controller.showKursyByDniKursowania(), podlinia, linia, idPrzystanku, przystanek, ulica, miejscowosc, gmina, typPrzystanku, godzina, uwagi);
+                kursyMainPanel.addTableView(rozkladyJazdy, () -> model.getKursyByRozkladyJazdyRowCount(), () -> model.getKursyByRozkladyJazdyValueAt(), "na danym rozkładzie jazdy", () -> controller.showKursyByRozkladyJazdy(), dzienKursowania, godzina, uwagi);
+                kursyMainPanel.addTableView(podlinie, () -> model.getKursyByPodlinieRowCount(), () -> model.getKursyByPodlinieValueAt(), "danej podlinii", () -> controller.showKursyByPodlinie(), idPrzystanku, przystanek, ulica, miejscowosc, gmina, typPrzystanku, dzienKursowania, godzina, uwagi);
+                kursyMainPanel.addTableView(linie, () -> model.getKursyByLinieRowCount(), () -> model.getKursyByLinieValueAt(), "danej linii", () -> controller.showKursyByLinie(), podlinia, idPrzystanku, przystanek, ulica, miejscowosc, gmina, typPrzystanku, dzienKursowania, godzina, uwagi);
+                kursyMainPanel.addTableView(przystanki, () -> model.getKursyByPrzystankiRowCount(), () -> model.getKursyByPrzystankiValueAt(), "na danym przystanku", () -> controller.showKursyByPrzystanki(), podlinia, linia, dzienKursowania, godzina, uwagi);
+                kursyMainPanel.addTableView(ulice, () -> model.getKursyByUliceRowCount(), () -> model.getKursyByUliceValueAt(), "przy danej ulicy", () -> controller.showKursyByUlice(), podlinia, linia, idPrzystanku, przystanek, typPrzystanku, dzienKursowania, godzina, uwagi);
+                kursyMainPanel.addTableView(miejscowosci, () -> model.getKursyByMiejscowosciRowCount(), () -> model.getKursyByMiejscowosciValueAt(), "w danej miejscowości", () -> controller.showKursyByMiejscowosci(), podlinia, linia, idPrzystanku, przystanek, ulica, typPrzystanku, dzienKursowania, godzina, uwagi);
+                kursyMainPanel.addTableView(gminy, () -> model.getKursyByGminyRowCount(), () -> model.getKursyByGminyValueAt(), "w danej gminie", () -> controller.showKursyByGminy(), podlinia, linia, idPrzystanku, przystanek, ulica, miejscowosc, typPrzystanku, dzienKursowania, godzina, uwagi);
+                addMainPanel(kursyMainPanel, () -> model.getKursyRowCount(), () -> model.getKursyValueAt(), () -> controller.showKursy(), podlinia, linia, idPrzystanku, przystanek, ulica, miejscowosc, gmina, typPrzystanku, dzienKursowania, godzina, uwagi);
+
+                final MainPanel logiMainPanel = new MainPanel("Logi");
+                addMainPanel(logiMainPanel, () -> model.getLogiRowCount(), () -> model.getLogiValueAt(), () -> controller.showLogi(), dataModyfikacji, tresc);
 
                 for (int i = 0; i < tabbedPane.getTabCount(); i++) {
                     tabbedPane.setTabComponentAt(i, createLabel(tabbedPane.getTitleAt(i), new Dimension(180, 50)));
@@ -152,6 +186,10 @@ public final class DefaultView implements View {
         dialog.setVisible(true);
     }
 
+    private void addMainPanel(final MainPanel mainPanel, final MainPanel.RowCountGetter rowCountGetter, final MainPanel.ValueGetter valueGetter, final MainPanel.TableViewShower tableViewShower, final String... columnNames) {
+        mainPanel.addTableView("All", rowCountGetter, valueGetter, "wszystkie", tableViewShower, columnNames);
+        tabbedPane.add(mainPanel);
+    }
     private static void addWindowClosingListener(@NotNull final Window window, final Controller controller) {
         window.addWindowListener(new WindowAdapter() {
             @Override
