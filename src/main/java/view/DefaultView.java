@@ -31,7 +31,7 @@ public final class DefaultView implements View {
 
     @Override
     public final void showLoginDialog() {
-        final JDialog dialog = new JDialog((Frame) null, "Okno logowania", true);
+        final JDialog dialog = new JDialog((Frame) null, "Okno logowania");
 
         final Controller controller = null;
 
