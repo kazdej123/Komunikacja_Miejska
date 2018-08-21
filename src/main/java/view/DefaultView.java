@@ -2,7 +2,6 @@ package view;
 
 import controller.Controller;
 import model.Model;
-import org.jetbrains.annotations.NotNull;
 
 import javax.swing.GroupLayout;
 import javax.swing.JButton;
@@ -11,7 +10,6 @@ import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPasswordField;
-import javax.swing.JRootPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
@@ -52,7 +50,6 @@ public final class DefaultView implements View {
 
                 final JFrame frame = new JFrame("Komunikacja miejska");
 
-                tabbedPane.setDoubleBuffered(true);
                 tabbedPane.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
 
                 final Model model = null;
@@ -178,19 +175,16 @@ public final class DefaultView implements View {
         dialog.setLocation((screenWidth - dialog.getWidth()) / 2, (screenHeight - dialog.getHeight()) / 2);
         dialog.setResizable(false);
         dialog.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
-
-        final JRootPane rootPane = dialog.getRootPane();
-        rootPane.setDefaultButton(loginButton);
-        rootPane.setDoubleBuffered(true);
-
+        dialog.getRootPane().setDefaultButton(loginButton);
         dialog.setVisible(true);
     }
 
     private void addMainPanel(final MainPanel mainPanel, final MainPanel.RowCountGetter rowCountGetter, final MainPanel.ValueGetter valueGetter, final MainPanel.TableViewShower tableViewShower, final String... columnNames) {
-        mainPanel.addTableView("All", rowCountGetter, valueGetter, "wszystkie", tableViewShower, columnNames);
+        mainPanel.addTableView(MainPanel.ALL, rowCountGetter, valueGetter, "wszystkie", tableViewShower, columnNames);
         tabbedPane.add(mainPanel);
     }
-    private static void addWindowClosingListener(@NotNull final Window window, final Controller controller) {
+
+    private static void addWindowClosingListener(final Window window, final Controller controller) {
         window.addWindowListener(new WindowAdapter() {
             @Override
             public final void windowClosing(final WindowEvent e) {
@@ -207,7 +201,7 @@ public final class DefaultView implements View {
         }
     }
 
-    private static GroupLayout.ParallelGroup createBaselineGroup(@NotNull final GroupLayout groupLayout) {
+    private static GroupLayout.ParallelGroup createBaselineGroup(final GroupLayout groupLayout) {
         return groupLayout.createParallelGroup(GroupLayout.Alignment.BASELINE);
     }
 
@@ -219,12 +213,12 @@ public final class DefaultView implements View {
 
     static JLabel createLabel(final String text, final Dimension dimension) {
         final JLabel label = new JLabel(text, SwingConstants.CENTER);
-        setDefaultJComponentProperties(label, dimension);
+        setJComponentProperties(label, dimension);
         label.setFont(new Font(FONT_NAME, Font.BOLD, 20));
         return label;
     }
 
-    static void setDefaultJComponentProperties(@NotNull final JComponent component, final Dimension dimension) {
+    static void setJComponentProperties(final JComponent component, final Dimension dimension) {
         component.setAlignmentX(Component.CENTER_ALIGNMENT);
         component.setPreferredSize(dimension);
     }

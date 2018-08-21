@@ -5,9 +5,6 @@ public interface Controller {
 
     void login();
 
-
-    //-------- show --------//
-
     void showGminy();
 
     void showMiejscowosciByGminy();

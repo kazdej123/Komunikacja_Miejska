@@ -2,8 +2,6 @@ package model;
 
 public interface Model {
 
-    //-------- getRowCount --------//
-
     int getGminyRowCount();
 
     int getMiejscowosciByGminyRowCount();
@@ -65,9 +63,6 @@ public interface Model {
     int getKursyRowCount();
 
     int getLogiRowCount();
-
-
-    //-------- getValueAt --------//
 
     Object getGminyValueAt();
 
