@@ -25,8 +25,6 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
 public final class DefaultView implements View {
-    static final String FONT_NAME = "Tahoma";
-
     private final JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.LEFT);
 
     @Override
@@ -50,6 +48,7 @@ public final class DefaultView implements View {
 
                 final JFrame frame = new JFrame("Komunikacja miejska");
 
+                tabbedPane.setFocusCycleRoot(true);
                 tabbedPane.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
 
                 final Model model = null;
@@ -145,7 +144,7 @@ public final class DefaultView implements View {
                 addMainPanel(logiMainPanel, () -> model.getLogiRowCount(), () -> model.getLogiValueAt(), () -> controller.showLogi(), dataModyfikacji, tresc);
 
                 for (int i = 0; i < tabbedPane.getTabCount(); i++) {
-                    tabbedPane.setTabComponentAt(i, createLabel(tabbedPane.getTitleAt(i), new Dimension(180, 50)));
+                    tabbedPane.setTabComponentAt(i, createLabel(tabbedPane.getTitleAt(i), new Dimension(150, 56), 18));
                 }
                 frame.add(tabbedPane);
                 addWindowClosingListener(frame, controller);
@@ -211,15 +210,15 @@ public final class DefaultView implements View {
         return button;
     }
 
-    static JLabel createLabel(final String text, final Dimension dimension) {
+    static JLabel createLabel(final String text, final Dimension dimension, final int fontSize) {
         final JLabel label = new JLabel(text, SwingConstants.CENTER);
-        setJComponentProperties(label, dimension);
-        label.setFont(new Font(FONT_NAME, Font.BOLD, 20));
+        label.setAlignmentX(Component.CENTER_ALIGNMENT);
+        label.setPreferredSize(dimension);
+        setJComponentFont(label, Font.BOLD, fontSize);
         return label;
     }
 
-    static void setJComponentProperties(final JComponent component, final Dimension dimension) {
-        component.setAlignmentX(Component.CENTER_ALIGNMENT);
-        component.setPreferredSize(dimension);
+    static void setJComponentFont(final JComponent jComponent, final int style, final int size) {
+        jComponent.setFont(new Font(jComponent.getFont().getName(), style, size));
     }
 }
