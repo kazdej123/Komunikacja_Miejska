@@ -2,6 +2,7 @@ package view;
 
 import controller.Controller;
 import model.Model;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.GroupLayout;
 import javax.swing.JButton;
@@ -188,12 +189,12 @@ public final class DefaultView implements View {
         dialog.setVisible(true);
     }
 
-    private void addMainPanel(final MainPanel mainPanel, final MainPanel.RowCountGetter rowCountGetter, final MainPanel.ValueGetter valueGetter, final MainPanel.TableViewShower tableViewShower, final String... columnNames) {
+    private void addMainPanel(@NotNull final MainPanel mainPanel, final MainPanel.RowCountGetter rowCountGetter, final MainPanel.ValueGetter valueGetter, final MainPanel.TableViewShower tableViewShower, final String... columnNames) {
         mainPanel.addTableView(MainPanel.ALL, rowCountGetter, valueGetter, "wszystkie", tableViewShower, columnNames);
         tabbedPane.add(mainPanel);
     }
 
-    private static void addWindowClosingListener(final Window window, final Controller controller) {
+    private static void addWindowClosingListener(@NotNull final Window window, final Controller controller) {
         window.addWindowListener(new WindowAdapter() {
             @Override
             public final void windowClosing(final WindowEvent e) {
@@ -210,7 +211,7 @@ public final class DefaultView implements View {
         }
     }
 
-    private static GroupLayout.ParallelGroup createBaselineGroup(final GroupLayout groupLayout) {
+    private static GroupLayout.ParallelGroup createBaselineGroup(@NotNull final GroupLayout groupLayout) {
         return groupLayout.createParallelGroup(GroupLayout.Alignment.BASELINE);
     }
 
@@ -227,12 +228,12 @@ public final class DefaultView implements View {
         return label;
     }
 
-    static void centerJComponentAndSetFont(final JComponent jComponent, final int style, final int size) {
+    static void centerJComponentAndSetFont(@NotNull final JComponent jComponent, final int style, final int size) {
         jComponent.setAlignmentX(Component.CENTER_ALIGNMENT);
         setJComponentFont(jComponent, style, size);
     }
 
-    static void setJComponentFont(final JComponent jComponent, final int style, final int size) {
+    static void setJComponentFont(@NotNull final JComponent jComponent, final int style, final int size) {
         jComponent.setFont(new Font(jComponent.getFont().getName(), style, size));
     }
 }

@@ -2,6 +2,7 @@ package view;
 
 import controller.Controller;
 import model.Model;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -13,7 +14,12 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.AbstractTableModel;
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.CardLayout;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.LayoutManager;
 import java.awt.event.ActionListener;
 
 final class MainPanel extends JPanel {
@@ -107,7 +113,7 @@ final class MainPanel extends JPanel {
             if (controller != null) {
                 tableViewShower.showTableView();
             } else {
-                if (name != ALL) {
+                if (!name.equals(ALL)) {
                     final JDialog dialog = new JDialog();
                     // TODO
                 }
@@ -127,12 +133,12 @@ final class MainPanel extends JPanel {
         return panel;
     }
 
-    private static void setPanelNameAndCycleRootFocused(final JPanel panel, final String name) {
+    private static void setPanelNameAndCycleRootFocused(@NotNull final JPanel panel, final String name) {
         panel.setName(name);
         panel.setFocusCycleRoot(true);
     }
 
-    private static void setEmptyBorder(final JComponent component, final int top, final int left, final int bottom, final int right) {
+    private static void setEmptyBorder(@NotNull final JComponent component, final int top, final int left, final int bottom, final int right) {
         component.setBorder(BorderFactory.createEmptyBorder(top, left, bottom, right));
     }
 
