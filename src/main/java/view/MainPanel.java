@@ -2,6 +2,7 @@ package view;
 
 import controller.Controller;
 import model.Model;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -13,7 +14,12 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.AbstractTableModel;
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.CardLayout;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.LayoutManager;
 import java.awt.event.ActionListener;
 
 final class MainPanel extends JPanel {
@@ -95,7 +101,7 @@ final class MainPanel extends JPanel {
         final JPanel internalButtonsPanel = createCycleRootFocusedPanel(new FlowLayout());
         internalButtonsPanel.add(createInternalButton("Dodaj rekord", null));
         internalButtonsPanel.add(createInternalButton("Usuń rekordy", null));
-        setEmptyBorder(internalButtonsPanel, 10, 10, 80, 10);
+        setEmptyBorder(internalButtonsPanel, 10, 10, 30, 10);
 
         tablePanel.add(internalButtonsPanel, BorderLayout.SOUTH);
 
@@ -107,7 +113,7 @@ final class MainPanel extends JPanel {
             if (controller != null) {
                 tableViewShower.showTableView();
             } else {
-                if (name != ALL) {
+                if (!name.equals(ALL)) {
                     final JDialog dialog = new JDialog();
                     // TODO
                 }
@@ -127,19 +133,19 @@ final class MainPanel extends JPanel {
         return panel;
     }
 
-    private static void setPanelNameAndCycleRootFocused(final JPanel panel, final String name) {
+    private static void setPanelNameAndCycleRootFocused(@NotNull final JPanel panel, final String name) {
         panel.setName(name);
         panel.setFocusCycleRoot(true);
     }
 
-    private static void setEmptyBorder(final JComponent component, final int top, final int left, final int bottom, final int right) {
+    private static void setEmptyBorder(@NotNull final JComponent component, final int top, final int left, final int bottom, final int right) {
         component.setBorder(BorderFactory.createEmptyBorder(top, left, bottom, right));
     }
 
     private static JButton createInternalButton(final String text, final ActionListener actionListener) {
         final JButton button = DefaultView.createButton(text, actionListener);
-        DefaultView.setJComponentFont(button, Font.PLAIN, 20);
-        button.setPreferredSize(new Dimension(200, 40));
+        DefaultView.setJComponentFont(button, Font.PLAIN, 18);
+        button.setPreferredSize(new Dimension(180, 40));
         return button;
     }
 }
