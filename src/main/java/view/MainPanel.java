@@ -16,9 +16,11 @@ import javax.swing.JTable;
 import javax.swing.table.AbstractTableModel;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.Frame;
 import java.awt.LayoutManager;
 import java.awt.event.ActionListener;
 
@@ -28,6 +30,8 @@ final class MainPanel extends JPanel {
     private static final int FONT_SIZE = 18;
 
     private static final Dimension buttonDimension = new Dimension(14 * FONT_SIZE, 45);
+
+    private final Frame ownerFrame;
 
     private final JPanel cardsPanel = createCycleRootFocusedPanel(new CardLayout());
     private final JPanel buttonsPanel = createCycleRootFocusedPanel(null);
@@ -47,9 +51,12 @@ final class MainPanel extends JPanel {
         void showTableView();
     }
 
-    MainPanel(final String name) {
+    MainPanel(final String name, final Frame ownerFrame) {
         super(new BorderLayout());
-        setPanelNameAndCycleRootFocused(this, name);
+        this.ownerFrame = ownerFrame;
+
+        setName(name);
+        setFocusCycleRoot(true);
         add(cardsPanel, BorderLayout.CENTER);
 
         buttonsPanel.setLayout(new BoxLayout(buttonsPanel, BoxLayout.Y_AXIS));
@@ -59,9 +66,9 @@ final class MainPanel extends JPanel {
         add(buttonsPanel, BorderLayout.EAST);
     }
 
-    final void addTableView(final String name, final RowCountGetter rowCountGetter, final ValueGetter valueGetter, final String text, final TableViewShower tableViewShower, final String... columnNames) {
-        final JPanel tablePanel = new JPanel(new BorderLayout());
-        setPanelNameAndCycleRootFocused(tablePanel, name);
+    final void addTableView(final String tablePanelName, final RowCountGetter rowCountGetter, final ValueGetter valueGetter, final String buttonText, final TableViewShower tableViewShower, final String showingDialogTitle, final String... columnNames) {
+        final JPanel tablePanel = createCycleRootFocusedPanel(new BorderLayout());
+        tablePanel.setName(tablePanelName);
 
         final JTable table = new JTable(new AbstractTableModel() {
             @Override
@@ -105,22 +112,24 @@ final class MainPanel extends JPanel {
 
         tablePanel.add(internalButtonsPanel, BorderLayout.SOUTH);
 
-        cardsPanel.add(tablePanel, name);
+        cardsPanel.add(tablePanel, tablePanelName);
 
-        final JButton button = DefaultView.createButton(text, e1 -> {
+        final JButton button = DefaultView.createButton(buttonText, e1 -> {
             final Controller controller = null;
 
             if (controller != null) {
                 tableViewShower.showTableView();
             } else {
-                if (!name.equals(ALL)) {
-                    final JDialog dialog = new JDialog();
+                if (!tablePanelName.equals(ALL)) {
+                    final JDialog dialog = DefaultView.createDialog(ownerFrame, showingDialogTitle);
                     // TODO
+                    dialog.setVisible(true);
                 }
-                ((CardLayout) cardsPanel.getLayout()).show(cardsPanel, name);
+                ((CardLayout) cardsPanel.getLayout()).show(cardsPanel, tablePanelName);
             }
         });
-        DefaultView.centerJComponentAndSetFont(button, Font.PLAIN, FONT_SIZE);
+        button.setAlignmentX(Component.CENTER_ALIGNMENT);
+        DefaultView.setJComponentFont(button, Font.PLAIN, FONT_SIZE);
         button.setMaximumSize(buttonDimension);
 
         buttonsPanel.add(Box.createRigidArea(new Dimension(0, 15)));
@@ -131,11 +140,6 @@ final class MainPanel extends JPanel {
         final JPanel panel = new JPanel(layout);
         panel.setFocusCycleRoot(true);
         return panel;
-    }
-
-    private static void setPanelNameAndCycleRootFocused(@NotNull final JPanel panel, final String name) {
-        panel.setName(name);
-        panel.setFocusCycleRoot(true);
     }
 
     private static void setEmptyBorder(@NotNull final JComponent component, final int top, final int left, final int bottom, final int right) {
