@@ -190,11 +190,6 @@ public final class DefaultView implements View {
         dialog.setVisible(true);
     }
 
-    private void addMainPanel(@NotNull final MainPanel mainPanel, final MainPanel.RowCountGetter rowCountGetter, final MainPanel.ValueGetter valueGetter, final MainPanel.TableViewShower tableViewShower, final String... columnNames) {
-        mainPanel.addTableView(MainPanel.ALL, rowCountGetter, valueGetter, "wszystkie", tableViewShower, null, columnNames);
-        tabbedPane.add(mainPanel);
-    }
-
     private void addWindowClosingListener(@NotNull final Window window) {
         window.addWindowListener(new WindowAdapter() {
             @Override
@@ -212,10 +207,6 @@ public final class DefaultView implements View {
         }
     }
 
-    private static GroupLayout.ParallelGroup createBaselineGroup(@NotNull final GroupLayout groupLayout) {
-        return groupLayout.createParallelGroup(GroupLayout.Alignment.BASELINE);
-    }
-
     static JButton createButton(final String text, final ActionListener actionListener) {
         final JButton button = new JButton(text);
         button.addActionListener(actionListener);
@@ -226,6 +217,11 @@ public final class DefaultView implements View {
     @Contract("_ -> new")
     private MainPanel createThisOwnedMainPanel(final String name) {
         return new MainPanel(name, frame);
+    }
+
+    private void addMainPanel(@NotNull final MainPanel mainPanel, final MainPanel.RowCountGetter rowCountGetter, final MainPanel.ValueGetter valueGetter, final MainPanel.TableViewShower tableViewShower, final String... columnNames) {
+        mainPanel.addTableView(MainPanel.ALL, rowCountGetter, valueGetter, "wszystkie", tableViewShower, null, columnNames);
+        tabbedPane.add(mainPanel);
     }
 
     static JLabel createLabel(final String text, final Dimension dimension, final int fontSize) {
@@ -246,5 +242,9 @@ public final class DefaultView implements View {
 
     static void setJComponentFont(@NotNull final JComponent jComponent, final int style, final int size) {
         jComponent.setFont(new Font(jComponent.getFont().getName(), style, size));
+    }
+
+    private static GroupLayout.ParallelGroup createBaselineGroup(@NotNull final GroupLayout groupLayout) {
+        return groupLayout.createParallelGroup(GroupLayout.Alignment.BASELINE);
     }
 }

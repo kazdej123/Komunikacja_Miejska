@@ -1,6 +1,7 @@
 package model;
 
 public interface Model {
+
     int getGminyRowCount();
 
     int getMiejscowosciByGminyRowCount();

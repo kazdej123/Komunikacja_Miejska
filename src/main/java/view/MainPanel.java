@@ -135,14 +135,14 @@ final class MainPanel extends JPanel {
         buttonsPanel.add(button);
     }
 
+    private static void setEmptyBorder(@NotNull final JComponent component, final int top, final int left, final int bottom, final int right) {
+        component.setBorder(BorderFactory.createEmptyBorder(top, left, bottom, right));
+    }
+
     private static JPanel createCycleRootFocusedPanel(final LayoutManager layout) {
         final JPanel panel = new JPanel(layout);
         panel.setFocusCycleRoot(true);
         return panel;
-    }
-
-    private static void setEmptyBorder(@NotNull final JComponent component, final int top, final int left, final int bottom, final int right) {
-        component.setBorder(BorderFactory.createEmptyBorder(top, left, bottom, right));
     }
 
     private static JButton createInternalButton(final String text, final ActionListener actionListener) {
