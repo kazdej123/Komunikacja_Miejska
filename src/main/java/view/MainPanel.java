@@ -16,7 +16,6 @@ import javax.swing.JTable;
 import javax.swing.table.AbstractTableModel;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
@@ -98,7 +97,7 @@ final class MainPanel extends JPanel {
             }
         });
         table.setAutoCreateRowSorter(true);
-        DefaultView.setJComponentFont(table.getTableHeader(), Font.BOLD, 12);
+        DefaultView.setJComponentBoldFont(table.getTableHeader(), 12);
 
         final JScrollPane scrollPane = new JScrollPane(table);
         setEmptyBorder(scrollPane, 20, 10, 10, 10);
@@ -121,15 +120,15 @@ final class MainPanel extends JPanel {
                 tableViewShower.showTableView();
             } else {
                 if (!tablePanelName.equals(ALL)) {
-                    final JDialog dialog = DefaultView.createDialog(ownerFrame, showingDialogTitle);
+                    final JDialog dialog = new JDialog(ownerFrame, showingDialogTitle);
                     // TODO
                     dialog.setVisible(true);
                 }
                 ((CardLayout) cardsPanel.getLayout()).show(cardsPanel, tablePanelName);
             }
         });
-        button.setAlignmentX(Component.CENTER_ALIGNMENT);
-        DefaultView.setJComponentFont(button, Font.PLAIN, FONT_SIZE);
+        DefaultView.centerJComponent(button);
+        setJComponentPlainFont(button, FONT_SIZE);
         button.setMaximumSize(buttonDimension);
 
         buttonsPanel.add(Box.createRigidArea(new Dimension(0, 15)));
@@ -148,8 +147,12 @@ final class MainPanel extends JPanel {
 
     private static JButton createInternalButton(final String text, final ActionListener actionListener) {
         final JButton button = DefaultView.createButton(text, actionListener);
-        DefaultView.setJComponentFont(button, Font.PLAIN, 18);
+        setJComponentPlainFont(button, 18);
         button.setPreferredSize(new Dimension(180, 40));
         return button;
+    }
+
+    private static void setJComponentPlainFont(final JComponent jComponent, final int size) {
+        DefaultView.setJComponentFont(jComponent, Font.PLAIN, size);
     }
 }
