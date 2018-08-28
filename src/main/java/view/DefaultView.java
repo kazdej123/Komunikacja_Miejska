@@ -246,4 +246,15 @@ public final class DefaultView implements View {
     private static GroupLayout.ParallelGroup createBaselineGroup(@NotNull final GroupLayout groupLayout) {
         return groupLayout.createParallelGroup(GroupLayout.Alignment.BASELINE);
     }
+
+    @NotNull
+    @Contract(pure = true)
+    @Override
+    public final String toString() {
+        return "DefaultView{" +
+                "controller=" + controller +
+                ", frame=" + frame +
+                ", tabbedPane=" + tabbedPane +
+                "} " + super.toString();
+    }
 }
