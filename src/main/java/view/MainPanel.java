@@ -155,14 +155,4 @@ final class MainPanel extends JPanel {
     private static void setJComponentPlainFont(final JComponent jComponent, final int size) {
         DefaultView.setJComponentFont(jComponent, Font.PLAIN, size);
     }
-
-    @NotNull
-    @Override
-    public final String toString() {
-        return "MainPanel{" +
-                "cardsPanel=" + cardsPanel +
-                ", buttonsPanel=" + buttonsPanel +
-                ", ownerFrame=" + ownerFrame +
-                "} " + super.toString();
-    }
 }
