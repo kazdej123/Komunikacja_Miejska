@@ -13,6 +13,7 @@ import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.WindowConstants;
 import javax.swing.table.AbstractTableModel;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
@@ -22,6 +23,8 @@ import java.awt.Font;
 import java.awt.Frame;
 import java.awt.LayoutManager;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 final class MainPanel extends JPanel {
     static final String ALL = "All";
@@ -50,6 +53,16 @@ final class MainPanel extends JPanel {
         void showTableView();
     }
 
+    static final class TableViewNames {
+        private final String tablePanelName;
+        private final String choosingDialogTitle;
+
+        TableViewNames(final String tablePanelName, final String choosingDialogTitle) {
+            this.tablePanelName = tablePanelName;
+            this.choosingDialogTitle = choosingDialogTitle;
+        }
+    }
+
     MainPanel(final String name, final Frame ownerFrame) {
         super(new BorderLayout());
         this.ownerFrame = ownerFrame;
@@ -65,8 +78,11 @@ final class MainPanel extends JPanel {
         add(buttonsPanel, BorderLayout.EAST);
     }
 
-    final void addTableView(final String tablePanelName, final RowCountGetter rowCountGetter, final ValueGetter valueGetter, final String buttonText, final TableViewShower tableViewShower, final String showingDialogTitle, final String... columnNames) {
+    final void addTableView(final TableViewNames tableViewNames, final RowCountGetter rowCountGetter, final ValueGetter valueGetter, final String buttonText, final TableViewShower tableViewShower, final String... columnNames) {
         final JPanel tablePanel = createCycleRootFocusedPanel(new BorderLayout());
+
+        final String tablePanelName = tableViewNames.tablePanelName;
+
         tablePanel.setName(tablePanelName);
 
         final JTable table = new JTable(new AbstractTableModel() {
@@ -120,9 +136,10 @@ final class MainPanel extends JPanel {
                 tableViewShower.showTableView();
             } else {
                 if (!tablePanelName.equals(ALL)) {
-                    final JDialog dialog = new JDialog(ownerFrame, showingDialogTitle);
+                    final JDialog dialog = new JDialog(ownerFrame, "Wybierz " + tableViewNames.choosingDialogTitle);
+                    DefaultView.initDialog(dialog, null, null, WindowConstants.DISPOSE_ON_CLOSE); // TODO
                     // TODO
-                    dialog.setVisible(true);
+//                    dialog.setVisible(true);
                 }
                 ((CardLayout) cardsPanel.getLayout()).show(cardsPanel, tablePanelName);
             }
