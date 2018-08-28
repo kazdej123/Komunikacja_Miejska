@@ -30,10 +30,10 @@ final class MainPanel extends JPanel {
 
     private static final Dimension buttonDimension = new Dimension(14 * FONT_SIZE, 45);
 
-    private final Frame ownerFrame;
-
     private final JPanel cardsPanel = createCycleRootFocusedPanel(new CardLayout());
     private final JPanel buttonsPanel = createCycleRootFocusedPanel(null);
+
+    private final Frame ownerFrame;
 
     @FunctionalInterface
     interface RowCountGetter {

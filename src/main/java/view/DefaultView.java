@@ -37,8 +37,6 @@ public final class DefaultView implements View {
     public final void showLoginDialog() {
         final JDialog dialog = new JDialog((Frame) null, "Okno logowania");
 
-        addWindowClosingListener(dialog);
-
         final Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 
         final int screenWidth = screenSize.width;
@@ -159,10 +157,10 @@ public final class DefaultView implements View {
                     tabbedPane.setTabComponentAt(i, createLabel(tabbedPane.getTitleAt(i), new Dimension(150, 56), 18));
                 }
                 frame.add(tabbedPane);
-                addWindowClosingListener(frame);
                 frame.setSize(screenWidth, screenHeight);
                 frame.setExtendedState(Frame.MAXIMIZED_BOTH);
                 frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+                addWindowClosingListener(frame);
                 frame.setVisible(true);
             }
         });
@@ -176,7 +174,7 @@ public final class DefaultView implements View {
         final JTextField usernameField = new JTextField("", 20);
         final JPasswordField passwordField = new JPasswordField("", 20);
 
-        final JButton cancelButton = createButton("Anuluj", e -> closeWindow(dialog));
+        final JButton cancelButton = createButton("Anuluj", e -> exit());
 
         groupLayout.setHorizontalGroup(groupLayout.createParallelGroup(GroupLayout.Alignment.CENTER).addGroup(groupLayout.createSequentialGroup().addGroup(groupLayout.createParallelGroup(GroupLayout.Alignment.TRAILING).addComponent(usernameLabel).addComponent(passwordLabel)).addGroup(groupLayout.createParallelGroup(GroupLayout.Alignment.LEADING).addComponent(usernameField).addComponent(passwordField))).addGroup(groupLayout.createSequentialGroup().addComponent(loginButton).addComponent(cancelButton)));
         groupLayout.setVerticalGroup(groupLayout.createSequentialGroup().addGroup(createBaselineGroup(groupLayout).addComponent(usernameLabel).addComponent(usernameField)).addGroup(createBaselineGroup(groupLayout).addComponent(passwordLabel).addComponent(passwordField)).addGroup(createBaselineGroup(groupLayout).addComponent(loginButton).addComponent(cancelButton)));
@@ -186,6 +184,7 @@ public final class DefaultView implements View {
         dialog.setLocation((screenWidth - dialog.getWidth()) / 2, (screenHeight - dialog.getHeight()) / 2);
         dialog.setResizable(false);
         dialog.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+        addWindowClosingListener(dialog);
         dialog.getRootPane().setDefaultButton(loginButton);
         dialog.setVisible(true);
     }
@@ -194,16 +193,16 @@ public final class DefaultView implements View {
         window.addWindowListener(new WindowAdapter() {
             @Override
             public final void windowClosing(final WindowEvent e) {
-                closeWindow(window);
+                exit();
             }
         });
     }
 
-    private void closeWindow(final Window window) {
+    private void exit() {
         if (controller != null) {
             controller.exit();
         } else {
-            window.dispose();
+            System.exit(0);
         }
     }
 
