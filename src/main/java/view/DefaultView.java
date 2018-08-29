@@ -96,34 +96,28 @@ public final class DefaultView implements View {
                 final TableViewNames dniKursowaniaNames = new TableViewNames("DniKursowania", "dzień kursowania");
 
                 final MainPanel gminyMainPanel = createThisOwnedMainPanel("Gminy");
-
                 addMainPanel(gminyMainPanel, () -> model.getGminyRowCount(), () -> model.getGminyValueAt(), () -> controller.showGminy(), idGminy, nazwaGminy);
 
                 final MainPanel miejscowosciMainPanel = createThisOwnedMainPanel("Miejscowości");
                 miejscowosciMainPanel.addTableView(gminyNames, () -> model.getMiejscowosciByGminyRowCount(), () -> model.getMiejscowosciByGminyValueAt(), "w danej gminie", () -> controller.showMiejscowosciByGminy(), idMiejscowosci, nazwaMiejscowosci);
-
                 addMainPanel(miejscowosciMainPanel, () -> model.getMiejscowosciRowCount(), () -> model.getMiejscowosciValueAt(), () -> controller.showMiejscowosci(), idMiejscowosci, nazwaMiejscowosci, gmina);
 
                 final MainPanel uliceMainPanel = createThisOwnedMainPanel("Ulice");
                 uliceMainPanel.addTableView(miejscowosciNames, () -> model.getUliceByMiejscowosciRowCount(), () -> model.getUliceByMiejscowosciValueAt(), "w danej miejscowości", () -> controller.showUliceByMiejscowosci(), idUlicy, nazwaUlicy);
                 uliceMainPanel.addTableView(gminyNames, () -> model.getUliceByGminyRowCount(), () -> model.getUliceByGminyValueAt(), "w danej gminie", () -> controller.showUliceByGminy(), idUlicy, nazwaUlicy, miejscowosc);
-
                 addMainPanel(uliceMainPanel, () -> model.getUliceRowCount(), () -> model.getUliceValueAt(), () -> controller.showUlice(), idUlicy, nazwaUlicy, miejscowosc, gmina);
 
                 final MainPanel przystankiMainPanel = createThisOwnedMainPanel("Przystanki");
                 przystankiMainPanel.addTableView(uliceNames, () -> model.getPrzystankiByUliceRowCount(), () -> model.getPrzystankiByUliceValueAt(), "przy danej ulicy", () -> controller.showPrzystankiByUlice(), idPrzystanku, nazwaPrzystanku, typPrzystanku);
                 przystankiMainPanel.addTableView(miejscowosciNames, () -> model.getPrzystankiByMiejscowosciRowCount(), () -> model.getPrzystankiByMiejscowosciValueAt(), "w danej miejscowości", () -> controller.showPrzystankiByMiejscowosci(), idPrzystanku, nazwaPrzystanku, ulica, typPrzystanku);
                 przystankiMainPanel.addTableView(gminyNames, () -> model.getPrzystankiByGminyRowCount(), () -> model.getPrzystankiByGminyValueAt(), "w danej gminie", () -> controller.showPrzystankiByGminy(), idPrzystanku, nazwaPrzystanku, ulica, miejscowosc, typPrzystanku);
-
                 addMainPanel(przystankiMainPanel, () -> model.getPrzystankiRowCount(), () -> model.getPrzystankiValueAt(), () -> controller.showPrzystanki(), idPrzystanku, nazwaPrzystanku, ulica, miejscowosc, gmina, typPrzystanku);
 
                 final MainPanel linieMainPanel = createThisOwnedMainPanel("Linie");
-
                 addMainPanel(linieMainPanel, () -> model.getLinieRowCount(), () -> model.getLinieValueAt(), () -> controller.showLinie(), nrLinii, autobusCzyTramwaj, dziennaCzyNocna, liniaWaznaOd, uwagi);
 
                 final MainPanel podlinieMainPanel = createThisOwnedMainPanel("Podlinie");
                 podlinieMainPanel.addTableView(linieNames, () -> model.getPodlinieByLinieRowCount(), () -> model.getPodlinieByLinieValueAt(), "danej linii", () -> controller.showPodlinieByLinie(), idPodlinii, uwagi);
-
                 addMainPanel(podlinieMainPanel, () -> model.getPodlinieRowCount(), () -> model.getPodlinieValueAt(), () -> controller.showPodlinie(), idPodlinii, linia, uwagi);
 
                 final MainPanel rozkladyJazdyMainPanel = createThisOwnedMainPanel("Rozkłady jazdy");
@@ -133,11 +127,9 @@ public final class DefaultView implements View {
                 rozkladyJazdyMainPanel.addTableView(uliceNames, () -> model.getRozkladyJazdyByUliceRowCount(), () -> model.getRozkladyJazdyByUliceValueAt(), "przy danej ulicy", () -> controller.showRozkladyJazdyByUlice(), nrPorzadkowy, idRozkladu, podlinia, linia, idPrzystanku, przystanek, typPrzystanku);
                 rozkladyJazdyMainPanel.addTableView(miejscowosciNames, () -> model.getRozkladyJazdyByMiejscowosciRowCount(), () -> model.getRozkladyJazdyByMiejscowosciValueAt(), "w danej miejscowości", () -> controller.showRozkladyJazdyByMiejscowosci(), nrPorzadkowy, idRozkladu, podlinia, linia, idPrzystanku, przystanek, ulica, typPrzystanku);
                 rozkladyJazdyMainPanel.addTableView(gminyNames, () -> model.getRozkladyJazdyByGminyRowCount(), () -> model.getRozkladyJazdyByGminyValueAt(), "w danej gminie", () -> controller.showRozkladyJazdyByGminy(), nrPorzadkowy, idRozkladu, podlinia, linia, idPrzystanku, przystanek, ulica, miejscowosc, typPrzystanku);
-
                 addMainPanel(rozkladyJazdyMainPanel, () -> model.getRozkladyJazdyRowCount(), () -> model.getRozkladyJazdyValueAt(), () -> controller.showRozkladyJazdy(), nrPorzadkowy, idRozkladu, podlinia, linia, idPrzystanku, przystanek, ulica, miejscowosc, gmina, typPrzystanku);
 
                 final MainPanel dniKursowaniaMainPanel = createThisOwnedMainPanel("Dni kursowania");
-
                 addMainPanel(dniKursowaniaMainPanel, () -> model.getDniKursowaniaRowCount(), () -> model.getDniKursowaniaValueAt(), () -> controller.showDniKursowania(), idDnia, nazwaDnia);
 
                 final MainPanel kursyMainPanel = createThisOwnedMainPanel("Kursy");
@@ -149,11 +141,9 @@ public final class DefaultView implements View {
                 kursyMainPanel.addTableView(uliceNames, () -> model.getKursyByUliceRowCount(), () -> model.getKursyByUliceValueAt(), "przy danej ulicy", () -> controller.showKursyByUlice(), podlinia, linia, idPrzystanku, przystanek, typPrzystanku, dzienKursowania, godzina, uwagi);
                 kursyMainPanel.addTableView(miejscowosciNames, () -> model.getKursyByMiejscowosciRowCount(), () -> model.getKursyByMiejscowosciValueAt(), "w danej miejscowości", () -> controller.showKursyByMiejscowosci(), podlinia, linia, idPrzystanku, przystanek, ulica, typPrzystanku, dzienKursowania, godzina, uwagi);
                 kursyMainPanel.addTableView(gminyNames, () -> model.getKursyByGminyRowCount(), () -> model.getKursyByGminyValueAt(), "w danej gminie", () -> controller.showKursyByGminy(), podlinia, linia, idPrzystanku, przystanek, ulica, miejscowosc, typPrzystanku, dzienKursowania, godzina, uwagi);
-
                 addMainPanel(kursyMainPanel, () -> model.getKursyRowCount(), () -> model.getKursyValueAt(), () -> controller.showKursy(), podlinia, linia, idPrzystanku, przystanek, ulica, miejscowosc, gmina, typPrzystanku, dzienKursowania, godzina, uwagi);
 
                 final MainPanel logiMainPanel = createThisOwnedMainPanel("Logi");
-
                 addMainPanel(logiMainPanel, () -> model.getLogiRowCount(), () -> model.getLogiValueAt(), () -> controller.showLogi(), dataModyfikacji, tresc);
 
                 for (int i = 0; i < tabbedPane.getTabCount(); i++) {
@@ -168,9 +158,7 @@ public final class DefaultView implements View {
             }
         });
 
-        final GroupLayout groupLayout = new GroupLayout(dialog.getContentPane());
-        groupLayout.setAutoCreateGaps(true);
-        groupLayout.setAutoCreateContainerGaps(true);
+        final GroupLayout groupLayout = createGroupLayout(dialog);
 
         final JLabel usernameLabel = new JLabel("Nazwa użytkownika: ");
         final JLabel passwordLabel = new JLabel("Hasło: ");
@@ -184,34 +172,6 @@ public final class DefaultView implements View {
 
         addWindowClosingListener(dialog);
         initDialog(dialog, groupLayout, loginButton, WindowConstants.DO_NOTHING_ON_CLOSE);
-    }
-
-    static void initDialog(@NotNull final JDialog dialog, final LayoutManager layout, final JButton defaultButton, final int closeOperation) {
-        dialog.setModal(true);
-        dialog.setLayout(layout);
-        dialog.pack();
-        dialog.setLocation((SCREEN_WIDTH - dialog.getWidth()) / 2, (SCREEN_HEIGHT - dialog.getHeight()) / 2);
-        dialog.setResizable(false);
-        dialog.getRootPane().setDefaultButton(defaultButton);
-        dialog.setDefaultCloseOperation(closeOperation);
-        dialog.setVisible(true);
-    }
-
-    private void addWindowClosingListener(@NotNull final Window window) {
-        window.addWindowListener(new WindowAdapter() {
-            @Override
-            public final void windowClosing(final WindowEvent e) {
-                exit();
-            }
-        });
-    }
-
-    private void exit() {
-        if (controller != null) {
-            controller.exit();
-        } else {
-            System.exit(0);
-        }
     }
 
     static JButton createButton(final String text, final ActionListener actionListener) {
@@ -251,7 +211,42 @@ public final class DefaultView implements View {
         jComponent.setFont(new Font(jComponent.getFont().getName(), style, size));
     }
 
+    private void addWindowClosingListener(@NotNull final Window window) {
+        window.addWindowListener(new WindowAdapter() {
+            @Override
+            public final void windowClosing(final WindowEvent e) {
+                exit();
+            }
+        });
+    }
+
+    private void exit() {
+        if (controller != null) {
+            controller.exit();
+        } else {
+            System.exit(0);
+        }
+    }
+
+    static GroupLayout createGroupLayout(@NotNull final JDialog dialog) {
+        final GroupLayout groupLayout = new GroupLayout(dialog.getContentPane());
+        groupLayout.setAutoCreateGaps(true);
+        groupLayout.setAutoCreateContainerGaps(true);
+        return groupLayout;
+    }
+
     private static GroupLayout.ParallelGroup createBaselineGroup(@NotNull final GroupLayout groupLayout) {
         return groupLayout.createParallelGroup(GroupLayout.Alignment.BASELINE);
+    }
+
+    static void initDialog(@NotNull final JDialog dialog, final LayoutManager layout, final JButton defaultButton, final int closeOperation) {
+        dialog.setModal(true);
+        dialog.setLayout(layout);
+        dialog.pack();
+        dialog.setLocation((SCREEN_WIDTH - dialog.getWidth()) / 2, (SCREEN_HEIGHT - dialog.getHeight()) / 2);
+        dialog.setResizable(false);
+        dialog.getRootPane().setDefaultButton(defaultButton);
+        dialog.setDefaultCloseOperation(closeOperation);
+        dialog.setVisible(true);
     }
 }

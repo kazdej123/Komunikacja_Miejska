@@ -7,6 +7,7 @@ import org.jetbrains.annotations.NotNull;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.GroupLayout;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
@@ -23,8 +24,6 @@ import java.awt.Font;
 import java.awt.Frame;
 import java.awt.LayoutManager;
 import java.awt.event.ActionListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 
 final class MainPanel extends JPanel {
     static final String ALL = "All";
@@ -78,7 +77,7 @@ final class MainPanel extends JPanel {
         add(buttonsPanel, BorderLayout.EAST);
     }
 
-    final void addTableView(final TableViewNames tableViewNames, final RowCountGetter rowCountGetter, final ValueGetter valueGetter, final String buttonText, final TableViewShower tableViewShower, final String... columnNames) {
+    final void addTableView(@NotNull final TableViewNames tableViewNames, final RowCountGetter rowCountGetter, final ValueGetter valueGetter, final String buttonText, final TableViewShower tableViewShower, final String... columnNames) {
         final JPanel tablePanel = createCycleRootFocusedPanel(new BorderLayout());
 
         final String tablePanelName = tableViewNames.tablePanelName;
@@ -137,9 +136,11 @@ final class MainPanel extends JPanel {
             } else {
                 if (!tablePanelName.equals(ALL)) {
                     final JDialog dialog = new JDialog(ownerFrame, "Wybierz " + tableViewNames.choosingDialogTitle);
-                    DefaultView.initDialog(dialog, null, null, WindowConstants.DISPOSE_ON_CLOSE); // TODO
+
+                    final GroupLayout groupLayout = DefaultView.createGroupLayout(dialog);
+
+                    //DefaultView.initDialog(dialog, groupLayout, okButton, WindowConstants.DISPOSE_ON_CLOSE);
                     // TODO
-//                    dialog.setVisible(true);
                 }
                 ((CardLayout) cardsPanel.getLayout()).show(cardsPanel, tablePanelName);
             }
