@@ -65,4 +65,66 @@ public interface Controller {
     void showKursy();
 
     void showLogi();
+
+    void addGminy();
+
+    void addMiejscowosciByGminy();
+
+    void addMiejscowosci();
+
+    void addUliceByMiejscowosci();
+
+    void addUliceByGminy();
+
+    void addUlice();
+
+    void addPrzystankiByUlice();
+
+    void addPrzystankiByMiejscowosci();
+
+    void addPrzystankiByGminy();
+
+    void addPrzystanki();
+
+    void addLinie();
+
+    void addPodlinieByLinie();
+
+    void addPodlinie();
+
+    void addRozkladyJazdyByPodlinie();
+
+    void addRozkladyJazdyByLinie();
+
+    void addRozkladyJazdyByPrzystanki();
+
+    void addRozkladyJazdyByUlice();
+
+    void addRozkladyJazdyByMiejscowosci();
+
+    void addRozkladyJazdyByGminy();
+
+    void addRozkladyJazdy();
+
+    void addDniKursowania();
+
+    void addKursyByDniKursowania();
+
+    void addKursyByRozkladyJazdy();
+
+    void addKursyByPodlinie();
+
+    void addKursyByLinie();
+
+    void addKursyByPrzystanki();
+
+    void addKursyByUlice();
+
+    void addKursyByMiejscowosci();
+
+    void addKursyByGminy();
+
+    void addKursy();
+
+    void addLogi();
 }

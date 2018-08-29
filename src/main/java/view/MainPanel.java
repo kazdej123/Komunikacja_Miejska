@@ -19,6 +19,8 @@ import java.awt.Font;
 import java.awt.Frame;
 import java.awt.LayoutManager;
 import java.awt.event.ActionListener;
+import java.util.function.IntSupplier;
+import java.util.function.Supplier;
 
 final class MainPanel extends JPanel {
     static final String ALL = "All";
@@ -31,21 +33,6 @@ final class MainPanel extends JPanel {
     private final JPanel buttonsPanel = createCycleRootFocusedPanel(null);
 
     private final Frame ownerFrame;
-
-    @FunctionalInterface
-    interface RowCountGetter {
-        int getRowCount();
-    }
-
-    @FunctionalInterface
-    interface ValueGetter {
-        Object getValueAt();
-    }
-
-    @FunctionalInterface
-    interface TableViewShower {
-        void showTableView();
-    }
 
     static final class TableViewNames {
         private final String tablePanelName;
@@ -72,7 +59,7 @@ final class MainPanel extends JPanel {
         add(buttonsPanel, BorderLayout.EAST);
     }
 
-    final void addTableView(@NotNull final TableViewNames tableViewNames, final RowCountGetter rowCountGetter, final ValueGetter valueGetter, final String buttonText, final TableViewShower tableViewShower, final String... columnNames) {
+    final void addTableView(@NotNull final TableViewNames tableViewNames, final IntSupplier intSupplier, final Supplier<Object> objectSupplier, final String buttonText, final Runnable showTableViewRunnable, final Runnable addRowRunnable, final String... columnNames) {
         final JPanel tablePanel = createCycleRootFocusedPanel(new BorderLayout());
 
         final String tablePanelName = tableViewNames.tablePanelName;
@@ -93,7 +80,7 @@ final class MainPanel extends JPanel {
             @Override
             public final int getRowCount() {
                 try {
-                    return rowCountGetter.getRowCount();
+                    return intSupplier.getAsInt();
                 } catch (final NullPointerException e) {
                     return 0;
                 }
@@ -101,7 +88,7 @@ final class MainPanel extends JPanel {
 
             @Override
             public final Object getValueAt(final int rowIndex, final int columnIndex) {
-                return valueGetter.getValueAt();
+                return objectSupplier.get();
             }
         });
         table.setAutoCreateRowSorter(true);
@@ -113,7 +100,13 @@ final class MainPanel extends JPanel {
         tablePanel.add(scrollPane, BorderLayout.CENTER);
 
         final JPanel internalButtonsPanel = createCycleRootFocusedPanel(new FlowLayout());
-        addInternalButton(internalButtonsPanel, "Dodaj rekord", null); // TODO
+        addInternalButton(internalButtonsPanel, "Dodaj rekord", e -> {
+            try {
+                addRowRunnable.run();
+            } catch (final NullPointerException e1) {
+                // TODO
+            }
+        });
         addInternalButton(internalButtonsPanel, "Usuń rekordy", null); // TODO
         setEmptyBorder(internalButtonsPanel, 10, 10, 30, 10);
 
@@ -123,7 +116,7 @@ final class MainPanel extends JPanel {
 
         final JButton button = DefaultView.createButton(buttonText, e -> {
             try {
-                tableViewShower.showTableView();
+                showTableViewRunnable.run();
             } catch (final NullPointerException e1) {
                 ((CardLayout) cardsPanel.getLayout()).show(cardsPanel, tablePanelName);
             }

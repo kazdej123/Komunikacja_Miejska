@@ -21,6 +21,8 @@ import java.awt.Window;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.function.IntSupplier;
+import java.util.function.Supplier;
 
 import static view.MainPanel.TableViewNames;
 
@@ -82,55 +84,55 @@ public final class DefaultView implements View {
         final TableViewNames dniKursowaniaNames = new TableViewNames("DniKursowania", "dzień kursowania");
 
         final MainPanel gminyMainPanel = createThisOwnedMainPanel("Gminy");
-        addMainPanel(gminyMainPanel, () -> model.getGminyRowCount(), () -> model.getGminyValueAt(), () -> controller.showGminy(), idGminy, nazwaGminy);
+        addMainPanel(gminyMainPanel, () -> model.getGminyRowCount(), () -> model.getGminyValueAt(), () -> controller.showGminy(), () -> controller.addGminy(), idGminy, nazwaGminy);
 
         final MainPanel miejscowosciMainPanel = createThisOwnedMainPanel("Miejscowości");
-        miejscowosciMainPanel.addTableView(gminyNames, () -> model.getMiejscowosciByGminyRowCount(), () -> model.getMiejscowosciByGminyValueAt(), "w danej gminie", () -> controller.showMiejscowosciByGminy(), idMiejscowosci, nazwaMiejscowosci);
-        addMainPanel(miejscowosciMainPanel, () -> model.getMiejscowosciRowCount(), () -> model.getMiejscowosciValueAt(), () -> controller.showMiejscowosci(), idMiejscowosci, nazwaMiejscowosci, gmina);
+        miejscowosciMainPanel.addTableView(gminyNames, () -> model.getMiejscowosciByGminyRowCount(), () -> model.getMiejscowosciByGminyValueAt(), "w danej gminie", () -> controller.showMiejscowosciByGminy(), () -> controller.addMiejscowosciByGminy(), idMiejscowosci, nazwaMiejscowosci);
+        addMainPanel(miejscowosciMainPanel, () -> model.getMiejscowosciRowCount(), () -> model.getMiejscowosciValueAt(), () -> controller.showMiejscowosci(), () -> controller.addMiejscowosci(), idMiejscowosci, nazwaMiejscowosci, gmina);
 
         final MainPanel uliceMainPanel = createThisOwnedMainPanel("Ulice");
-        uliceMainPanel.addTableView(miejscowosciNames, () -> model.getUliceByMiejscowosciRowCount(), () -> model.getUliceByMiejscowosciValueAt(), "w danej miejscowości", () -> controller.showUliceByMiejscowosci(), idUlicy, nazwaUlicy);
-        uliceMainPanel.addTableView(gminyNames, () -> model.getUliceByGminyRowCount(), () -> model.getUliceByGminyValueAt(), "w danej gminie", () -> controller.showUliceByGminy(), idUlicy, nazwaUlicy, miejscowosc);
-        addMainPanel(uliceMainPanel, () -> model.getUliceRowCount(), () -> model.getUliceValueAt(), () -> controller.showUlice(), idUlicy, nazwaUlicy, miejscowosc, gmina);
+        uliceMainPanel.addTableView(miejscowosciNames, () -> model.getUliceByMiejscowosciRowCount(), () -> model.getUliceByMiejscowosciValueAt(), "w danej miejscowości", () -> controller.showUliceByMiejscowosci(), () -> controller.addUliceByMiejscowosci(), idUlicy, nazwaUlicy);
+        uliceMainPanel.addTableView(gminyNames, () -> model.getUliceByGminyRowCount(), () -> model.getUliceByGminyValueAt(), "w danej gminie", () -> controller.showUliceByGminy(), () -> controller.addUliceByGminy(), idUlicy, nazwaUlicy, miejscowosc);
+        addMainPanel(uliceMainPanel, () -> model.getUliceRowCount(), () -> model.getUliceValueAt(), () -> controller.showUlice(), () -> controller.addUlice(), idUlicy, nazwaUlicy, miejscowosc, gmina);
 
         final MainPanel przystankiMainPanel = createThisOwnedMainPanel("Przystanki");
-        przystankiMainPanel.addTableView(uliceNames, () -> model.getPrzystankiByUliceRowCount(), () -> model.getPrzystankiByUliceValueAt(), "przy danej ulicy", () -> controller.showPrzystankiByUlice(), idPrzystanku, nazwaPrzystanku, typPrzystanku);
-        przystankiMainPanel.addTableView(miejscowosciNames, () -> model.getPrzystankiByMiejscowosciRowCount(), () -> model.getPrzystankiByMiejscowosciValueAt(), "w danej miejscowości", () -> controller.showPrzystankiByMiejscowosci(), idPrzystanku, nazwaPrzystanku, ulica, typPrzystanku);
-        przystankiMainPanel.addTableView(gminyNames, () -> model.getPrzystankiByGminyRowCount(), () -> model.getPrzystankiByGminyValueAt(), "w danej gminie", () -> controller.showPrzystankiByGminy(), idPrzystanku, nazwaPrzystanku, ulica, miejscowosc, typPrzystanku);
-        addMainPanel(przystankiMainPanel, () -> model.getPrzystankiRowCount(), () -> model.getPrzystankiValueAt(), () -> controller.showPrzystanki(), idPrzystanku, nazwaPrzystanku, ulica, miejscowosc, gmina, typPrzystanku);
+        przystankiMainPanel.addTableView(uliceNames, () -> model.getPrzystankiByUliceRowCount(), () -> model.getPrzystankiByUliceValueAt(), "przy danej ulicy", () -> controller.showPrzystankiByUlice(), () -> controller.addPrzystankiByUlice(), idPrzystanku, nazwaPrzystanku, typPrzystanku);
+        przystankiMainPanel.addTableView(miejscowosciNames, () -> model.getPrzystankiByMiejscowosciRowCount(), () -> model.getPrzystankiByMiejscowosciValueAt(), "w danej miejscowości", () -> controller.showPrzystankiByMiejscowosci(), () -> controller.addPrzystankiByMiejscowosci(), idPrzystanku, nazwaPrzystanku, ulica, typPrzystanku);
+        przystankiMainPanel.addTableView(gminyNames, () -> model.getPrzystankiByGminyRowCount(), () -> model.getPrzystankiByGminyValueAt(), "w danej gminie", () -> controller.showPrzystankiByGminy(), () -> controller.addPrzystankiByGminy(), idPrzystanku, nazwaPrzystanku, ulica, miejscowosc, typPrzystanku);
+        addMainPanel(przystankiMainPanel, () -> model.getPrzystankiRowCount(), () -> model.getPrzystankiValueAt(), () -> controller.showPrzystanki(), () -> controller.addPrzystanki(), idPrzystanku, nazwaPrzystanku, ulica, miejscowosc, gmina, typPrzystanku);
 
         final MainPanel linieMainPanel = createThisOwnedMainPanel("Linie");
-        addMainPanel(linieMainPanel, () -> model.getLinieRowCount(), () -> model.getLinieValueAt(), () -> controller.showLinie(), nrLinii, autobusCzyTramwaj, dziennaCzyNocna, liniaWaznaOd, uwagi);
+        addMainPanel(linieMainPanel, () -> model.getLinieRowCount(), () -> model.getLinieValueAt(), () -> controller.showLinie(), () -> controller.addLinie(), nrLinii, autobusCzyTramwaj, dziennaCzyNocna, liniaWaznaOd, uwagi);
 
         final MainPanel podlinieMainPanel = createThisOwnedMainPanel("Podlinie");
-        podlinieMainPanel.addTableView(linieNames, () -> model.getPodlinieByLinieRowCount(), () -> model.getPodlinieByLinieValueAt(), "danej linii", () -> controller.showPodlinieByLinie(), idPodlinii, uwagi);
-        addMainPanel(podlinieMainPanel, () -> model.getPodlinieRowCount(), () -> model.getPodlinieValueAt(), () -> controller.showPodlinie(), idPodlinii, linia, uwagi);
+        podlinieMainPanel.addTableView(linieNames, () -> model.getPodlinieByLinieRowCount(), () -> model.getPodlinieByLinieValueAt(), "danej linii", () -> controller.showPodlinieByLinie(), () -> controller.addPodlinieByLinie(), idPodlinii, uwagi);
+        addMainPanel(podlinieMainPanel, () -> model.getPodlinieRowCount(), () -> model.getPodlinieValueAt(), () -> controller.showPodlinie(), () -> controller.addPodlinie(), idPodlinii, linia, uwagi);
 
         final MainPanel rozkladyJazdyMainPanel = createThisOwnedMainPanel("Rozkłady jazdy");
-        rozkladyJazdyMainPanel.addTableView(podlinieNames, () -> model.getRozkladyJazdyByPodlinieRowCount(), () -> model.getRozkladyJazdyByPodlinieValueAt(), "danej podlinii", () -> controller.showRozkladyJazdyByPodlinie(), nrPorzadkowy, idRozkladu, idPrzystanku, przystanek, ulica, miejscowosc, gmina, typPrzystanku);
-        rozkladyJazdyMainPanel.addTableView(linieNames, () -> model.getRozkladyJazdyByLinieRowCount(), () -> model.getRozkladyJazdyByLinieValueAt(), "danej linii", () -> controller.showRozkladyJazdyByLinie(), nrPorzadkowy, idRozkladu, podlinia, idPrzystanku, przystanek, ulica, miejscowosc, gmina, typPrzystanku);
-        rozkladyJazdyMainPanel.addTableView(przystankiNames, () -> model.getRozkladyJazdyByPrzystankiRowCount(), () -> model.getRozkladyJazdyByPrzystankiValueAt(), "na danym przystanku", () -> controller.showRozkladyJazdyByPrzystanki(), nrPorzadkowy, idRozkladu, podlinia, linia);
-        rozkladyJazdyMainPanel.addTableView(uliceNames, () -> model.getRozkladyJazdyByUliceRowCount(), () -> model.getRozkladyJazdyByUliceValueAt(), "przy danej ulicy", () -> controller.showRozkladyJazdyByUlice(), nrPorzadkowy, idRozkladu, podlinia, linia, idPrzystanku, przystanek, typPrzystanku);
-        rozkladyJazdyMainPanel.addTableView(miejscowosciNames, () -> model.getRozkladyJazdyByMiejscowosciRowCount(), () -> model.getRozkladyJazdyByMiejscowosciValueAt(), "w danej miejscowości", () -> controller.showRozkladyJazdyByMiejscowosci(), nrPorzadkowy, idRozkladu, podlinia, linia, idPrzystanku, przystanek, ulica, typPrzystanku);
-        rozkladyJazdyMainPanel.addTableView(gminyNames, () -> model.getRozkladyJazdyByGminyRowCount(), () -> model.getRozkladyJazdyByGminyValueAt(), "w danej gminie", () -> controller.showRozkladyJazdyByGminy(), nrPorzadkowy, idRozkladu, podlinia, linia, idPrzystanku, przystanek, ulica, miejscowosc, typPrzystanku);
-        addMainPanel(rozkladyJazdyMainPanel, () -> model.getRozkladyJazdyRowCount(), () -> model.getRozkladyJazdyValueAt(), () -> controller.showRozkladyJazdy(), nrPorzadkowy, idRozkladu, podlinia, linia, idPrzystanku, przystanek, ulica, miejscowosc, gmina, typPrzystanku);
+        rozkladyJazdyMainPanel.addTableView(podlinieNames, () -> model.getRozkladyJazdyByPodlinieRowCount(), () -> model.getRozkladyJazdyByPodlinieValueAt(), "danej podlinii", () -> controller.showRozkladyJazdyByPodlinie(), () -> controller.addRozkladyJazdyByPodlinie(), nrPorzadkowy, idRozkladu, idPrzystanku, przystanek, ulica, miejscowosc, gmina, typPrzystanku);
+        rozkladyJazdyMainPanel.addTableView(linieNames, () -> model.getRozkladyJazdyByLinieRowCount(), () -> model.getRozkladyJazdyByLinieValueAt(), "danej linii", () -> controller.showRozkladyJazdyByLinie(), () -> controller.addRozkladyJazdyByLinie(), nrPorzadkowy, idRozkladu, podlinia, idPrzystanku, przystanek, ulica, miejscowosc, gmina, typPrzystanku);
+        rozkladyJazdyMainPanel.addTableView(przystankiNames, () -> model.getRozkladyJazdyByPrzystankiRowCount(), () -> model.getRozkladyJazdyByPrzystankiValueAt(), "na danym przystanku", () -> controller.showRozkladyJazdyByPrzystanki(), () -> controller.addRozkladyJazdyByPrzystanki(), nrPorzadkowy, idRozkladu, podlinia, linia);
+        rozkladyJazdyMainPanel.addTableView(uliceNames, () -> model.getRozkladyJazdyByUliceRowCount(), () -> model.getRozkladyJazdyByUliceValueAt(), "przy danej ulicy", () -> controller.showRozkladyJazdyByUlice(), () -> controller.addRozkladyJazdyByUlice(), nrPorzadkowy, idRozkladu, podlinia, linia, idPrzystanku, przystanek, typPrzystanku);
+        rozkladyJazdyMainPanel.addTableView(miejscowosciNames, () -> model.getRozkladyJazdyByMiejscowosciRowCount(), () -> model.getRozkladyJazdyByMiejscowosciValueAt(), "w danej miejscowości", () -> controller.showRozkladyJazdyByMiejscowosci(), () -> controller.addRozkladyJazdyByMiejscowosci(), nrPorzadkowy, idRozkladu, podlinia, linia, idPrzystanku, przystanek, ulica, typPrzystanku);
+        rozkladyJazdyMainPanel.addTableView(gminyNames, () -> model.getRozkladyJazdyByGminyRowCount(), () -> model.getRozkladyJazdyByGminyValueAt(), "w danej gminie", () -> controller.showRozkladyJazdyByGminy(), () -> controller.addRozkladyJazdyByGminy(), nrPorzadkowy, idRozkladu, podlinia, linia, idPrzystanku, przystanek, ulica, miejscowosc, typPrzystanku);
+        addMainPanel(rozkladyJazdyMainPanel, () -> model.getRozkladyJazdyRowCount(), () -> model.getRozkladyJazdyValueAt(), () -> controller.showRozkladyJazdy(), () -> controller.addRozkladyJazdy(), nrPorzadkowy, idRozkladu, podlinia, linia, idPrzystanku, przystanek, ulica, miejscowosc, gmina, typPrzystanku);
 
         final MainPanel dniKursowaniaMainPanel = createThisOwnedMainPanel("Dni kursowania");
-        addMainPanel(dniKursowaniaMainPanel, () -> model.getDniKursowaniaRowCount(), () -> model.getDniKursowaniaValueAt(), () -> controller.showDniKursowania(), idDnia, nazwaDnia);
+        addMainPanel(dniKursowaniaMainPanel, () -> model.getDniKursowaniaRowCount(), () -> model.getDniKursowaniaValueAt(), () -> controller.showDniKursowania(), () -> controller.addDniKursowania(), idDnia, nazwaDnia);
 
         final MainPanel kursyMainPanel = createThisOwnedMainPanel("Kursy");
-        kursyMainPanel.addTableView(dniKursowaniaNames, () -> model.getKursyByDniKursowaniaRowCount(), () -> model.getKursyByDniKursowaniaValueAt(), "w danym dniu kursowania", () -> controller.showKursyByDniKursowania(), podlinia, linia, idPrzystanku, przystanek, ulica, miejscowosc, gmina, typPrzystanku, godzina, uwagi);
-        kursyMainPanel.addTableView(rozkladyJazdyNames, () -> model.getKursyByRozkladyJazdyRowCount(), () -> model.getKursyByRozkladyJazdyValueAt(), "na danym rozkładzie jazdy", () -> controller.showKursyByRozkladyJazdy(), dzienKursowania, godzina, uwagi);
-        kursyMainPanel.addTableView(podlinieNames, () -> model.getKursyByPodlinieRowCount(), () -> model.getKursyByPodlinieValueAt(), "danej podlinii", () -> controller.showKursyByPodlinie(), idPrzystanku, przystanek, ulica, miejscowosc, gmina, typPrzystanku, dzienKursowania, godzina, uwagi);
-        kursyMainPanel.addTableView(linieNames, () -> model.getKursyByLinieRowCount(), () -> model.getKursyByLinieValueAt(), "danej linii", () -> controller.showKursyByLinie(), podlinia, idPrzystanku, przystanek, ulica, miejscowosc, gmina, typPrzystanku, dzienKursowania, godzina, uwagi);
-        kursyMainPanel.addTableView(przystankiNames, () -> model.getKursyByPrzystankiRowCount(), () -> model.getKursyByPrzystankiValueAt(), "na danym przystanku", () -> controller.showKursyByPrzystanki(), podlinia, linia, dzienKursowania, godzina, uwagi);
-        kursyMainPanel.addTableView(uliceNames, () -> model.getKursyByUliceRowCount(), () -> model.getKursyByUliceValueAt(), "przy danej ulicy", () -> controller.showKursyByUlice(), podlinia, linia, idPrzystanku, przystanek, typPrzystanku, dzienKursowania, godzina, uwagi);
-        kursyMainPanel.addTableView(miejscowosciNames, () -> model.getKursyByMiejscowosciRowCount(), () -> model.getKursyByMiejscowosciValueAt(), "w danej miejscowości", () -> controller.showKursyByMiejscowosci(), podlinia, linia, idPrzystanku, przystanek, ulica, typPrzystanku, dzienKursowania, godzina, uwagi);
-        kursyMainPanel.addTableView(gminyNames, () -> model.getKursyByGminyRowCount(), () -> model.getKursyByGminyValueAt(), "w danej gminie", () -> controller.showKursyByGminy(), podlinia, linia, idPrzystanku, przystanek, ulica, miejscowosc, typPrzystanku, dzienKursowania, godzina, uwagi);
-        addMainPanel(kursyMainPanel, () -> model.getKursyRowCount(), () -> model.getKursyValueAt(), () -> controller.showKursy(), podlinia, linia, idPrzystanku, przystanek, ulica, miejscowosc, gmina, typPrzystanku, dzienKursowania, godzina, uwagi);
+        kursyMainPanel.addTableView(dniKursowaniaNames, () -> model.getKursyByDniKursowaniaRowCount(), () -> model.getKursyByDniKursowaniaValueAt(), "w danym dniu kursowania", () -> controller.showKursyByDniKursowania(), () -> controller.addKursyByDniKursowania(), podlinia, linia, idPrzystanku, przystanek, ulica, miejscowosc, gmina, typPrzystanku, godzina, uwagi);
+        kursyMainPanel.addTableView(rozkladyJazdyNames, () -> model.getKursyByRozkladyJazdyRowCount(), () -> model.getKursyByRozkladyJazdyValueAt(), "na danym rozkładzie jazdy", () -> controller.showKursyByRozkladyJazdy(), () -> controller.addKursyByRozkladyJazdy(), dzienKursowania, godzina, uwagi);
+        kursyMainPanel.addTableView(podlinieNames, () -> model.getKursyByPodlinieRowCount(), () -> model.getKursyByPodlinieValueAt(), "danej podlinii", () -> controller.showKursyByPodlinie(), () -> controller.addKursyByPodlinie(), idPrzystanku, przystanek, ulica, miejscowosc, gmina, typPrzystanku, dzienKursowania, godzina, uwagi);
+        kursyMainPanel.addTableView(linieNames, () -> model.getKursyByLinieRowCount(), () -> model.getKursyByLinieValueAt(), "danej linii", () -> controller.showKursyByLinie(), () -> controller.addKursyByLinie(), podlinia, idPrzystanku, przystanek, ulica, miejscowosc, gmina, typPrzystanku, dzienKursowania, godzina, uwagi);
+        kursyMainPanel.addTableView(przystankiNames, () -> model.getKursyByPrzystankiRowCount(), () -> model.getKursyByPrzystankiValueAt(), "na danym przystanku", () -> controller.showKursyByPrzystanki(), () -> controller.addKursyByPrzystanki(), podlinia, linia, dzienKursowania, godzina, uwagi);
+        kursyMainPanel.addTableView(uliceNames, () -> model.getKursyByUliceRowCount(), () -> model.getKursyByUliceValueAt(), "przy danej ulicy", () -> controller.showKursyByUlice(), () -> controller.addKursyByUlice(), podlinia, linia, idPrzystanku, przystanek, typPrzystanku, dzienKursowania, godzina, uwagi);
+        kursyMainPanel.addTableView(miejscowosciNames, () -> model.getKursyByMiejscowosciRowCount(), () -> model.getKursyByMiejscowosciValueAt(), "w danej miejscowości", () -> controller.showKursyByMiejscowosci(), () -> controller.addKursyByMiejscowosci(), podlinia, linia, idPrzystanku, przystanek, ulica, typPrzystanku, dzienKursowania, godzina, uwagi);
+        kursyMainPanel.addTableView(gminyNames, () -> model.getKursyByGminyRowCount(), () -> model.getKursyByGminyValueAt(), "w danej gminie", () -> controller.showKursyByGminy(), () -> controller.addKursyByGminy(), podlinia, linia, idPrzystanku, przystanek, ulica, miejscowosc, typPrzystanku, dzienKursowania, godzina, uwagi);
+        addMainPanel(kursyMainPanel, () -> model.getKursyRowCount(), () -> model.getKursyValueAt(), () -> controller.showKursy(), () -> controller.addKursy(), podlinia, linia, idPrzystanku, przystanek, ulica, miejscowosc, gmina, typPrzystanku, dzienKursowania, godzina, uwagi);
 
         final MainPanel logiMainPanel = createThisOwnedMainPanel("Logi");
-        addMainPanel(logiMainPanel, () -> model.getLogiRowCount(), () -> model.getLogiValueAt(), () -> controller.showLogi(), dataModyfikacji, tresc);
+        addMainPanel(logiMainPanel, () -> model.getLogiRowCount(), () -> model.getLogiValueAt(), () -> controller.showLogi(), () -> controller.addLogi(), dataModyfikacji, tresc);
 
         for (int i = 0; i < tabbedPane.getTabCount(); i++) {
             tabbedPane.setTabComponentAt(i, createLabel(tabbedPane.getTitleAt(i), new Dimension(150, 56), 18));
@@ -177,8 +179,8 @@ public final class DefaultView implements View {
         return new MainPanel(name, frame);
     }
 
-    private void addMainPanel(@NotNull final MainPanel mainPanel, final MainPanel.RowCountGetter rowCountGetter, final MainPanel.ValueGetter valueGetter, final MainPanel.TableViewShower tableViewShower, final String... columnNames) {
-        mainPanel.addTableView(new TableViewNames(MainPanel.ALL, null), rowCountGetter, valueGetter, "wszystkie", tableViewShower, columnNames);
+    private void addMainPanel(@NotNull final MainPanel mainPanel, final IntSupplier intSupplier, final Supplier<Object> objectSupplier, final Runnable showTableViewRunnable, final Runnable addRowRunnable, final String... columnNames) {
+        mainPanel.addTableView(new TableViewNames(MainPanel.ALL, null), intSupplier, objectSupplier, "wszystkie", showTableViewRunnable, addRowRunnable, columnNames);
         tabbedPane.add(mainPanel);
     }
 
