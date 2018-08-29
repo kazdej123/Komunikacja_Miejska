@@ -7,14 +7,11 @@ import org.jetbrains.annotations.NotNull;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
-import javax.swing.GroupLayout;
 import javax.swing.JButton;
 import javax.swing.JComponent;
-import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.WindowConstants;
 import javax.swing.table.AbstractTableModel;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
@@ -128,20 +125,12 @@ final class MainPanel extends JPanel {
 
         cardsPanel.add(tablePanel, tablePanelName);
 
-        final JButton button = DefaultView.createButton(buttonText, e1 -> {
+        final JButton button = DefaultView.createButton(buttonText, e -> {
             final Controller controller = null;
 
             if (controller != null) {
                 tableViewShower.showTableView();
             } else {
-                if (!tablePanelName.equals(ALL)) {
-                    final JDialog dialog = new JDialog(ownerFrame, "Wybierz " + tableViewNames.choosingDialogTitle);
-
-                    final GroupLayout groupLayout = DefaultView.createGroupLayout(dialog);
-
-                    //DefaultView.initDialog(dialog, groupLayout, okButton, WindowConstants.DISPOSE_ON_CLOSE);
-                    // TODO
-                }
                 ((CardLayout) cardsPanel.getLayout()).show(cardsPanel, tablePanelName);
             }
         });
