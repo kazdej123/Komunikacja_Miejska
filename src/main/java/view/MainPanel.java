@@ -1,7 +1,5 @@
 package view;
 
-import controller.Controller;
-import model.Model;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.BorderFactory;
@@ -94,11 +92,9 @@ final class MainPanel extends JPanel {
 
             @Override
             public final int getRowCount() {
-                final Model model = null;
-
-                if (model != null) {
+                try {
                     return rowCountGetter.getRowCount();
-                } else {
+                } catch (final NullPointerException e) {
                     return 0;
                 }
             }
@@ -117,8 +113,8 @@ final class MainPanel extends JPanel {
         tablePanel.add(scrollPane, BorderLayout.CENTER);
 
         final JPanel internalButtonsPanel = createCycleRootFocusedPanel(new FlowLayout());
-        internalButtonsPanel.add(createInternalButton("Dodaj rekord", null));
-        internalButtonsPanel.add(createInternalButton("Usuń rekordy", null));
+        addInternalButton(internalButtonsPanel, "Dodaj rekord", null); // TODO
+        addInternalButton(internalButtonsPanel, "Usuń rekordy", null); // TODO
         setEmptyBorder(internalButtonsPanel, 10, 10, 30, 10);
 
         tablePanel.add(internalButtonsPanel, BorderLayout.SOUTH);
@@ -126,11 +122,9 @@ final class MainPanel extends JPanel {
         cardsPanel.add(tablePanel, tablePanelName);
 
         final JButton button = DefaultView.createButton(buttonText, e -> {
-            final Controller controller = null;
-
-            if (controller != null) {
+            try {
                 tableViewShower.showTableView();
-            } else {
+            } catch (final NullPointerException e1) {
                 ((CardLayout) cardsPanel.getLayout()).show(cardsPanel, tablePanelName);
             }
         });
@@ -152,11 +146,11 @@ final class MainPanel extends JPanel {
         return panel;
     }
 
-    private static JButton createInternalButton(final String text, final ActionListener actionListener) {
+    private static void addInternalButton(@NotNull final JPanel internalButtonsPanel, final String text, final ActionListener actionListener) {
         final JButton button = DefaultView.createButton(text, actionListener);
         setJComponentPlainFont(button, 18);
         button.setPreferredSize(new Dimension(180, 40));
-        return button;
+        internalButtonsPanel.add(button);
     }
 
     private static void setJComponentPlainFont(final JComponent jComponent, final int size) {

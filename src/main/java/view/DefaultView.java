@@ -147,13 +147,7 @@ public final class DefaultView implements View {
     public final void showLoginDialog() {
         final JDialog dialog = new JDialog((Frame) null, "Okno logowania");
 
-        final JButton loginButton = createButton("Zaloguj", e -> {
-            if (controller != null) {
-                controller.login();
-            } else {
-                dialog.dispose();
-            }
-        });
+        final JButton loginButton = createButton("Zaloguj", e -> controller.login());
 
         final GroupLayout groupLayout = createGroupLayout(dialog);
 

@@ -1,4 +1,3 @@
 package view;
 
-interface View {
-}
+interface View {}
