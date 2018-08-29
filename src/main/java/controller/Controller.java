@@ -66,65 +66,65 @@ public interface Controller {
 
     void showLogi();
 
-    void addGminy();
+    void insertIntoGminy();
 
-    void addMiejscowosciByGminy();
+    void insertIntoMiejscowosciByGminy();
 
-    void addMiejscowosci();
+    void insertIntoMiejscowosci();
 
-    void addUliceByMiejscowosci();
+    void insertIntoUliceByMiejscowosci();
 
-    void addUliceByGminy();
+    void insertIntoUliceByGminy();
 
-    void addUlice();
+    void insertIntoUlice();
 
-    void addPrzystankiByUlice();
+    void insertIntoPrzystankiByUlice();
 
-    void addPrzystankiByMiejscowosci();
+    void insertIntoPrzystankiByMiejscowosci();
 
-    void addPrzystankiByGminy();
+    void insertIntoPrzystankiByGminy();
 
-    void addPrzystanki();
+    void insertIntoPrzystanki();
 
-    void addLinie();
+    void insertIntoLinie();
 
-    void addPodlinieByLinie();
+    void insertIntoPodlinieByLinie();
 
-    void addPodlinie();
+    void insertIntoPodlinie();
 
-    void addRozkladyJazdyByPodlinie();
+    void insertIntoRozkladyJazdyByPodlinie();
 
-    void addRozkladyJazdyByLinie();
+    void insertIntoRozkladyJazdyByLinie();
 
-    void addRozkladyJazdyByPrzystanki();
+    void insertIntoRozkladyJazdyByPrzystanki();
 
-    void addRozkladyJazdyByUlice();
+    void insertIntoRozkladyJazdyByUlice();
 
-    void addRozkladyJazdyByMiejscowosci();
+    void insertIntoRozkladyJazdyByMiejscowosci();
 
-    void addRozkladyJazdyByGminy();
+    void insertIntoRozkladyJazdyByGminy();
 
-    void addRozkladyJazdy();
+    void insertIntoRozkladyJazdy();
 
-    void addDniKursowania();
+    void insertIntoDniKursowania();
 
-    void addKursyByDniKursowania();
+    void insertIntoKursyByDniKursowania();
 
-    void addKursyByRozkladyJazdy();
+    void insertIntoKursyByRozkladyJazdy();
 
-    void addKursyByPodlinie();
+    void insertIntoKursyByPodlinie();
 
-    void addKursyByLinie();
+    void insertIntoKursyByLinie();
 
-    void addKursyByPrzystanki();
+    void insertIntoKursyByPrzystanki();
 
-    void addKursyByUlice();
+    void insertIntoKursyByUlice();
 
-    void addKursyByMiejscowosci();
+    void insertIntoKursyByMiejscowosci();
 
-    void addKursyByGminy();
+    void insertIntoKursyByGminy();
 
-    void addKursy();
+    void insertIntoKursy();
 
-    void addLogi();
+    void insertIntoLogi();
 }

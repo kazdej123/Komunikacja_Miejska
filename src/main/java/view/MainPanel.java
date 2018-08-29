@@ -54,12 +54,12 @@ final class MainPanel extends JPanel {
 
         buttonsPanel.setLayout(new BoxLayout(buttonsPanel, BoxLayout.Y_AXIS));
         buttonsPanel.add(DefaultView.createLabel("Wyświetl " + name.toLowerCase(), buttonDimension, (int) (1.1 * FONT_SIZE)));
-        setEmptyBorder(buttonsPanel, 30, 10, 30, 20);
+        setEmptyBorder(buttonsPanel, 30, 5, 30, 20);
 
         add(buttonsPanel, BorderLayout.EAST);
     }
 
-    final void addTableView(@NotNull final TableViewNames tableViewNames, final IntSupplier intSupplier, final Supplier<Object> objectSupplier, final String buttonText, final Runnable showTableViewRunnable, final Runnable addRowRunnable, final String... columnNames) {
+    final void addTableView(@NotNull final TableViewNames tableViewNames, final IntSupplier intSupplier, final Supplier<Object> objectSupplier, final String buttonText, final Runnable showTableViewRunnable, final Runnable insertRowRunnable, final String... columnNames) {
         final JPanel tablePanel = createCycleRootFocusedPanel(new BorderLayout());
 
         final String tablePanelName = tableViewNames.tablePanelName;
@@ -95,20 +95,20 @@ final class MainPanel extends JPanel {
         DefaultView.setJComponentBoldFont(table.getTableHeader(), 12);
 
         final JScrollPane scrollPane = new JScrollPane(table);
-        setEmptyBorder(scrollPane, 20, 10, 10, 10);
+        setEmptyTablePanelBorder(scrollPane, 20, 10);
 
         tablePanel.add(scrollPane, BorderLayout.CENTER);
 
         final JPanel internalButtonsPanel = createCycleRootFocusedPanel(new FlowLayout());
         addInternalButton(internalButtonsPanel, "Dodaj rekord", e -> {
             try {
-                addRowRunnable.run();
+                insertRowRunnable.run();
             } catch (final NullPointerException e1) {
                 // TODO
             }
         });
         addInternalButton(internalButtonsPanel, "Usuń rekordy", null); // TODO
-        setEmptyBorder(internalButtonsPanel, 10, 10, 30, 10);
+        setEmptyTablePanelBorder(internalButtonsPanel, 10, 30);
 
         tablePanel.add(internalButtonsPanel, BorderLayout.SOUTH);
 
@@ -129,14 +129,18 @@ final class MainPanel extends JPanel {
         buttonsPanel.add(button);
     }
 
-    private static void setEmptyBorder(@NotNull final JComponent component, final int top, final int left, final int bottom, final int right) {
-        component.setBorder(BorderFactory.createEmptyBorder(top, left, bottom, right));
-    }
-
     private static JPanel createCycleRootFocusedPanel(final LayoutManager layout) {
         final JPanel panel = new JPanel(layout);
         panel.setFocusCycleRoot(true);
         return panel;
+    }
+
+    private static void setEmptyTablePanelBorder(final JComponent component, final int top, final int bottom) {
+        setEmptyBorder(component, top, 10, bottom, 10);
+    }
+
+    private static void setEmptyBorder(@NotNull final JComponent component, final int top, final int left, final int bottom, final int right) {
+        component.setBorder(BorderFactory.createEmptyBorder(top, left, bottom, right));
     }
 
     private static void addInternalButton(@NotNull final JPanel internalButtonsPanel, final String text, final ActionListener actionListener) {
