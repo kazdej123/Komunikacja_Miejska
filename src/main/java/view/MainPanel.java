@@ -23,8 +23,6 @@ import java.util.function.IntSupplier;
 import java.util.function.Supplier;
 
 final class MainPanel extends JPanel {
-    static final String ALL = "All";
-
     private static final int FONT_SIZE = 18;
 
     private static final Dimension buttonDimension = new Dimension(14 * FONT_SIZE, 45);
@@ -32,21 +30,21 @@ final class MainPanel extends JPanel {
     private final JPanel cardsPanel = createCycleRootFocusedPanel(new CardLayout());
     private final JPanel buttonsPanel = createCycleRootFocusedPanel(null);
 
-    private final Frame ownerFrame;
+//    private final Frame ownerFrame;
 
     static final class TableViewNames {
         private final String tablePanelName;
-        private final String choosingDialogTitle;
+//        private final String choosingDialogTitle;
 
         TableViewNames(final String tablePanelName, final String choosingDialogTitle) {
             this.tablePanelName = tablePanelName;
-            this.choosingDialogTitle = choosingDialogTitle;
+//            this.choosingDialogTitle = choosingDialogTitle;
         }
     }
 
     MainPanel(final String name, final Frame ownerFrame) {
         super(new BorderLayout());
-        this.ownerFrame = ownerFrame;
+//        this.ownerFrame = ownerFrame;
 
         setName(name);
         setFocusCycleRoot(true);
@@ -59,11 +57,12 @@ final class MainPanel extends JPanel {
         add(buttonsPanel, BorderLayout.EAST);
     }
 
-    final void addTableView(@NotNull final TableViewNames tableViewNames, final IntSupplier intSupplier, final Supplier<Object> objectSupplier, final String buttonText, final Runnable showTableViewRunnable, final Runnable insertRowRunnable, final String... columnNames) {
+    final void addTableView(final TableViewNames tableViewNames, final IntSupplier intSupplier, final Supplier<Object> objectSupplier, final Runnable insertRowRunnable, final String buttonText, final Runnable showTableViewRunnable, final String... columnNames) {
+        addTableView(tableViewNames.tablePanelName, intSupplier, objectSupplier, insertRowRunnable, buttonText, showTableViewRunnable, () -> {/*TODO*/}, columnNames);
+    }
+
+    final void addTableView(final String tablePanelName, final IntSupplier intSupplier, final Supplier<Object> objectSupplier, final Runnable insertRowRunnable, final String buttonText, final Runnable showTableViewRunnable, final Runnable showAdditionalTableViewRunnable, final String[] columnNames) {
         final JPanel tablePanel = createCycleRootFocusedPanel(new BorderLayout());
-
-        final String tablePanelName = tableViewNames.tablePanelName;
-
         tablePanel.setName(tablePanelName);
 
         final JTable table = new JTable(new AbstractTableModel() {
@@ -118,6 +117,7 @@ final class MainPanel extends JPanel {
             try {
                 showTableViewRunnable.run();
             } catch (final NullPointerException e1) {
+                showAdditionalTableViewRunnable.run();
                 ((CardLayout) cardsPanel.getLayout()).show(cardsPanel, tablePanelName);
             }
         });
