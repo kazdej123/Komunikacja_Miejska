@@ -57,7 +57,7 @@ final class MainPanel extends JPanel {
         add(buttonsPanel, BorderLayout.EAST);
     }
 
-    final void addTableView(final TableViewNames tableViewNames, final IntSupplier intSupplier, final Supplier<Object> objectSupplier, final Runnable insertRowRunnable, final String buttonText, final Runnable showTableViewRunnable, final String... columnNames) {
+    final void addTableView(@NotNull final TableViewNames tableViewNames, final IntSupplier intSupplier, final Supplier<Object> objectSupplier, final Runnable insertRowRunnable, final String buttonText, final Runnable showTableViewRunnable, final String... columnNames) {
         addTableView(tableViewNames.tablePanelName, intSupplier, objectSupplier, insertRowRunnable, buttonText, showTableViewRunnable, () -> {/*TODO*/}, columnNames);
     }
 
