@@ -53,13 +53,21 @@ final class MainPanel extends JPanel {
 
         setName(name);
         setFocusCycleRoot(true);
+        setEmptyBorder(this, 10, 20, 20, 20);
+
+        cardsPanel.add(new JPanel(), null);
+        
         add(cardsPanel, BorderLayout.CENTER);
 
         buttonsPanel.setLayout(new BoxLayout(buttonsPanel, BoxLayout.Y_AXIS));
-        buttonsPanel.add(DefaultView.createLabel("Wyświetl " + name.toLowerCase(), buttonDimension, (int) (1.1 * FONT_SIZE)));
+        buttonsPanel.add(DefaultView.createBoldLabel("Wyświetl " + name.toLowerCase(), buttonDimension, (int) (1.1 * FONT_SIZE)));
         setEmptyBorder(buttonsPanel, 30, 5, 30, 20);
 
         add(buttonsPanel, BorderLayout.EAST);
+    }
+
+    private static void setEmptyBorder(@NotNull final JComponent component, final int top, final int left, final int bottom, final int right) {
+        component.setBorder(BorderFactory.createEmptyBorder(top, left, bottom, right));
     }
 
     final void addTableView(@NotNull final TableViewNames tableViewNames, final IntSupplier intSupplier, final ObjectSupplier objectSupplier, final Runnable insertRowRunnable, final String buttonText, final Runnable showTableViewRunnable, final String... columnNames) {
@@ -96,10 +104,10 @@ final class MainPanel extends JPanel {
             }
         });
         table.setAutoCreateRowSorter(true);
-        DefaultView.setJComponentBoldFont(table.getTableHeader(), 12);
+        DefaultView.setJComponentFont(table.getTableHeader(), Font.BOLD, 12);
 
         final JScrollPane scrollPane = new JScrollPane(table);
-        setEmptyTablePanelBorder(scrollPane, 20, 10);
+        setEmptyBorder(scrollPane, 20, 10, 10, 10);
 
         tablePanel.add(scrollPane, BorderLayout.CENTER);
 
@@ -112,32 +120,47 @@ final class MainPanel extends JPanel {
             }
         });
         addButtonToContainer(internalButtonsPanel, "Usuń rekordy", null); // TODO
-        setEmptyTablePanelBorder(internalButtonsPanel, 10, 30);
+        setEmptyBorder(internalButtonsPanel, 10, 10, 30, 10);
 
         tablePanel.add(internalButtonsPanel, BorderLayout.SOUTH);
 
         cardsPanel.add(tablePanel, tablePanelName);
 
-        final JButton button = DefaultView.createButton(buttonText, e -> {
+        final JButton button = DefaultView.createButton(buttonText, FONT_SIZE, buttonDimension, e -> {
             try {
                 showTableViewRunnable.run();
             } catch (final NullPointerException e1) {
                 if (choosingDialogTitle != null) {
-                    final JDialog dialog = new JDialog(ownerWindow, "Wybierz " + choosingDialogTitle);
+                    final JDialog dialog = new JDialog(ownerWindow, "Okno wyboru");
+                    dialog.setLayout(new BorderLayout());
+
+                    final JPanel northDialogPanel = new JPanel();
+                    northDialogPanel.add(DefaultView.createLabel("Wybierz " + choosingDialogTitle + ":", Font.PLAIN, 15));
+                    setEmptyBorder(northDialogPanel, 10, 10, 0, 10);
+
+                    dialog.add(northDialogPanel, BorderLayout.NORTH);
                     // TODO
-                    final JButton okButton = DefaultView.createButton("Ok", e2 -> {
+                    final Dimension dialogButtonDimension = new Dimension(100, 25);
+                    final int dialogButtonFontSize = 15;
+
+                    final JButton okButton = DefaultView.createButton("Ok", dialogButtonFontSize, dialogButtonDimension, e2 -> {
                         dialog.dispose();
                         showTablePanel(tablePanelName);
                     });
-                    // TODO
-                    DefaultView.initDialog(dialog, new BorderLayout(), okButton);
+
+                    final JPanel southDialogPanel = createCycleRootFocusedPanel(new FlowLayout());
+                    southDialogPanel.add(okButton);
+                    southDialogPanel.add(DefaultView.createButton("Anuluj", dialogButtonFontSize, dialogButtonDimension, e2 -> dialog.dispose()));
+                    setEmptyBorder(southDialogPanel, 0, 10, 10, 10);
+
+                    dialog.add(southDialogPanel, BorderLayout.SOUTH);
+                    DefaultView.initDialog(dialog, okButton);
                 } else {
                     showTablePanel(tablePanelName);
                 }
             }
         });
         DefaultView.centerJComponent(button);
-        setJComponentPlainFont(button, FONT_SIZE);
         button.setMaximumSize(buttonDimension);
 
         buttonsPanel.add(Box.createRigidArea(new Dimension(0, 15)));
@@ -150,23 +173,9 @@ final class MainPanel extends JPanel {
         return panel;
     }
 
-    private static void setEmptyTablePanelBorder(final JComponent component, final int top, final int bottom) {
-        setEmptyBorder(component, top, 10, bottom, 10);
-    }
-
-    private static void setEmptyBorder(@NotNull final JComponent component, final int top, final int left, final int bottom, final int right) {
-        component.setBorder(BorderFactory.createEmptyBorder(top, left, bottom, right));
-    }
-
     private static void addButtonToContainer(@NotNull final Container container, final String text, final ActionListener actionListener) {
-        final JButton button = DefaultView.createButton(text, actionListener);
-        setJComponentPlainFont(button, 18);
-        button.setPreferredSize(new Dimension(180, 40));
+        final JButton button = DefaultView.createButton(text, 18, new Dimension(180, 40), actionListener);
         container.add(button);
-    }
-
-    private static void setJComponentPlainFont(final JComponent jComponent, final int size) {
-        DefaultView.setJComponentFont(jComponent, Font.PLAIN, size);
     }
 
     private void showTablePanel(final String tablePanelName) {

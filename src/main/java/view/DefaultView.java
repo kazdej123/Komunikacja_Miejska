@@ -17,7 +17,6 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Frame;
-import java.awt.LayoutManager;
 import java.awt.Toolkit;
 import java.awt.Window;
 import java.awt.event.ActionListener;
@@ -38,11 +37,10 @@ public final class DefaultView implements View {
 
     private final JFrame frame = new JFrame("Komunikacja miejska");
 
-    private final JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.LEFT);
+    private final JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.LEFT, JTabbedPane.SCROLL_TAB_LAYOUT);
 
     public DefaultView() {
         tabbedPane.setFocusCycleRoot(true);
-        tabbedPane.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
 
         final Model model = null;
 
@@ -137,7 +135,7 @@ public final class DefaultView implements View {
         addMainPanel(logiMainPanel, () -> model.getLogiRowCount(), () -> model.getLogiValueAt(), () -> controller.showLogi(), () -> controller.insertIntoLogi(), dataModyfikacji, tresc);
 
         for (int i = 0; i < tabbedPane.getTabCount(); i++) {
-            tabbedPane.setTabComponentAt(i, createLabel(tabbedPane.getTitleAt(i), new Dimension(150, 56), 18));
+            tabbedPane.setTabComponentAt(i, createBoldLabel(tabbedPane.getTitleAt(i), new Dimension(150, 56), 18));
         }
         frame.add(tabbedPane);
         frame.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
@@ -158,24 +156,21 @@ public final class DefaultView implements View {
         tabbedPane.add(mainPanel);
     }
 
-    static JLabel createLabel(final String text, final Dimension dimension, final int fontSize) {
+    static JLabel createBoldLabel(final String text, final Dimension dimension, final int fontSize) {
+        final JLabel label = createLabel(text, Font.BOLD, fontSize);
+        label.setPreferredSize(dimension);
+        return label;
+    }
+
+    static JLabel createLabel(final String text, final int fontStyle, final int fontSize) {
         final JLabel label = new JLabel(text, SwingConstants.CENTER);
         centerJComponent(label);
-        setJComponentBoldFont(label, fontSize);
-        label.setPreferredSize(dimension);
+        setJComponentFont(label, fontStyle, fontSize);
         return label;
     }
 
     static void centerJComponent(@NotNull final JComponent jComponent) {
         jComponent.setAlignmentX(Component.CENTER_ALIGNMENT);
-    }
-
-    static void setJComponentBoldFont(final JComponent jComponent, final int size) {
-        setJComponentFont(jComponent, Font.BOLD, size);
-    }
-
-    static void setJComponentFont(@NotNull final JComponent jComponent, final int style, final int size) {
-        jComponent.setFont(new Font(jComponent.getFont().getName(), style, size));
     }
 
     private void addWindowClosingListener(@NotNull final Window window) {
@@ -195,15 +190,20 @@ public final class DefaultView implements View {
         }
     }
 
-    static JButton createButton(final String text, final ActionListener actionListener) {
+    static JButton createButton(final String text, final int fontSize, final Dimension dimension, final ActionListener actionListener) {
         final JButton button = new JButton(text);
+        setJComponentFont(button, Font.PLAIN, fontSize);
+        button.setPreferredSize(dimension);
         button.addActionListener(actionListener);
         return button;
     }
 
-    static void initDialog(@NotNull final JDialog dialog, final LayoutManager layout, final JButton defaultButton) {
+    static void setJComponentFont(@NotNull final JComponent jComponent, final int style, final int size) {
+        jComponent.setFont(new Font(jComponent.getFont().getName(), style, size));
+    }
+
+    static void initDialog(@NotNull final JDialog dialog, final JButton defaultButton) {
         dialog.setModal(true);
-        dialog.setLayout(layout);
         dialog.pack();
         dialog.setLocation((SCREEN_WIDTH - dialog.getWidth()) / 2, (SCREEN_HEIGHT - dialog.getHeight()) / 2);
         dialog.setResizable(false);
