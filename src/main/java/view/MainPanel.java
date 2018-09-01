@@ -29,6 +29,9 @@ final class MainPanel extends JPanel {
 
     private static final Dimension buttonDimension = new Dimension(14 * FONT_SIZE, 45);
 
+    @FunctionalInterface
+    interface ObjectSupplier extends Supplier<Object> {}
+
     static final class TableViewNames {
         private final String tablePanelName;
 //        private final String choosingDialogTitle;
@@ -59,7 +62,7 @@ final class MainPanel extends JPanel {
         add(buttonsPanel, BorderLayout.EAST);
     }
 
-    final void addTableView(@NotNull final TableViewNames tableViewNames, final IntSupplier intSupplier, final Supplier<Object> objectSupplier, final Runnable insertRowRunnable, final String buttonText, final Runnable showTableViewRunnable, final String... columnNames) {
+    final void addTableView(@NotNull final TableViewNames tableViewNames, final IntSupplier intSupplier, final ObjectSupplier objectSupplier, final Runnable insertRowRunnable, final String buttonText, final Runnable showTableViewRunnable, final String... columnNames) {
         addTableView(tableViewNames.tablePanelName, intSupplier, objectSupplier, insertRowRunnable, buttonText, showTableViewRunnable, () -> {
             final JDialog dialog = new JDialog(ownerWindow);
             // TODO
@@ -68,7 +71,7 @@ final class MainPanel extends JPanel {
         }, columnNames);
     }
 
-    final void addTableView(final String tablePanelName, final IntSupplier intSupplier, final Supplier<Object> objectSupplier, final Runnable insertRowRunnable, final String buttonText, final Runnable showTableViewRunnable, final Runnable showAdditionalTableViewRunnable, final String[] columnNames) {
+    final void addTableView(final String tablePanelName, final IntSupplier intSupplier, final ObjectSupplier objectSupplier, final Runnable insertRowRunnable, final String buttonText, final Runnable showTableViewRunnable, final Runnable showAdditionalTableViewRunnable, final String[] columnNames) {
         final JPanel tablePanel = createCycleRootFocusedPanel(new BorderLayout());
         tablePanel.setName(tablePanelName);
 

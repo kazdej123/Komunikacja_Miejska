@@ -24,8 +24,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.function.IntSupplier;
-import java.util.function.Supplier;
 
+import static view.MainPanel.ObjectSupplier;
 import static view.MainPanel.TableViewNames;
 
 public final class DefaultView implements View {
@@ -153,7 +153,7 @@ public final class DefaultView implements View {
         return new MainPanel(name, frame);
     }
 
-    private void addMainPanel(@NotNull final MainPanel mainPanel, final IntSupplier intSupplier, final Supplier<Object> objectSupplier, final Runnable insertRowRunnable, final Runnable showTableViewRunnable, final String... columnNames) {
+    private void addMainPanel(@NotNull final MainPanel mainPanel, final IntSupplier intSupplier, final ObjectSupplier objectSupplier, final Runnable insertRowRunnable, final Runnable showTableViewRunnable, final String... columnNames) {
         mainPanel.addTableView("All", intSupplier, objectSupplier, insertRowRunnable, "wszystkie", showTableViewRunnable, () -> {}, columnNames);
         tabbedPane.add(mainPanel);
     }
