@@ -125,8 +125,14 @@ final class MainPanel extends JPanel {
                 if (choosingDialogTitle != null) {
                     final JDialog dialog = new JDialog(ownerWindow, "Wybierz " + choosingDialogTitle);
                     // TODO
+                    final JButton okButton = DefaultView.createButton("Ok", e2 -> {
+                        dialog.dispose();
+                        showTablePanel(tablePanelName);
+                    });
+                    // TODO
+                    DefaultView.initDialog(dialog, new BorderLayout(), okButton);
                 } else {
-                    ((CardLayout) cardsPanel.getLayout()).show(cardsPanel, tablePanelName);
+                    showTablePanel(tablePanelName);
                 }
             }
         });
@@ -161,5 +167,9 @@ final class MainPanel extends JPanel {
 
     private static void setJComponentPlainFont(final JComponent jComponent, final int size) {
         DefaultView.setJComponentFont(jComponent, Font.PLAIN, size);
+    }
+
+    private void showTablePanel(final String tablePanelName) {
+        ((CardLayout) cardsPanel.getLayout()).show(cardsPanel, tablePanelName);
     }
 }
