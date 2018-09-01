@@ -154,7 +154,7 @@ public final class DefaultView implements View {
     }
 
     private void addMainPanel(@NotNull final MainPanel mainPanel, final IntSupplier intSupplier, final ObjectSupplier objectSupplier, final Runnable insertRowRunnable, final Runnable showTableViewRunnable, final String... columnNames) {
-        mainPanel.addTableView("All", intSupplier, objectSupplier, insertRowRunnable, "wszystkie", showTableViewRunnable, () -> {}, columnNames);
+        mainPanel.addTableView("All", intSupplier, objectSupplier, insertRowRunnable, "wszystkie", showTableViewRunnable, null, columnNames);
         tabbedPane.add(mainPanel);
     }
 

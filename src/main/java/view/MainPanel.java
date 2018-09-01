@@ -34,11 +34,11 @@ final class MainPanel extends JPanel {
 
     static final class TableViewNames {
         private final String tablePanelName;
-//        private final String choosingDialogTitle;
+        private final String choosingDialogTitle;
 
         TableViewNames(final String tablePanelName, final String choosingDialogTitle) {
             this.tablePanelName = tablePanelName;
-//            this.choosingDialogTitle = choosingDialogTitle;
+            this.choosingDialogTitle = choosingDialogTitle;
         }
     }
 
@@ -63,15 +63,10 @@ final class MainPanel extends JPanel {
     }
 
     final void addTableView(@NotNull final TableViewNames tableViewNames, final IntSupplier intSupplier, final ObjectSupplier objectSupplier, final Runnable insertRowRunnable, final String buttonText, final Runnable showTableViewRunnable, final String... columnNames) {
-        addTableView(tableViewNames.tablePanelName, intSupplier, objectSupplier, insertRowRunnable, buttonText, showTableViewRunnable, () -> {
-            final JDialog dialog = new JDialog(ownerWindow);
-            // TODO
-            final JButton button = DefaultView.createButton("Ok", null /*TODO*/);
-            DefaultView.initDialog(dialog, new BorderLayout(), button);
-        }, columnNames);
+        addTableView(tableViewNames.tablePanelName, intSupplier, objectSupplier, insertRowRunnable, buttonText, showTableViewRunnable, tableViewNames.choosingDialogTitle, columnNames);
     }
 
-    final void addTableView(final String tablePanelName, final IntSupplier intSupplier, final ObjectSupplier objectSupplier, final Runnable insertRowRunnable, final String buttonText, final Runnable showTableViewRunnable, final Runnable showAdditionalTableViewRunnable, final String[] columnNames) {
+    final void addTableView(final String tablePanelName, final IntSupplier intSupplier, final ObjectSupplier objectSupplier, final Runnable insertRowRunnable, final String buttonText, final Runnable showTableViewRunnable, final String choosingDialogTitle, final String[] columnNames) {
         final JPanel tablePanel = createCycleRootFocusedPanel(new BorderLayout());
         tablePanel.setName(tablePanelName);
 
@@ -127,8 +122,12 @@ final class MainPanel extends JPanel {
             try {
                 showTableViewRunnable.run();
             } catch (final NullPointerException e1) {
-                showAdditionalTableViewRunnable.run();
-                ((CardLayout) cardsPanel.getLayout()).show(cardsPanel, tablePanelName);
+                if (choosingDialogTitle != null) {
+                    final JDialog dialog = new JDialog(ownerWindow, "Wybierz " + choosingDialogTitle);
+                    // TODO
+                } else {
+                    ((CardLayout) cardsPanel.getLayout()).show(cardsPanel, tablePanelName);
+                }
             }
         });
         DefaultView.centerJComponent(button);
