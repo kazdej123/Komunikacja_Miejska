@@ -7,17 +7,19 @@ import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JComponent;
+import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.AbstractTableModel;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
+import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
-import java.awt.Frame;
 import java.awt.LayoutManager;
+import java.awt.Window;
 import java.awt.event.ActionListener;
 import java.util.function.IntSupplier;
 import java.util.function.Supplier;
@@ -26,11 +28,6 @@ final class MainPanel extends JPanel {
     private static final int FONT_SIZE = 18;
 
     private static final Dimension buttonDimension = new Dimension(14 * FONT_SIZE, 45);
-
-    private final JPanel cardsPanel = createCycleRootFocusedPanel(new CardLayout());
-    private final JPanel buttonsPanel = createCycleRootFocusedPanel(null);
-
-//    private final Frame ownerFrame;
 
     static final class TableViewNames {
         private final String tablePanelName;
@@ -42,9 +39,14 @@ final class MainPanel extends JPanel {
         }
     }
 
-    MainPanel(final String name, final Frame ownerFrame) {
+    private final JPanel cardsPanel = createCycleRootFocusedPanel(new CardLayout());
+    private final JPanel buttonsPanel = createCycleRootFocusedPanel(null);
+
+    private final Window ownerWindow;
+
+    MainPanel(final String name, final Window ownerWindow) {
         super(new BorderLayout());
-//        this.ownerFrame = ownerFrame;
+        this.ownerWindow = ownerWindow;
 
         setName(name);
         setFocusCycleRoot(true);
@@ -58,7 +60,12 @@ final class MainPanel extends JPanel {
     }
 
     final void addTableView(@NotNull final TableViewNames tableViewNames, final IntSupplier intSupplier, final Supplier<Object> objectSupplier, final Runnable insertRowRunnable, final String buttonText, final Runnable showTableViewRunnable, final String... columnNames) {
-        addTableView(tableViewNames.tablePanelName, intSupplier, objectSupplier, insertRowRunnable, buttonText, showTableViewRunnable, () -> {/*TODO*/}, columnNames);
+        addTableView(tableViewNames.tablePanelName, intSupplier, objectSupplier, insertRowRunnable, buttonText, showTableViewRunnable, () -> {
+            final JDialog dialog = new JDialog(ownerWindow);
+            // TODO
+            final JButton button = DefaultView.createButton("Ok", null /*TODO*/);
+            DefaultView.initDialog(dialog, new BorderLayout(), button);
+        }, columnNames);
     }
 
     final void addTableView(final String tablePanelName, final IntSupplier intSupplier, final Supplier<Object> objectSupplier, final Runnable insertRowRunnable, final String buttonText, final Runnable showTableViewRunnable, final Runnable showAdditionalTableViewRunnable, final String[] columnNames) {
@@ -99,14 +106,14 @@ final class MainPanel extends JPanel {
         tablePanel.add(scrollPane, BorderLayout.CENTER);
 
         final JPanel internalButtonsPanel = createCycleRootFocusedPanel(new FlowLayout());
-        addInternalButton(internalButtonsPanel, "Dodaj rekord", e -> {
+        addButtonToContainer(internalButtonsPanel, "Dodaj rekord", e -> {
             try {
                 insertRowRunnable.run();
             } catch (final NullPointerException e1) {
                 // TODO
             }
         });
-        addInternalButton(internalButtonsPanel, "Usuń rekordy", null); // TODO
+        addButtonToContainer(internalButtonsPanel, "Usuń rekordy", null); // TODO
         setEmptyTablePanelBorder(internalButtonsPanel, 10, 30);
 
         tablePanel.add(internalButtonsPanel, BorderLayout.SOUTH);
@@ -143,11 +150,11 @@ final class MainPanel extends JPanel {
         component.setBorder(BorderFactory.createEmptyBorder(top, left, bottom, right));
     }
 
-    private static void addInternalButton(@NotNull final JPanel internalButtonsPanel, final String text, final ActionListener actionListener) {
+    private static void addButtonToContainer(@NotNull final Container container, final String text, final ActionListener actionListener) {
         final JButton button = DefaultView.createButton(text, actionListener);
         setJComponentPlainFont(button, 18);
         button.setPreferredSize(new Dimension(180, 40));
-        internalButtonsPanel.add(button);
+        container.add(button);
     }
 
     private static void setJComponentPlainFont(final JComponent jComponent, final int size) {

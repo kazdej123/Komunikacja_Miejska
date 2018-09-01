@@ -7,6 +7,7 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.swing.JButton;
 import javax.swing.JComponent;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JTabbedPane;
@@ -16,6 +17,7 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Frame;
+import java.awt.LayoutManager;
 import java.awt.Toolkit;
 import java.awt.Window;
 import java.awt.event.ActionListener;
@@ -199,6 +201,17 @@ public final class DefaultView implements View {
         return button;
     }
 
+    static void initDialog(@NotNull final JDialog dialog, final LayoutManager layout, final JButton defaultButton) {
+        dialog.setModal(true);
+        dialog.setLayout(layout);
+        dialog.pack();
+        dialog.setLocation((SCREEN_WIDTH - dialog.getWidth()) / 2, (SCREEN_HEIGHT - dialog.getHeight()) / 2);
+        dialog.setResizable(false);
+        dialog.getRootPane().setDefaultButton(defaultButton);
+        dialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+        dialog.setVisible(true);
+    }
+
     /*@Override
     public final void showLoginDialog() {
         final JDialog dialog = new JDialog((Frame) null, "Okno logowania");
@@ -230,16 +243,5 @@ public final class DefaultView implements View {
 
     /*private static final GroupLayout.ParallelGroup createBaselineGroup() {
         return groupLayout.createParallelGroup(GroupLayout.Alignment.BASELINE);
-    }*/
-
-    /*private static final void initDialog() {
-        dialog.setModal(true);
-        dialog.setLayout(layout);
-        dialog.pack();
-        dialog.setLocation((SCREEN_WIDTH - dialog.getWidth()) / 2, (SCREEN_HEIGHT - dialog.getHeight()) / 2);
-        dialog.setResizable(false);
-        dialog.getRootPane().setDefaultButton(defaultButton);
-        dialog.setDefaultCloseOperation(closeOperation);
-        dialog.setVisible(true);
     }*/
 }
