@@ -190,10 +190,9 @@ public final class DefaultView implements View {
         }
     }
 
-    static JButton createButton(final String text, final int fontSize, final Dimension dimension, final ActionListener actionListener) {
+    static JButton createButton(final String text, final int fontSize, final ActionListener actionListener) {
         final JButton button = new JButton(text);
         setJComponentFont(button, Font.PLAIN, fontSize);
-        button.setPreferredSize(dimension);
         button.addActionListener(actionListener);
         return button;
     }
