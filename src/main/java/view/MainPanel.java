@@ -25,25 +25,25 @@ import java.util.function.IntSupplier;
 import java.util.function.Supplier;
 
 final class MainPanel extends JPanel {
-    private static final int FONT_SIZE = 18;
+    private static final int DEFAULT_FONT_SIZE = 18;
 
-    private static final Dimension buttonDimension = new Dimension(14 * FONT_SIZE, 45);
+    private static final Dimension defaultJComponentDimension = new Dimension(14 * DEFAULT_FONT_SIZE, 45);
 
     @FunctionalInterface
     interface ObjectSupplier extends Supplier<Object> {}
 
     static final class TableViewNames {
         private final String tablePanelName;
-        private final String choosingDialogLabelText;
+        private final String choosingDialogTitle;
 
-        TableViewNames(final String tablePanelName, final String choosingDialogLabelText) {
+        TableViewNames(final String tablePanelName, final String choosingDialogTitle) {
             this.tablePanelName = tablePanelName;
-            this.choosingDialogLabelText = choosingDialogLabelText;
+            this.choosingDialogTitle = choosingDialogTitle;
         }
     }
 
-    private final JPanel cardsPanel = createFocusCycleRootedPanel(new CardLayout(), 0, 0, 0, 0);
-    private final JPanel buttonsPanel = createFocusCycleRootedPanel(null, 0, 0, 0, 0);
+    private final JPanel cardsPanel = createFocusCycleRootedPanel(new CardLayout(), 0, 10, 0, 10);
+    private final JPanel buttonsPanel = createFocusCycleRootedPanel(null, 10, 10, 10, 10);
 
     private final Window ownerWindow;
 
@@ -53,23 +53,23 @@ final class MainPanel extends JPanel {
 
         setName(name);
         setFocusCycleRoot(true);
-        setJComponentEmptyBorder(this, 0, 0, 0, 0);
+        setJComponentEmptyBorder(this, 20, 10, 30, 10);
 
         cardsPanel.add(new JPanel(), null);
         
         add(cardsPanel, BorderLayout.CENTER);
 
         buttonsPanel.setLayout(new BoxLayout(buttonsPanel, BoxLayout.Y_AXIS));
-        buttonsPanel.add(DefaultView.createBoldLabel("Wyświetl " + name.toLowerCase(), (int) (1.1 * FONT_SIZE), buttonDimension));
+        buttonsPanel.add(DefaultView.createBoldLabel("Wyświetl " + name.toLowerCase(), (int) (1.1 * DEFAULT_FONT_SIZE), defaultJComponentDimension));
 
         add(buttonsPanel, BorderLayout.EAST);
     }
 
     final void addTableView(@NotNull final TableViewNames tableViewNames, final IntSupplier intSupplier, final ObjectSupplier objectSupplier, final Runnable insertRowRunnable, final String buttonText, final Runnable showTableViewRunnable, final String... columnNames) {
-        addTableView(tableViewNames.tablePanelName, intSupplier, objectSupplier, insertRowRunnable, buttonText, showTableViewRunnable, tableViewNames.choosingDialogLabelText, columnNames);
+        addTableView(tableViewNames.tablePanelName, intSupplier, objectSupplier, insertRowRunnable, buttonText, showTableViewRunnable, tableViewNames.choosingDialogTitle, columnNames);
     }
 
-    final void addTableView(final String tablePanelName, final IntSupplier intSupplier, final ObjectSupplier objectSupplier, final Runnable insertRowRunnable, final String buttonText, final Runnable showTableViewRunnable, final String choosingDialogLabelText, final String[] columnNames) {
+    final void addTableView(final String tablePanelName, final IntSupplier intSupplier, final ObjectSupplier objectSupplier, final Runnable insertRowRunnable, final String buttonText, final Runnable showTableViewRunnable, final String choosingDialogTitle, final String[] columnNames) {
         final JPanel tablePanel = createFocusCycleRootedPanel(new BorderLayout(), 0, 0, 0, 0);
         tablePanel.setName(tablePanelName);
 
@@ -89,49 +89,46 @@ final class MainPanel extends JPanel {
                 try {
                     return intSupplier.getAsInt();
                 } catch (final NullPointerException e) {
-                    return 0;
+                    return 100;
                 }
             }
 
             @Override
             public final Object getValueAt(final int rowIndex, final int columnIndex) {
-                return objectSupplier.get();
+//                return objectSupplier.get();
+                return "Morszcz";
             }
         });
         table.setAutoCreateRowSorter(true);
         DefaultView.setJComponentFont(table.getTableHeader(), Font.BOLD, 12);
 
         final JScrollPane scrollPane = new JScrollPane(table);
-        setJComponentEmptyBorder(scrollPane, 0, 0, 0, 0);
+        setJComponentEmptyBorder(scrollPane, 0, 0, 10, 0);
 
         tablePanel.add(scrollPane, BorderLayout.CENTER);
 
-        final JPanel internalButtonsPanel = createFocusCycleRootedPanel(0, 0, 0, 0);
-        addButtonToContainer(internalButtonsPanel, "Dodaj rekord", e -> {
+        final JPanel southButtonsPanel = createFocusCycleRootedPanel(10, 0, 0, 0);
+        addButtonToContainer(southButtonsPanel, "Dodaj rekord", e -> {
             try {
                 insertRowRunnable.run();
             } catch (final NullPointerException e1) {
                 // TODO
             }
         });
-        addButtonToContainer(internalButtonsPanel, "Usuń rekordy", null); // TODO
+        addButtonToContainer(southButtonsPanel, "Usuń rekordy", null); // TODO
 
-        tablePanel.add(internalButtonsPanel, BorderLayout.SOUTH);
+        tablePanel.add(southButtonsPanel, BorderLayout.SOUTH);
 
         cardsPanel.add(tablePanel, tablePanelName);
 
-        final JButton button = DefaultView.createButton(buttonText, FONT_SIZE, e -> {
+        final JButton button = DefaultView.createButton(buttonText, DEFAULT_FONT_SIZE, e -> {
             try {
                 showTableViewRunnable.run();
             } catch (final NullPointerException e1) {
-                if (choosingDialogLabelText != null) {
-                    final JDialog dialog = new JDialog(ownerWindow, "Okno wyboru");
+                if (choosingDialogTitle != null) {
+                    final JDialog dialog = new JDialog(ownerWindow, "Wybierz " + choosingDialogTitle);
                     dialog.setLayout(new BorderLayout());
 
-                    final JPanel northDialogPanel = createPanel(new FlowLayout(), 0, 0, 0, 0);
-                    northDialogPanel.add(DefaultView.createLabel("Wybierz " + choosingDialogLabelText + ":", Font.PLAIN, 15));
-
-                    dialog.add(northDialogPanel, BorderLayout.NORTH);
                     // TODO
                     final int dialogButtonFontSize = 15;
 
@@ -140,11 +137,12 @@ final class MainPanel extends JPanel {
                         showTablePanel(tablePanelName);
                     });
 
-                    final JPanel southDialogPanel = createFocusCycleRootedPanel(0, 0, 0, 0);
+                    final JPanel southDialogPanel = createFocusCycleRootedPanel(10, 0, 0, 0);
                     southDialogPanel.add(okButton);
                     southDialogPanel.add(DefaultView.createButton("Anuluj", dialogButtonFontSize, e2 -> dialog.dispose()));
 
                     dialog.add(southDialogPanel, BorderLayout.SOUTH);
+                    setJComponentEmptyBorder(dialog.getRootPane(), 10, 10, 10, 10);
                     DefaultView.initDialog(dialog, okButton);
                 } else {
                     showTablePanel(tablePanelName);
@@ -152,7 +150,7 @@ final class MainPanel extends JPanel {
             }
         });
         DefaultView.centerJComponent(button);
-        button.setMaximumSize(buttonDimension);
+        button.setMaximumSize(defaultJComponentDimension);
 
         buttonsPanel.add(Box.createRigidArea(new Dimension(0, 15)));
         buttonsPanel.add(button);
@@ -163,8 +161,9 @@ final class MainPanel extends JPanel {
     }
 
     private static JPanel createFocusCycleRootedPanel(final LayoutManager layout, final int top, final int left, final int bottom, final int right) {
-        final JPanel panel = createPanel(layout, top, left, bottom, right);
+        final JPanel panel = new JPanel(layout, true);
         panel.setFocusCycleRoot(true);
+        setJComponentEmptyBorder(panel, top, left, bottom, right);
         return panel;
     }
 
@@ -179,7 +178,7 @@ final class MainPanel extends JPanel {
     }
 
     private static void addButtonToContainer(@NotNull final Container container, final String text, final ActionListener actionListener) {
-        container.add(DefaultView.createButton(text, FONT_SIZE, actionListener));
+        container.add(DefaultView.createButton(text, DEFAULT_FONT_SIZE, actionListener));
     }
 
     private void showTablePanel(final String tablePanelName) {
