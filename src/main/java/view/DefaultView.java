@@ -35,12 +35,12 @@ public final class DefaultView implements View {
 
     private final Controller controller = null;
 
-    private final JFrame frame = new JFrame("Komunikacja miejska");
+    private final JFrame jFrame = new JFrame("Komunikacja miejska");
 
-    private final JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.LEFT, JTabbedPane.SCROLL_TAB_LAYOUT);
+    private final JTabbedPane jTabbedPane = new JTabbedPane(JTabbedPane.LEFT, JTabbedPane.SCROLL_TAB_LAYOUT);
 
     public DefaultView() {
-        tabbedPane.setFocusCycleRoot(true);
+        jTabbedPane.setFocusCycleRoot(true);
 
         final Model model = null;
 
@@ -134,42 +134,42 @@ public final class DefaultView implements View {
         final MainPanel logiMainPanel = createMainPanel("Logi");
         addMainPanel(logiMainPanel, () -> model.getLogiRowCount(), () -> model.getLogiValueAt(), () -> controller.showLogi(), () -> controller.insertIntoLogi(), dataModyfikacji, tresc);
 
-        for (int i = 0; i < tabbedPane.getTabCount(); i++) {
-            tabbedPane.setTabComponentAt(i, createBoldLabel(tabbedPane.getTitleAt(i), 18, new Dimension(150, 56)));
+        for (int i = 0; i < jTabbedPane.getTabCount(); i++) {
+            jTabbedPane.setTabComponentAt(i, createBoldJLabel(jTabbedPane.getTitleAt(i), 18, new Dimension(150, 56)));
         }
-        frame.add(tabbedPane);
-        frame.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
-        frame.setExtendedState(Frame.MAXIMIZED_BOTH);
-        frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
-        addWindowClosingListener(frame);
-        frame.setVisible(true);
+        jFrame.add(jTabbedPane);
+        jFrame.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
+        jFrame.setExtendedState(Frame.MAXIMIZED_BOTH);
+        jFrame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+        addWindowClosingListener(jFrame);
+        jFrame.setVisible(true);
     }
 
     @NotNull
     @Contract("_ -> new")
     private MainPanel createMainPanel(final String name) {
-        return new MainPanel(frame, name);
+        return new MainPanel(jFrame, name);
     }
 
     private void addMainPanel(@NotNull final MainPanel mainPanel, final IntSupplier intSupplier, final ObjectSupplier objectSupplier, final Runnable insertRowRunnable, final Runnable showTableViewRunnable, final String... columnNames) {
         mainPanel.addTableView("All", intSupplier, objectSupplier, insertRowRunnable, "wszystkie", showTableViewRunnable, null, columnNames);
-        tabbedPane.add(mainPanel);
+        jTabbedPane.add(mainPanel);
     }
 
-    static JLabel createBoldLabel(final String text, final int fontSize, final Dimension dimension) {
-        final JLabel label = new JLabel(text, SwingConstants.CENTER);
-        centerJComponent(label);
-        setJComponentBoldFont(label, fontSize);
-        label.setPreferredSize(dimension);
-        return label;
+    static JLabel createBoldJLabel(final String text, final int fontSize, final Dimension dimension) {
+        final JLabel jLabel = new JLabel(text, SwingConstants.CENTER);
+        centerJComponent(jLabel);
+        setJComponentBoldFont(jLabel, fontSize);
+        jLabel.setPreferredSize(dimension);
+        return jLabel;
     }
 
     static void centerJComponent(@NotNull final JComponent jComponent) {
         jComponent.setAlignmentX(Component.CENTER_ALIGNMENT);
     }
 
-    static void setJComponentBoldFont(final JComponent jComponent, final int size) {
-        setJComponentFont(jComponent, Font.BOLD, size);
+    static void setJComponentBoldFont(final JComponent jComponent, final int fontSize) {
+        setJComponentFont(jComponent, Font.BOLD, fontSize);
     }
 
     private void addWindowClosingListener(@NotNull final Window window) {
@@ -189,39 +189,39 @@ public final class DefaultView implements View {
         }
     }
 
-    static JButton createButton(final String text, final int fontSize, final ActionListener actionListener) {
-        final JButton button = new JButton(text);
-        setJComponentFont(button, Font.PLAIN, fontSize);
-        button.addActionListener(actionListener);
-        return button;
+    static JButton createJButton(final String text, final int fontSize, final ActionListener actionListener) {
+        final JButton jButton = new JButton(text);
+        setJComponentFont(jButton, Font.PLAIN, fontSize);
+        jButton.addActionListener(actionListener);
+        return jButton;
     }
 
-    private static void setJComponentFont(@NotNull final JComponent jComponent, final int style, final int size) {
-        jComponent.setFont(new Font(jComponent.getFont().getName(), style, size));
+    private static void setJComponentFont(@NotNull final JComponent jComponent, final int fontStyle, final int fontSize) {
+        jComponent.setFont(new Font(jComponent.getFont().getName(), fontStyle, fontSize));
     }
 
-    static void initDialog(@NotNull final JDialog dialog, final JButton defaultButton) {
-        dialog.setModal(true);
-        dialog.pack();
-        dialog.setLocation((SCREEN_WIDTH - dialog.getWidth()) / 2, (SCREEN_HEIGHT - dialog.getHeight()) / 2);
-        dialog.setResizable(false);
-        dialog.getRootPane().setDefaultButton(defaultButton);
-        dialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-        dialog.setVisible(true);
+    static void initJDialog(@NotNull final JDialog jDialog, final JButton defaultButton) {
+        jDialog.setModal(true);
+        jDialog.pack();
+        jDialog.setLocation((SCREEN_WIDTH - jDialog.getWidth()) / 2, (SCREEN_HEIGHT - jDialog.getHeight()) / 2);
+        jDialog.setResizable(false);
+        jDialog.getRootPane().setDefaultButton(defaultButton);
+        jDialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+        jDialog.setVisible(true);
     }
 
-    /*static JLabel createLabel(final String text, final int fontStyle, final int fontSize) {
-        final JLabel label = new JLabel(text, SwingConstants.CENTER);
-        centerJComponent(label);
-        setJComponentFont(label, fontStyle, fontSize);
+    /*private static final JLabel createJLabel() {
+        final JLabel jLabel = new JLabel(text, SwingConstants.CENTER);
+        centerJComponent(jLabel);
+        setJComponentFont(jLabel, fontStyle, fontSize);
         return label;
     }*/
 
     /*@Override
     public final void showLoginDialog() {
-        final JDialog dialog = new JDialog((Frame) null, "Okno logowania");
+        final JDialog jDialog = new JDialog((Frame) null, "Okno logowania");
 
-        final JButton loginButton = createButton("Zaloguj", e -> controller.login());
+        final JButton loginButton = createJButton("Zaloguj", e -> controller.login());
 
         final GroupLayout groupLayout = createGroupLayout(dialog);
 
@@ -230,17 +230,17 @@ public final class DefaultView implements View {
         final JTextField usernameField = new JTextField("", 20);
         final JPasswordField passwordField = new JPasswordField("", 20);
 
-        final JButton cancelButton = createButton("Anuluj", e -> exit());
+        final JButton cancelButton = createJButton("Anuluj", e -> exit());
 
         groupLayout.setHorizontalGroup(groupLayout.createParallelGroup(GroupLayout.Alignment.CENTER).addGroup(groupLayout.createSequentialGroup().addGroup(groupLayout.createParallelGroup(GroupLayout.Alignment.TRAILING).addComponent(usernameLabel).addComponent(passwordLabel)).addGroup(groupLayout.createParallelGroup(GroupLayout.Alignment.LEADING).addComponent(usernameField).addComponent(passwordField))).addGroup(groupLayout.createSequentialGroup().addComponent(loginButton).addComponent(cancelButton)));
         groupLayout.setVerticalGroup(groupLayout.createSequentialGroup().addGroup(createBaselineGroup(groupLayout).addComponent(usernameLabel).addComponent(usernameField)).addGroup(createBaselineGroup(groupLayout).addComponent(passwordLabel).addComponent(passwordField)).addGroup(createBaselineGroup(groupLayout).addComponent(loginButton).addComponent(cancelButton)));
 
         addWindowClosingListener(dialog);
-        initDialog(dialog, groupLayout, loginButton, WindowConstants.DO_NOTHING_ON_CLOSE);
+        initJDialog(jDialog, groupLayout, loginButton, WindowConstants.DO_NOTHING_ON_CLOSE);
     }*/
 
     /*private static final GroupLayout createGroupLayout() {
-        final GroupLayout groupLayout = new GroupLayout(dialog.getContentPane());
+        final GroupLayout groupLayout = new GroupLayout(jDialog.getContentPane());
         groupLayout.setAutoCreateGaps(true);
         groupLayout.setAutoCreateContainerGaps(true);
         return groupLayout;

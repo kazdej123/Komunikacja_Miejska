@@ -19,7 +19,6 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.LayoutManager;
 import java.awt.Window;
-import java.awt.event.ActionListener;
 import java.util.function.IntSupplier;
 import java.util.function.Supplier;
 
@@ -41,8 +40,8 @@ final class MainPanel extends JPanel {
         }
     }
 
-    private final JPanel cardsPanel = createFocusCycleRootedPanel(new CardLayout(), 0, 10, 0, 10);
-    private final JPanel buttonsPanel = createFocusCycleRootedPanel(null, 10, 10, 10, 10);
+    private final JPanel cardsPanel = createJPanel(new CardLayout(), 0, 10, 0, 10);
+    private final JPanel buttonsPanel = createJPanel(null, 10, 10, 10, 10);
 
     private final Window ownerWindow;
 
@@ -59,7 +58,7 @@ final class MainPanel extends JPanel {
         add(cardsPanel, BorderLayout.CENTER);
 
         buttonsPanel.setLayout(new BoxLayout(buttonsPanel, BoxLayout.Y_AXIS));
-        buttonsPanel.add(DefaultView.createBoldLabel("Wyświetl " + name.toLowerCase(), (int) (1.1 * DEFAULT_FONT_SIZE), defaultJComponentDimension));
+        buttonsPanel.add(DefaultView.createBoldJLabel("Wyświetl " + name.toLowerCase(), (int) (1.1 * DEFAULT_FONT_SIZE), defaultJComponentDimension));
 
         add(buttonsPanel, BorderLayout.EAST);
     }
@@ -69,10 +68,10 @@ final class MainPanel extends JPanel {
     }
 
     final void addTableView(final String tablePanelName, final IntSupplier intSupplier, final ObjectSupplier objectSupplier, final Runnable insertRowRunnable, final String buttonText, final Runnable showTableViewRunnable, final String choosingDialogTitle, final String[] columnNames) {
-        final JPanel tablePanel = createFocusCycleRootedPanel(new BorderLayout(), 0, 0, 0, 0);
+        final JPanel tablePanel = createJPanel(new BorderLayout(), 0, 0, 0, 0);
         tablePanel.setName(tablePanelName);
 
-        final JTable table = new JTable(new AbstractTableModel() {
+        final JTable jTable = new JTable(new AbstractTableModel() {
             @Override
             public final int getColumnCount() {
                 return columnNames.length;
@@ -98,81 +97,77 @@ final class MainPanel extends JPanel {
                 return "Morszcz";
             }
         });
-        table.setAutoCreateRowSorter(true);
-        DefaultView.setJComponentBoldFont(table.getTableHeader(), 12);
+        jTable.setAutoCreateRowSorter(true);
+        DefaultView.setJComponentBoldFont(jTable.getTableHeader(), 12);
 
-        final JScrollPane scrollPane = new JScrollPane(table);
-        setJComponentEmptyBorder(scrollPane, 0, 0, 10, 0);
+        final JScrollPane jScrollPane = new JScrollPane(jTable);
+        setJComponentEmptyBorder(jScrollPane, 0, 0, 10, 0);
 
-        tablePanel.add(scrollPane, BorderLayout.CENTER);
+        tablePanel.add(jScrollPane, BorderLayout.CENTER);
 
-        final JPanel southButtonsPanel = createFocusCycleRootedPanel(10, 0, 0, 0);
-        addButtonToContainer(southButtonsPanel, "Dodaj rekord", e -> {
+        final JPanel southButtonsPanel = createJPanel(10, 0, 0, 0);
+        southButtonsPanel.add(DefaultView.createJButton("Dodaj rekord", DEFAULT_FONT_SIZE, e -> {
             try {
                 insertRowRunnable.run();
             } catch (final NullPointerException e1) {
                 // TODO
             }
-        });
+        }));
         addGapToContainer(southButtonsPanel, 20, 0);
-        addButtonToContainer(southButtonsPanel, "Usuń rekordy", null); // TODO
+        southButtonsPanel.add(DefaultView.createJButton("Usuń rekordy", DEFAULT_FONT_SIZE, null/*TODO*/));
 
         tablePanel.add(southButtonsPanel, BorderLayout.SOUTH);
 
         cardsPanel.add(tablePanel, tablePanelName);
 
-        final JButton button = DefaultView.createButton(buttonText, DEFAULT_FONT_SIZE, e -> {
+        final JButton jButton = DefaultView.createJButton(buttonText, DEFAULT_FONT_SIZE, e -> {
             try {
                 showTableViewRunnable.run();
             } catch (final NullPointerException e1) {
                 if (choosingDialogTitle != null) {
-                    final JDialog dialog = new JDialog(ownerWindow, "Wybierz " + choosingDialogTitle);
-                    dialog.setLayout(new BorderLayout());
+                    final JDialog jDialog = new JDialog(ownerWindow, "Wybierz " + choosingDialogTitle);
+                    jDialog.setLayout(new BorderLayout());
 
                     // TODO
-                    final int dialogButtonFontSize = 15;
+                    final int fontSize = 15;
 
-                    final JButton okButton = DefaultView.createButton("Ok", dialogButtonFontSize, e2 -> {
-                        dialog.dispose();
+                    final JButton okButton = DefaultView.createJButton("Ok", fontSize, e2 -> {
+                        jDialog.dispose();
                         showTablePanel(tablePanelName);
                     });
 
-                    final JPanel southDialogPanel = createFocusCycleRootedPanel(10, 0, 0, 0);
+                    final JPanel southDialogPanel = createJPanel(10, 0, 0, 0);
                     southDialogPanel.add(okButton);
-                    southDialogPanel.add(DefaultView.createButton("Anuluj", dialogButtonFontSize, e2 -> dialog.dispose()));
+                    southDialogPanel.add(DefaultView.createJButton("Anuluj", fontSize, e2 -> jDialog.dispose()));
 
-                    dialog.add(southDialogPanel, BorderLayout.SOUTH);
-                    setJComponentEmptyBorder(dialog.getRootPane(), 10, 10, 10, 10);
-                    DefaultView.initDialog(dialog, okButton);
+                    jDialog.add(southDialogPanel, BorderLayout.SOUTH);
+                    setJComponentEmptyBorder(jDialog.getRootPane(), 10, 10, 10, 10);
+                    DefaultView.initJDialog(jDialog, okButton);
                 } else {
                     showTablePanel(tablePanelName);
                 }
             }
         });
-        DefaultView.centerJComponent(button);
-        button.setMaximumSize(defaultJComponentDimension);
+        DefaultView.centerJComponent(jButton);
+        jButton.setMaximumSize(defaultJComponentDimension);
 
         addGapToContainer(buttonsPanel, 0, 15);
-        buttonsPanel.add(button);
+        buttonsPanel.add(jButton);
     }
 
-    private static JPanel createFocusCycleRootedPanel(final int top, final int left, final int bottom, final int right) {
-        return createFocusCycleRootedPanel(new FlowLayout(), top, left, bottom, right);
+    private static JPanel createJPanel(final int top, final int left, final int bottom, final int right) {
+        return createJPanel(new FlowLayout(), top, left, bottom, right);
     }
 
-    private static JPanel createFocusCycleRootedPanel(final LayoutManager layout, final int top, final int left, final int bottom, final int right) {
-        final JPanel panel = new JPanel(layout, true);
-        panel.setFocusCycleRoot(true);
-        setJComponentEmptyBorder(panel, top, left, bottom, right);
-        return panel;
+    private static JPanel createJPanel(final LayoutManager layout, final int top, final int left, final int bottom, final int right) {
+        final JPanel jPanel = new JPanel(layout, true);
+        jPanel.setFocusCycleRoot(true);
+        setJComponentEmptyBorder(jPanel, top, left, bottom, right);
+        return jPanel;
     }
 
-    private static void setJComponentEmptyBorder(@NotNull final JComponent component, final int top, final int left, final int bottom, final int right) {
-        component.setBorder(BorderFactory.createEmptyBorder(top, left, bottom, right));
-    }
-
-    private static void addButtonToContainer(@NotNull final Container container, final String text, final ActionListener actionListener) {
-        container.add(DefaultView.createButton(text, DEFAULT_FONT_SIZE, actionListener));
+    private static void setJComponentEmptyBorder(@NotNull final JComponent jComponent, final int top, final int left, final int bottom, final int right) {
+        jComponent.setBorder(BorderFactory.createEmptyBorder(top, left, bottom, right));
     }
 
     private static void addGapToContainer(@NotNull final Container container, final int width, final int height) {
