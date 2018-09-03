@@ -17,7 +17,6 @@ import java.awt.CardLayout;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.awt.Font;
 import java.awt.LayoutManager;
 import java.awt.Window;
 import java.awt.event.ActionListener;
@@ -100,7 +99,7 @@ final class MainPanel extends JPanel {
             }
         });
         table.setAutoCreateRowSorter(true);
-        DefaultView.setJComponentFont(table.getTableHeader(), Font.BOLD, 12);
+        DefaultView.setJComponentBoldFont(table.getTableHeader(), 12);
 
         final JScrollPane scrollPane = new JScrollPane(table);
         setJComponentEmptyBorder(scrollPane, 0, 0, 10, 0);
@@ -115,6 +114,7 @@ final class MainPanel extends JPanel {
                 // TODO
             }
         });
+        addGapToContainer(southButtonsPanel, 20, 0);
         addButtonToContainer(southButtonsPanel, "Usuń rekordy", null); // TODO
 
         tablePanel.add(southButtonsPanel, BorderLayout.SOUTH);
@@ -152,7 +152,7 @@ final class MainPanel extends JPanel {
         DefaultView.centerJComponent(button);
         button.setMaximumSize(defaultJComponentDimension);
 
-        buttonsPanel.add(Box.createRigidArea(new Dimension(0, 15)));
+        addGapToContainer(buttonsPanel, 0, 15);
         buttonsPanel.add(button);
     }
 
@@ -167,18 +167,16 @@ final class MainPanel extends JPanel {
         return panel;
     }
 
-    private static JPanel createPanel(final LayoutManager layout, final int top, final int left, final int bottom, final int right) {
-        final JPanel panel = new JPanel(layout, true);
-        setJComponentEmptyBorder(panel, top, left, bottom, right);
-        return panel;
-    }
-
     private static void setJComponentEmptyBorder(@NotNull final JComponent component, final int top, final int left, final int bottom, final int right) {
         component.setBorder(BorderFactory.createEmptyBorder(top, left, bottom, right));
     }
 
     private static void addButtonToContainer(@NotNull final Container container, final String text, final ActionListener actionListener) {
         container.add(DefaultView.createButton(text, DEFAULT_FONT_SIZE, actionListener));
+    }
+
+    private static void addGapToContainer(@NotNull final Container container, final int width, final int height) {
+        container.add(Box.createRigidArea(new Dimension(width, height)));
     }
 
     private void showTablePanel(final String tablePanelName) {
