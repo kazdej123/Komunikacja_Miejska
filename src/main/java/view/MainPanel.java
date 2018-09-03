@@ -47,20 +47,20 @@ final class MainPanel extends JPanel {
 
     private final Window ownerWindow;
 
-    MainPanel(final String name, final Window ownerWindow) {
+    MainPanel(final Window ownerWindow, final String name) {
         super(new BorderLayout());
         this.ownerWindow = ownerWindow;
 
         setName(name);
         setFocusCycleRoot(true);
-        setEmptyBorder(this, 20, 20, 20, 20);
+        setJComponentEmptyBorder(this, 0, 0, 0, 0);
 
         cardsPanel.add(new JPanel(), null);
         
         add(cardsPanel, BorderLayout.CENTER);
 
         buttonsPanel.setLayout(new BoxLayout(buttonsPanel, BoxLayout.Y_AXIS));
-        buttonsPanel.add(DefaultView.createBoldLabel("Wyświetl " + name.toLowerCase(), buttonDimension, (int) (1.1 * FONT_SIZE)));
+        buttonsPanel.add(DefaultView.createBoldLabel("Wyświetl " + name.toLowerCase(), (int) (1.1 * FONT_SIZE), buttonDimension));
 
         add(buttonsPanel, BorderLayout.EAST);
     }
@@ -102,11 +102,11 @@ final class MainPanel extends JPanel {
         DefaultView.setJComponentFont(table.getTableHeader(), Font.BOLD, 12);
 
         final JScrollPane scrollPane = new JScrollPane(table);
-        setEmptyBorder(scrollPane, 20, 10, 10, 10);
+        setJComponentEmptyBorder(scrollPane, 0, 0, 0, 0);
 
         tablePanel.add(scrollPane, BorderLayout.CENTER);
 
-        final JPanel internalButtonsPanel = createFocusCycleRootedPanel(new FlowLayout(), 0, 0, 0, 0);
+        final JPanel internalButtonsPanel = createFocusCycleRootedPanel(0, 0, 0, 0);
         addButtonToContainer(internalButtonsPanel, "Dodaj rekord", e -> {
             try {
                 insertRowRunnable.run();
@@ -140,7 +140,7 @@ final class MainPanel extends JPanel {
                         showTablePanel(tablePanelName);
                     });
 
-                    final JPanel southDialogPanel = createFocusCycleRootedPanel(new FlowLayout(), 0, 0, 0, 0);
+                    final JPanel southDialogPanel = createFocusCycleRootedPanel(0, 0, 0, 0);
                     southDialogPanel.add(okButton);
                     southDialogPanel.add(DefaultView.createButton("Anuluj", dialogButtonFontSize, e2 -> dialog.dispose()));
 
@@ -158,6 +158,10 @@ final class MainPanel extends JPanel {
         buttonsPanel.add(button);
     }
 
+    private static JPanel createFocusCycleRootedPanel(final int top, final int left, final int bottom, final int right) {
+        return createFocusCycleRootedPanel(new FlowLayout(), top, left, bottom, right);
+    }
+
     private static JPanel createFocusCycleRootedPanel(final LayoutManager layout, final int top, final int left, final int bottom, final int right) {
         final JPanel panel = createPanel(layout, top, left, bottom, right);
         panel.setFocusCycleRoot(true);
@@ -166,11 +170,11 @@ final class MainPanel extends JPanel {
 
     private static JPanel createPanel(final LayoutManager layout, final int top, final int left, final int bottom, final int right) {
         final JPanel panel = new JPanel(layout, true);
-        setEmptyBorder(panel, top, left, bottom, right);
+        setJComponentEmptyBorder(panel, top, left, bottom, right);
         return panel;
     }
 
-    private static void setEmptyBorder(@NotNull final JComponent component, final int top, final int left, final int bottom, final int right) {
+    private static void setJComponentEmptyBorder(@NotNull final JComponent component, final int top, final int left, final int bottom, final int right) {
         component.setBorder(BorderFactory.createEmptyBorder(top, left, bottom, right));
     }
 

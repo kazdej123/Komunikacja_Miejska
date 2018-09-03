@@ -83,44 +83,44 @@ public final class DefaultView implements View {
         final TableViewNames rozkladyJazdyNames = new TableViewNames("RozkladyJazdy", "rozkład jazdy");
         final TableViewNames dniKursowaniaNames = new TableViewNames("DniKursowania", "dzień kursowania");
 
-        final MainPanel gminyMainPanel = createThisOwnedMainPanel("Gminy");
-        addMainPanel(gminyMainPanel, () -> model.getGminyRowCount(), () -> model.getGminyValueAt(), () -> controller.showGminy(), () -> controller.insertIntoGminy(), idGminy, nazwaGminy);
+        final MainPanel gminyMainPanel = createMainPanel("Gminy");
+        addMainPanelWithBasicTableView(gminyMainPanel, () -> model.getGminyRowCount(), () -> model.getGminyValueAt(), () -> controller.showGminy(), () -> controller.insertIntoGminy(), idGminy, nazwaGminy);
 
-        final MainPanel miejscowosciMainPanel = createThisOwnedMainPanel("Miejscowości");
+        final MainPanel miejscowosciMainPanel = createMainPanel("Miejscowości");
         miejscowosciMainPanel.addTableView(gminyNames, () -> model.getMiejscowosciByGminyRowCount(), () -> model.getMiejscowosciByGminyValueAt(), () -> controller.insertIntoMiejscowosciByGminy(), "w danej gminie", () -> controller.showMiejscowosciByGminy(), idMiejscowosci, nazwaMiejscowosci);
-        addMainPanel(miejscowosciMainPanel, () -> model.getMiejscowosciRowCount(), () -> model.getMiejscowosciValueAt(), () -> controller.showMiejscowosci(), () -> controller.insertIntoMiejscowosci(), idMiejscowosci, nazwaMiejscowosci, gmina);
+        addMainPanelWithBasicTableView(miejscowosciMainPanel, () -> model.getMiejscowosciRowCount(), () -> model.getMiejscowosciValueAt(), () -> controller.showMiejscowosci(), () -> controller.insertIntoMiejscowosci(), idMiejscowosci, nazwaMiejscowosci, gmina);
 
-        final MainPanel uliceMainPanel = createThisOwnedMainPanel("Ulice");
+        final MainPanel uliceMainPanel = createMainPanel("Ulice");
         uliceMainPanel.addTableView(miejscowosciNames, () -> model.getUliceByMiejscowosciRowCount(), () -> model.getUliceByMiejscowosciValueAt(), () -> controller.insertIntoUliceByMiejscowosci(), "w danej miejscowości", () -> controller.showUliceByMiejscowosci(), idUlicy, nazwaUlicy);
         uliceMainPanel.addTableView(gminyNames, () -> model.getUliceByGminyRowCount(), () -> model.getUliceByGminyValueAt(), () -> controller.insertIntoUliceByGminy(), "w danej gminie", () -> controller.showUliceByGminy(), idUlicy, nazwaUlicy, miejscowosc);
-        addMainPanel(uliceMainPanel, () -> model.getUliceRowCount(), () -> model.getUliceValueAt(), () -> controller.showUlice(), () -> controller.insertIntoUlice(), idUlicy, nazwaUlicy, miejscowosc, gmina);
+        addMainPanelWithBasicTableView(uliceMainPanel, () -> model.getUliceRowCount(), () -> model.getUliceValueAt(), () -> controller.showUlice(), () -> controller.insertIntoUlice(), idUlicy, nazwaUlicy, miejscowosc, gmina);
 
-        final MainPanel przystankiMainPanel = createThisOwnedMainPanel("Przystanki");
+        final MainPanel przystankiMainPanel = createMainPanel("Przystanki");
         przystankiMainPanel.addTableView(uliceNames, () -> model.getPrzystankiByUliceRowCount(), () -> model.getPrzystankiByUliceValueAt(), () -> controller.insertIntoPrzystankiByUlice(), "przy danej ulicy", () -> controller.showPrzystankiByUlice(), idPrzystanku, nazwaPrzystanku, typPrzystanku);
         przystankiMainPanel.addTableView(miejscowosciNames, () -> model.getPrzystankiByMiejscowosciRowCount(), () -> model.getPrzystankiByMiejscowosciValueAt(), () -> controller.insertIntoPrzystankiByMiejscowosci(), "w danej miejscowości", () -> controller.showPrzystankiByMiejscowosci(), idPrzystanku, nazwaPrzystanku, ulica, typPrzystanku);
         przystankiMainPanel.addTableView(gminyNames, () -> model.getPrzystankiByGminyRowCount(), () -> model.getPrzystankiByGminyValueAt(), () -> controller.insertIntoPrzystankiByGminy(), "w danej gminie", () -> controller.showPrzystankiByGminy(), idPrzystanku, nazwaPrzystanku, ulica, miejscowosc, typPrzystanku);
-        addMainPanel(przystankiMainPanel, () -> model.getPrzystankiRowCount(), () -> model.getPrzystankiValueAt(), () -> controller.showPrzystanki(), () -> controller.insertIntoPrzystanki(), idPrzystanku, nazwaPrzystanku, ulica, miejscowosc, gmina, typPrzystanku);
+        addMainPanelWithBasicTableView(przystankiMainPanel, () -> model.getPrzystankiRowCount(), () -> model.getPrzystankiValueAt(), () -> controller.showPrzystanki(), () -> controller.insertIntoPrzystanki(), idPrzystanku, nazwaPrzystanku, ulica, miejscowosc, gmina, typPrzystanku);
 
-        final MainPanel linieMainPanel = createThisOwnedMainPanel("Linie");
-        addMainPanel(linieMainPanel, () -> model.getLinieRowCount(), () -> model.getLinieValueAt(), () -> controller.showLinie(), () -> controller.insertIntoLinie(), nrLinii, autobusCzyTramwaj, dziennaCzyNocna, liniaWaznaOd, uwagi);
+        final MainPanel linieMainPanel = createMainPanel("Linie");
+        addMainPanelWithBasicTableView(linieMainPanel, () -> model.getLinieRowCount(), () -> model.getLinieValueAt(), () -> controller.showLinie(), () -> controller.insertIntoLinie(), nrLinii, autobusCzyTramwaj, dziennaCzyNocna, liniaWaznaOd, uwagi);
 
-        final MainPanel podlinieMainPanel = createThisOwnedMainPanel("Podlinie");
+        final MainPanel podlinieMainPanel = createMainPanel("Podlinie");
         podlinieMainPanel.addTableView(linieNames, () -> model.getPodlinieByLinieRowCount(), () -> model.getPodlinieByLinieValueAt(), () -> controller.insertIntoPodlinieByLinie(), "danej linii", () -> controller.showPodlinieByLinie(), idPodlinii, uwagi);
-        addMainPanel(podlinieMainPanel, () -> model.getPodlinieRowCount(), () -> model.getPodlinieValueAt(), () -> controller.showPodlinie(), () -> controller.insertIntoPodlinie(), idPodlinii, linia, uwagi);
+        addMainPanelWithBasicTableView(podlinieMainPanel, () -> model.getPodlinieRowCount(), () -> model.getPodlinieValueAt(), () -> controller.showPodlinie(), () -> controller.insertIntoPodlinie(), idPodlinii, linia, uwagi);
 
-        final MainPanel rozkladyJazdyMainPanel = createThisOwnedMainPanel("Rozkłady jazdy");
+        final MainPanel rozkladyJazdyMainPanel = createMainPanel("Rozkłady jazdy");
         rozkladyJazdyMainPanel.addTableView(podlinieNames, () -> model.getRozkladyJazdyByPodlinieRowCount(), () -> model.getRozkladyJazdyByPodlinieValueAt(), () -> controller.insertIntoRozkladyJazdyByPodlinie(), "danej podlinii", () -> controller.showRozkladyJazdyByPodlinie(), nrPorzadkowy, idRozkladu, idPrzystanku, przystanek, ulica, miejscowosc, gmina, typPrzystanku);
         rozkladyJazdyMainPanel.addTableView(linieNames, () -> model.getRozkladyJazdyByLinieRowCount(), () -> model.getRozkladyJazdyByLinieValueAt(), () -> controller.insertIntoRozkladyJazdyByLinie(), "danej linii", () -> controller.showRozkladyJazdyByLinie(), nrPorzadkowy, idRozkladu, podlinia, idPrzystanku, przystanek, ulica, miejscowosc, gmina, typPrzystanku);
         rozkladyJazdyMainPanel.addTableView(przystankiNames, () -> model.getRozkladyJazdyByPrzystankiRowCount(), () -> model.getRozkladyJazdyByPrzystankiValueAt(), () -> controller.insertIntoRozkladyJazdyByPrzystanki(), "na danym przystanku", () -> controller.showRozkladyJazdyByPrzystanki(), nrPorzadkowy, idRozkladu, podlinia, linia);
         rozkladyJazdyMainPanel.addTableView(uliceNames, () -> model.getRozkladyJazdyByUliceRowCount(), () -> model.getRozkladyJazdyByUliceValueAt(), () -> controller.insertIntoRozkladyJazdyByUlice(), "przy danej ulicy", () -> controller.showRozkladyJazdyByUlice(), nrPorzadkowy, idRozkladu, podlinia, linia, idPrzystanku, przystanek, typPrzystanku);
         rozkladyJazdyMainPanel.addTableView(miejscowosciNames, () -> model.getRozkladyJazdyByMiejscowosciRowCount(), () -> model.getRozkladyJazdyByMiejscowosciValueAt(), () -> controller.insertIntoRozkladyJazdyByMiejscowosci(), "w danej miejscowości", () -> controller.showRozkladyJazdyByMiejscowosci(), nrPorzadkowy, idRozkladu, podlinia, linia, idPrzystanku, przystanek, ulica, typPrzystanku);
         rozkladyJazdyMainPanel.addTableView(gminyNames, () -> model.getRozkladyJazdyByGminyRowCount(), () -> model.getRozkladyJazdyByGminyValueAt(), () -> controller.insertIntoRozkladyJazdyByGminy(), "w danej gminie", () -> controller.showRozkladyJazdyByGminy(), nrPorzadkowy, idRozkladu, podlinia, linia, idPrzystanku, przystanek, ulica, miejscowosc, typPrzystanku);
-        addMainPanel(rozkladyJazdyMainPanel, () -> model.getRozkladyJazdyRowCount(), () -> model.getRozkladyJazdyValueAt(), () -> controller.showRozkladyJazdy(), () -> controller.insertIntoRozkladyJazdy(), nrPorzadkowy, idRozkladu, podlinia, linia, idPrzystanku, przystanek, ulica, miejscowosc, gmina, typPrzystanku);
+        addMainPanelWithBasicTableView(rozkladyJazdyMainPanel, () -> model.getRozkladyJazdyRowCount(), () -> model.getRozkladyJazdyValueAt(), () -> controller.showRozkladyJazdy(), () -> controller.insertIntoRozkladyJazdy(), nrPorzadkowy, idRozkladu, podlinia, linia, idPrzystanku, przystanek, ulica, miejscowosc, gmina, typPrzystanku);
 
-        final MainPanel dniKursowaniaMainPanel = createThisOwnedMainPanel("Dni kursowania");
-        addMainPanel(dniKursowaniaMainPanel, () -> model.getDniKursowaniaRowCount(), () -> model.getDniKursowaniaValueAt(), () -> controller.showDniKursowania(), () -> controller.insertIntoDniKursowania(), idDnia, nazwaDnia);
+        final MainPanel dniKursowaniaMainPanel = createMainPanel("Dni kursowania");
+        addMainPanelWithBasicTableView(dniKursowaniaMainPanel, () -> model.getDniKursowaniaRowCount(), () -> model.getDniKursowaniaValueAt(), () -> controller.showDniKursowania(), () -> controller.insertIntoDniKursowania(), idDnia, nazwaDnia);
 
-        final MainPanel kursyMainPanel = createThisOwnedMainPanel("Kursy");
+        final MainPanel kursyMainPanel = createMainPanel("Kursy");
         kursyMainPanel.addTableView(dniKursowaniaNames, () -> model.getKursyByDniKursowaniaRowCount(), () -> model.getKursyByDniKursowaniaValueAt(), () -> controller.insertIntoKursyByDniKursowania(), "w danym dniu kursowania", () -> controller.showKursyByDniKursowania(), podlinia, linia, idPrzystanku, przystanek, ulica, miejscowosc, gmina, typPrzystanku, godzina, uwagi);
         kursyMainPanel.addTableView(rozkladyJazdyNames, () -> model.getKursyByRozkladyJazdyRowCount(), () -> model.getKursyByRozkladyJazdyValueAt(), () -> controller.insertIntoKursyByRozkladyJazdy(), "na danym rozkładzie jazdy", () -> controller.showKursyByRozkladyJazdy(), dzienKursowania, godzina, uwagi);
         kursyMainPanel.addTableView(podlinieNames, () -> model.getKursyByPodlinieRowCount(), () -> model.getKursyByPodlinieValueAt(), () -> controller.insertIntoKursyByPodlinie(), "danej podlinii", () -> controller.showKursyByPodlinie(), idPrzystanku, przystanek, ulica, miejscowosc, gmina, typPrzystanku, dzienKursowania, godzina, uwagi);
@@ -129,34 +129,34 @@ public final class DefaultView implements View {
         kursyMainPanel.addTableView(uliceNames, () -> model.getKursyByUliceRowCount(), () -> model.getKursyByUliceValueAt(), () -> controller.insertIntoKursyByUlice(), "przy danej ulicy", () -> controller.showKursyByUlice(), podlinia, linia, idPrzystanku, przystanek, typPrzystanku, dzienKursowania, godzina, uwagi);
         kursyMainPanel.addTableView(miejscowosciNames, () -> model.getKursyByMiejscowosciRowCount(), () -> model.getKursyByMiejscowosciValueAt(), () -> controller.insertIntoKursyByMiejscowosci(), "w danej miejscowości", () -> controller.showKursyByMiejscowosci(), podlinia, linia, idPrzystanku, przystanek, ulica, typPrzystanku, dzienKursowania, godzina, uwagi);
         kursyMainPanel.addTableView(gminyNames, () -> model.getKursyByGminyRowCount(), () -> model.getKursyByGminyValueAt(), () -> controller.insertIntoKursyByGminy(), "w danej gminie", () -> controller.showKursyByGminy(), podlinia, linia, idPrzystanku, przystanek, ulica, miejscowosc, typPrzystanku, dzienKursowania, godzina, uwagi);
-        addMainPanel(kursyMainPanel, () -> model.getKursyRowCount(), () -> model.getKursyValueAt(), () -> controller.showKursy(), () -> controller.insertIntoKursy(), podlinia, linia, idPrzystanku, przystanek, ulica, miejscowosc, gmina, typPrzystanku, dzienKursowania, godzina, uwagi);
+        addMainPanelWithBasicTableView(kursyMainPanel, () -> model.getKursyRowCount(), () -> model.getKursyValueAt(), () -> controller.showKursy(), () -> controller.insertIntoKursy(), podlinia, linia, idPrzystanku, przystanek, ulica, miejscowosc, gmina, typPrzystanku, dzienKursowania, godzina, uwagi);
 
-        final MainPanel logiMainPanel = createThisOwnedMainPanel("Logi");
-        addMainPanel(logiMainPanel, () -> model.getLogiRowCount(), () -> model.getLogiValueAt(), () -> controller.showLogi(), () -> controller.insertIntoLogi(), dataModyfikacji, tresc);
+        final MainPanel logiMainPanel = createMainPanel("Logi");
+        addMainPanelWithBasicTableView(logiMainPanel, () -> model.getLogiRowCount(), () -> model.getLogiValueAt(), () -> controller.showLogi(), () -> controller.insertIntoLogi(), dataModyfikacji, tresc);
 
         for (int i = 0; i < tabbedPane.getTabCount(); i++) {
-            tabbedPane.setTabComponentAt(i, createBoldLabel(tabbedPane.getTitleAt(i), new Dimension(150, 56), 18));
+            tabbedPane.setTabComponentAt(i, createBoldLabel(tabbedPane.getTitleAt(i), 18, new Dimension(150, 56)));
         }
         frame.add(tabbedPane);
         frame.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
         frame.setExtendedState(Frame.MAXIMIZED_BOTH);
         frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
-        addWindowClosingListener(frame);
+        setWindowExitOnClose(frame);
         frame.setVisible(true);
     }
 
     @NotNull
     @Contract("_ -> new")
-    private MainPanel createThisOwnedMainPanel(final String name) {
-        return new MainPanel(name, frame);
+    private MainPanel createMainPanel(final String name) {
+        return new MainPanel(frame, name);
     }
 
-    private void addMainPanel(@NotNull final MainPanel mainPanel, final IntSupplier intSupplier, final ObjectSupplier objectSupplier, final Runnable insertRowRunnable, final Runnable showTableViewRunnable, final String... columnNames) {
+    private void addMainPanelWithBasicTableView(@NotNull final MainPanel mainPanel, final IntSupplier intSupplier, final ObjectSupplier objectSupplier, final Runnable insertRowRunnable, final Runnable showTableViewRunnable, final String... columnNames) {
         mainPanel.addTableView("All", intSupplier, objectSupplier, insertRowRunnable, "wszystkie", showTableViewRunnable, null, columnNames);
         tabbedPane.add(mainPanel);
     }
 
-    static JLabel createBoldLabel(final String text, final Dimension dimension, final int fontSize) {
+    static JLabel createBoldLabel(final String text, final int fontSize, final Dimension dimension) {
         final JLabel label = createLabel(text, Font.BOLD, fontSize);
         label.setPreferredSize(dimension);
         return label;
@@ -173,7 +173,7 @@ public final class DefaultView implements View {
         jComponent.setAlignmentX(Component.CENTER_ALIGNMENT);
     }
 
-    private void addWindowClosingListener(@NotNull final Window window) {
+    private void setWindowExitOnClose(@NotNull final Window window) {
         window.addWindowListener(new WindowAdapter() {
             @Override
             public final void windowClosing(final WindowEvent e) {
