@@ -2,7 +2,15 @@ package view;
 
 import org.jetbrains.annotations.NotNull;
 
-import javax.swing.*;
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JComponent;
+import javax.swing.JDialog;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.table.AbstractTableModel;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
@@ -32,8 +40,8 @@ final class MainPanel extends JPanel {
         }
     }
 
-    private final Container cardsPanel = createJPanel(new CardLayout(), 0, 10, 0, 10);
-    private final Container buttonsPanel = createJPanel(null, 10, 10, 10, 10);
+    private final JPanel cardsPanel = createJPanel(new CardLayout(), 0, 10, 0, 10);
+    private final JPanel buttonsPanel = createJPanel(null, 10, 10, 10, 10);
 
     private final Window ownerWindow;
 
@@ -60,7 +68,7 @@ final class MainPanel extends JPanel {
     }
 
     final void addTableView(final String tablePanelName, final IntSupplier intSupplier, final Supplier objectSupplier, final Runnable insertRowRunnable, final String buttonText, final Runnable showTableViewRunnable, final Object choosingDialogTitle, final String[] columnNames) {
-        final Container tablePanel = createJPanel(new BorderLayout(), 0, 0, 0, 0);
+        final JPanel tablePanel = createJPanel(new BorderLayout(), 0, 0, 0, 0);
         tablePanel.setName(tablePanelName);
 
         final JTable jTable = new JTable(new AbstractTableModel() {
@@ -92,12 +100,12 @@ final class MainPanel extends JPanel {
         jTable.setAutoCreateRowSorter(true);
         DefaultView.setComponentBoldFont(jTable.getTableHeader(), 12);
 
-        final JComponent jScrollPane = new JScrollPane(jTable);
+        final JScrollPane jScrollPane = new JScrollPane(jTable);
         setJComponentEmptyBorder(jScrollPane, 0, 0, 10, 0);
 
         tablePanel.add(jScrollPane, BorderLayout.CENTER);
 
-        final Container southButtonsPanel = createJPanel(10, 0, 0, 0);
+        final JPanel southButtonsPanel = createJPanel(10, 0, 0, 0);
         southButtonsPanel.add(DefaultView.createJButton("Dodaj rekord", DEFAULT_FONT_SIZE, e -> {
             try {
                 insertRowRunnable.run();
@@ -112,7 +120,7 @@ final class MainPanel extends JPanel {
 
         cardsPanel.add(tablePanel, tablePanelName);
 
-        final JComponent jButton = DefaultView.createJButton(buttonText, DEFAULT_FONT_SIZE, e -> {
+        final JButton jButton = DefaultView.createJButton(buttonText, DEFAULT_FONT_SIZE, e -> {
             try {
                 showTableViewRunnable.run();
             } catch (final NullPointerException e1) {
@@ -128,7 +136,7 @@ final class MainPanel extends JPanel {
                         showTablePanel(tablePanelName);
                     });
 
-                    final Container southDialogPanel = createJPanel(10, 0, 0, 0);
+                    final JPanel southDialogPanel = createJPanel(10, 0, 0, 0);
                     southDialogPanel.add(okButton);
                     southDialogPanel.add(DefaultView.createJButton("Anuluj", fontSize, e2 -> jDialog.dispose()));
 
