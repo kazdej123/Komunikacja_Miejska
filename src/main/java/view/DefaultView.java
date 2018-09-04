@@ -23,8 +23,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.function.IntSupplier;
+import java.util.function.Supplier;
 
-import static view.MainPanel.ObjectSupplier;
 import static view.MainPanel.TableViewNames;
 
 public final class DefaultView implements View {
@@ -151,7 +151,7 @@ public final class DefaultView implements View {
         return new MainPanel(jFrame, name);
     }
 
-    private void addMainPanel(@NotNull final MainPanel mainPanel, final IntSupplier intSupplier, final ObjectSupplier objectSupplier, final Runnable insertRowRunnable, final Runnable showTableViewRunnable, final String... columnNames) {
+    private void addMainPanel(@NotNull final MainPanel mainPanel, final IntSupplier intSupplier, final Supplier objectSupplier, final Runnable insertRowRunnable, final Runnable showTableViewRunnable, final String... columnNames) {
         mainPanel.addTableView("All", intSupplier, objectSupplier, insertRowRunnable, "wszystkie", showTableViewRunnable, null, columnNames);
         jTabbedPane.add(mainPanel);
     }
@@ -159,7 +159,7 @@ public final class DefaultView implements View {
     static JLabel createBoldJLabel(final String text, final int fontSize, final Dimension dimension) {
         final JLabel jLabel = new JLabel(text, SwingConstants.CENTER);
         centerJComponent(jLabel);
-        setJComponentBoldFont(jLabel, fontSize);
+        setComponentBoldFont(jLabel, fontSize);
         jLabel.setPreferredSize(dimension);
         return jLabel;
     }
@@ -168,8 +168,8 @@ public final class DefaultView implements View {
         jComponent.setAlignmentX(Component.CENTER_ALIGNMENT);
     }
 
-    static void setJComponentBoldFont(final JComponent jComponent, final int fontSize) {
-        setJComponentFont(jComponent, Font.BOLD, fontSize);
+    static void setComponentBoldFont(final Component component, final int fontSize) {
+        setComponentFont(component, Font.BOLD, fontSize);
     }
 
     private void addWindowClosingListener(@NotNull final Window window) {
@@ -191,13 +191,13 @@ public final class DefaultView implements View {
 
     static JButton createJButton(final String text, final int fontSize, final ActionListener actionListener) {
         final JButton jButton = new JButton(text);
-        setJComponentFont(jButton, Font.PLAIN, fontSize);
+        setComponentFont(jButton, Font.PLAIN, fontSize);
         jButton.addActionListener(actionListener);
         return jButton;
     }
 
-    private static void setJComponentFont(@NotNull final JComponent jComponent, final int fontStyle, final int fontSize) {
-        jComponent.setFont(new Font(jComponent.getFont().getName(), fontStyle, fontSize));
+    private static void setComponentFont(@NotNull final Component component, final int fontStyle, final int fontSize) {
+        component.setFont(new Font(component.getFont().getName(), fontStyle, fontSize));
     }
 
     static void initJDialog(@NotNull final JDialog jDialog, final JButton defaultButton) {
