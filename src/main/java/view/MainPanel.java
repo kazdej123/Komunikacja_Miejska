@@ -2,23 +2,11 @@ package view;
 
 import org.jetbrains.annotations.NotNull;
 
-import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JComponent;
-import javax.swing.JDialog;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
+import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import javax.swing.table.AbstractTableModel;
-import java.awt.BorderLayout;
-import java.awt.CardLayout;
-import java.awt.Container;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.LayoutManager;
-import java.awt.Window;
+import java.awt.*;
+import java.awt.event.ActionListener;
 import java.util.function.IntSupplier;
 import java.util.function.Supplier;
 
@@ -30,6 +18,11 @@ final class MainPanel extends JPanel {
     /*@FunctionalInterface
     interface ObjectSupplier extends Supplier<Object> {}*/
 
+    private final JPanel cardsPanel = createJPanel(new CardLayout(), new Insets(0, 10, 0, 10));
+    private final JPanel buttonsPanel = createJPanel(null, new Insets(10, 10, 10, 10));
+
+    private final Window ownerWindow;
+
     static final class TableViewNames {
         private final String tablePanelName;
         private final Object choosingDialogTitle;
@@ -40,18 +33,13 @@ final class MainPanel extends JPanel {
         }
     }
 
-    private final JPanel cardsPanel = createJPanel(new CardLayout(), 0, 10, 0, 10);
-    private final JPanel buttonsPanel = createJPanel(null, 10, 10, 10, 10);
-
-    private final Window ownerWindow;
-
     MainPanel(final Window ownerWindow, final String name) {
         super(new BorderLayout());
         this.ownerWindow = ownerWindow;
 
         setName(name);
         setFocusCycleRoot(true);
-        setJComponentEmptyBorder(this, 20, 10, 30, 10);
+        setJComponentEmptyBorder(this, new Insets(20, 10, 30, 10));
 
         cardsPanel.add(new JPanel(), null);
         
@@ -68,7 +56,7 @@ final class MainPanel extends JPanel {
     }
 
     final void addTableView(final String tablePanelName, final IntSupplier intSupplier, final Supplier objectSupplier, final Runnable insertRowRunnable, final String buttonText, final Runnable showTableViewRunnable, final Object choosingDialogTitle, final String[] columnNames) {
-        final JPanel tablePanel = createJPanel(new BorderLayout(), 0, 0, 0, 0);
+        final JPanel tablePanel = createJPanel(new BorderLayout(), new Insets(0, 0, 0, 0));
         tablePanel.setName(tablePanelName);
 
         final JTable jTable = new JTable(new AbstractTableModel() {
@@ -100,21 +88,12 @@ final class MainPanel extends JPanel {
         jTable.setAutoCreateRowSorter(true);
         DefaultView.setComponentBoldFont(jTable.getTableHeader(), 12);
 
-        final JScrollPane jScrollPane = new JScrollPane(jTable);
-        setJComponentEmptyBorder(jScrollPane, 0, 0, 10, 0);
+        addScrollableComponentToContainer(tablePanel, BorderLayout.CENTER, jTable, new Insets(0, 0, 0, 10));
 
-        tablePanel.add(jScrollPane, BorderLayout.CENTER);
-
-        final JPanel southButtonsPanel = createJPanel(10, 0, 0, 0);
-        southButtonsPanel.add(DefaultView.createJButton("Dodaj rekord", DEFAULT_FONT_SIZE, e -> {
-            try {
-                insertRowRunnable.run();
-            } catch (final NullPointerException e1) {
-                // TODO
-            }
-        }));
+        final JPanel southButtonsPanel = createJPanel(new Insets(10, 0, 0, 0));
+        addJButtonToContainer(southButtonsPanel, "Dodaj rekord", DEFAULT_FONT_SIZE, e -> insertRowRunnable.run());
         addGapToContainer(southButtonsPanel, 20, 0);
-        southButtonsPanel.add(DefaultView.createJButton("Usuń rekordy", DEFAULT_FONT_SIZE, null/*TODO*/));
+        addJButtonToContainer(southButtonsPanel, "Usuń rekordy", DEFAULT_FONT_SIZE, null);
 
         tablePanel.add(southButtonsPanel, BorderLayout.SOUTH);
 
@@ -126,9 +105,25 @@ final class MainPanel extends JPanel {
             } catch (final NullPointerException e1) {
                 if (choosingDialogTitle != null) {
                     final JDialog jDialog = new JDialog(ownerWindow, "Wybierz " + choosingDialogTitle);
-                    jDialog.setLayout(new BorderLayout());
+                    setJComponentEmptyBorder(jDialog.getRootPane(), new Insets(10, 10, 10, 10));
 
+                    final JList<String> jList = new JList<>(new AbstractListModel<String>() {
+                        @Override
+                        public final int getSize() {
+                            return 100; // TODO
+                        }
+
+                        @Override
+                        public final String getElementAt(final int index) {
+                            return index + "Test";
+                        }
+                    });
                     // TODO
+
+                    addScrollableComponentToContainer(jDialog, BorderLayout.CENTER, jList, new Insets(0, 0, 10, 0));
+
+                    final JPanel southDialogPanel = createJPanel(new Insets(10, 0, 0, 0));
+
                     final int fontSize = 15;
 
                     final JButton okButton = DefaultView.createJButton("Ok", fontSize, e2 -> {
@@ -136,13 +131,20 @@ final class MainPanel extends JPanel {
                         showTablePanel(tablePanelName);
                     });
 
-                    final JPanel southDialogPanel = createJPanel(10, 0, 0, 0);
                     southDialogPanel.add(okButton);
                     southDialogPanel.add(DefaultView.createJButton("Anuluj", fontSize, e2 -> jDialog.dispose()));
 
                     jDialog.add(southDialogPanel, BorderLayout.SOUTH);
-                    setJComponentEmptyBorder(jDialog.getRootPane(), 10, 10, 10, 10);
-                    DefaultView.initJDialog(jDialog, okButton);
+                    jDialog.pack();
+
+                    final Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+
+                    jDialog.setLocation((screenSize.width - jDialog.getWidth()) / 2, (screenSize.height - jDialog.getHeight()) / 2);
+                    jDialog.setModal(true);
+                    jDialog.setResizable(false);
+                    jDialog.getRootPane().setDefaultButton(okButton);
+                    jDialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+                    jDialog.setVisible(true);
                 } else {
                     showTablePanel(tablePanelName);
                 }
@@ -155,19 +157,29 @@ final class MainPanel extends JPanel {
         buttonsPanel.add(jButton);
     }
 
-    private static JPanel createJPanel(final int top, final int left, final int bottom, final int right) {
-        return createJPanel(new FlowLayout(), top, left, bottom, right);
+    private static void addJButtonToContainer(@NotNull final Container container, final String buttonText, final int fontSize, final ActionListener actionListener) {
+        container.add(DefaultView.createJButton(buttonText, fontSize, actionListener));
     }
 
-    private static JPanel createJPanel(final LayoutManager layout, final int top, final int left, final int bottom, final int right) {
+    private static void addScrollableComponentToContainer(@NotNull final Container container, final Object constraints, final Component component, final Insets borderInsets) {
+        final JScrollPane jScrollPane = new JScrollPane(component);
+        setJComponentEmptyBorder(jScrollPane, borderInsets);
+        container.add(jScrollPane, constraints);
+    }
+
+    private static JPanel createJPanel(final Insets borderInsets) {
+        return createJPanel(new FlowLayout(), borderInsets);
+    }
+
+    private static JPanel createJPanel(final LayoutManager layout, final Insets borderInsets) {
         final JPanel jPanel = new JPanel(layout, true);
         jPanel.setFocusCycleRoot(true);
-        setJComponentEmptyBorder(jPanel, top, left, bottom, right);
+        setJComponentEmptyBorder(jPanel, borderInsets);
         return jPanel;
     }
 
-    private static void setJComponentEmptyBorder(@NotNull final JComponent jComponent, final int top, final int left, final int bottom, final int right) {
-        jComponent.setBorder(BorderFactory.createEmptyBorder(top, left, bottom, right));
+    private static void setJComponentEmptyBorder(@NotNull final JComponent jComponent, final Insets borderInsets) {
+        jComponent.setBorder(new EmptyBorder(borderInsets));
     }
 
     private static void addGapToContainer(@NotNull final Container container, final int width, final int height) {

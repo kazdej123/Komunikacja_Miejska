@@ -200,16 +200,6 @@ public final class DefaultView implements View {
         component.setFont(new Font(component.getFont().getName(), fontStyle, fontSize));
     }
 
-    static void initJDialog(@NotNull final JDialog jDialog, final JButton defaultButton) {
-        jDialog.setModal(true);
-        jDialog.pack();
-        jDialog.setLocation((SCREEN_WIDTH - jDialog.getWidth()) / 2, (SCREEN_HEIGHT - jDialog.getHeight()) / 2);
-        jDialog.setResizable(false);
-        jDialog.getRootPane().setDefaultButton(defaultButton);
-        jDialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-        jDialog.setVisible(true);
-    }
-
     /*private static final JLabel createJLabel() {
         final JLabel jLabel = new JLabel(text, SwingConstants.CENTER);
         centerJComponent(jLabel);
