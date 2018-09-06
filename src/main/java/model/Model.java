@@ -125,4 +125,128 @@ public interface Model {
     Object getKursyValueAt();
 
     Object getLogiValueAt();
+
+    int getGminyChoosingForShowSize();
+
+    int getMiejscowosciByGminyChoosingForShowSize();
+
+    int getMiejscowosciChoosingForShowSize();
+
+    int getUliceByMiejscowosciChoosingForShowSize();
+
+    int getUliceByGminyChoosingForShowSize();
+
+    int getUliceChoosingForShowSize();
+
+    int getPrzystankiByUliceChoosingForShowSize();
+
+    int getPrzystankiByMiejscowosciChoosingForShowSize();
+
+    int getPrzystankiByGminyChoosingForShowSize();
+
+    int getPrzystankiChoosingForShowSize();
+
+    int getLinieChoosingForShowSize();
+
+    int getPodlinieByLinieChoosingForShowSize();
+
+    int getPodlinieChoosingForShowSize();
+
+    int getRozkladyJazdyByPodlinieChoosingForShowSize();
+
+    int getRozkladyJazdyByLinieChoosingForShowSize();
+
+    int getRozkladyJazdyByPrzystankiChoosingForShowSize();
+
+    int getRozkladyJazdyByUliceChoosingForShowSize();
+
+    int getRozkladyJazdyByMiejscowosciChoosingForShowSize();
+
+    int getRozkladyJazdyByGminyChoosingForShowSize();
+
+    int getRozkladyJazdyChoosingForShowSize();
+
+    int getDniKursowaniaChoosingForShowSize();
+
+    int getKursyByDniKursowaniaChoosingForShowSize();
+
+    int getKursyByRozkladyJazdyChoosingForShowSize();
+
+    int getKursyByPodlinieChoosingForShowSize();
+
+    int getKursyByLinieChoosingForShowSize();
+
+    int getKursyByPrzystankiChoosingForShowSize();
+
+    int getKursyByUliceChoosingForShowSize();
+
+    int getKursyByMiejscowosciChoosingForShowSize();
+
+    int getKursyByGminyChoosingForShowSize();
+
+    int getKursyChoosingForShowSize();
+
+    int getLogiChoosingForShowSize();
+
+    String getGminyChoosingForShowElementAt();
+
+    String getMiejscowosciByGminyChoosingForShowElementAt();
+
+    String getMiejscowosciChoosingForShowElementAt();
+
+    String getUliceByMiejscowosciChoosingForShowElementAt();
+
+    String getUliceByGminyChoosingForShowElementAt();
+
+    String getUliceChoosingForShowElementAt();
+
+    String getPrzystankiByUliceChoosingForShowElementAt();
+
+    String getPrzystankiByMiejscowosciChoosingForShowElementAt();
+
+    String getPrzystankiByGminyChoosingForShowElementAt();
+
+    String getPrzystankiChoosingForShowElementAt();
+
+    String getLinieChoosingForShowElementAt();
+
+    String getPodlinieByLinieChoosingForShowElementAt();
+
+    String getPodlinieChoosingForShowElementAt();
+
+    String getRozkladyJazdyByPodlinieChoosingForShowElementAt();
+
+    String getRozkladyJazdyByLinieChoosingForShowElementAt();
+
+    String getRozkladyJazdyByPrzystankiChoosingForShowElementAt();
+
+    String getRozkladyJazdyByUliceChoosingForShowElementAt();
+
+    String getRozkladyJazdyByMiejscowosciChoosingForShowElementAt();
+
+    String getRozkladyJazdyByGminyChoosingForShowElementAt();
+
+    String getRozkladyJazdyChoosingForShowElementAt();
+
+    String getDniKursowaniaChoosingForShowElementAt();
+
+    String getKursyByDniKursowaniaChoosingForShowElementAt();
+
+    String getKursyByRozkladyJazdyChoosingForShowElementAt();
+
+    String getKursyByPodlinieChoosingForShowElementAt();
+
+    String getKursyByLinieChoosingForShowElementAt();
+
+    String getKursyByPrzystankiChoosingForShowElementAt();
+
+    String getKursyByUliceChoosingForShowElementAt();
+
+    String getKursyByMiejscowosciChoosingForShowElementAt();
+
+    String getKursyByGminyChoosingForShowElementAt();
+
+    String getKursyChoosingForShowElementAt();
+
+    String getLogiChoosingForShowElementAt();
 }

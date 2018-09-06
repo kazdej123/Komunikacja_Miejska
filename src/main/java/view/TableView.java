@@ -3,33 +3,26 @@ package view;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
-import javax.swing.AbstractListModel;
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JList;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.WindowConstants;
+import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.Container;
-import java.awt.FlowLayout;
-import java.awt.Font;
-import java.awt.Insets;
+import java.awt.*;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.function.IntSupplier;
 import java.util.function.Supplier;
 
 final class TableView {
+    @FunctionalInterface
+    interface StringSupplier extends Supplier<String> {}
+
     private final JPanel tablePanel = MainPanel.createJPanel(new BorderLayout(), new Insets(0, 0, 0, 0));
 
     private final JButton mainButton;
 
     private final MainPanel ownerMainPanel;
 
-    TableView(@NotNull final MainPanel ownerMainPanel, final String tablePanelName, final IntSupplier intSupplier, final Supplier objectSupplier, final Runnable insertRowRunnable, final String buttonText, final Runnable showTableViewRunnable, final Object choosingDialogTitle, final String[] columnNames) {
+    TableView(@NotNull final MainPanel ownerMainPanel, final String tablePanelName, final IntSupplier tableRowCountSupplier, final Supplier tableValueAtSupplier, final Runnable insertRowRunnable, final String buttonText, final Runnable showTableViewRunnable, final Object choosingDialogTitle, final IntSupplier choosingForShowSizeSupplier, final StringSupplier choosingForShowElementAtSupplier, final String[] columnNames) {
         this.ownerMainPanel = ownerMainPanel;
 
         tablePanel.setName(tablePanelName);
@@ -48,7 +41,7 @@ final class TableView {
             @Override
             public final int getRowCount() {
                 try {
-                    return intSupplier.getAsInt();
+                    return tableRowCountSupplier.getAsInt();
                 } catch (final NullPointerException e) {
                     return 100;
                 }
@@ -56,13 +49,16 @@ final class TableView {
 
             @Override
             public final Object getValueAt(final int rowIndex, final int columnIndex) {
-//                    return objectSupplier.get();
-                return "Morszcz";
+                try {
+                    return tableValueAtSupplier.get();
+                } catch (final NullPointerException e) {
+                    return "Morszcz";
+                }
             }
         });
         jTable.setAutoCreateRowSorter(true);
         DefaultView.setComponentBoldFont(jTable.getTableHeader(), 12);
-        addScrollableComponentToContainer(tablePanel, BorderLayout.CENTER, jTable, new Insets(0, 0, 0, 10));
+        addScrollableComponentToContainer(tablePanel, jTable, BorderLayout.CENTER, new Insets(0, 0, 0, 10));
 
         final JPanel southButtonsPanel = createJPanel(new Insets(10, 0, 0, 0));
         addJButtonToContainer(southButtonsPanel, "Dodaj rekord", MainPanel.DEFAULT_FONT_SIZE, e -> {
@@ -87,28 +83,41 @@ final class TableView {
                     final JList<String> jList = new JList<>(new AbstractListModel<>() {
                         @Override
                         public final int getSize() {
-                            return 100; // TODO
+                            try {
+                                return choosingForShowSizeSupplier.getAsInt();
+                            } catch (final NullPointerException e2) {
+                                return 100;
+                            }
                         }
 
                         @Override
                         public final String getElementAt(final int index) {
-                            return index + "Test";
+                            try {
+                                return choosingForShowElementAtSupplier.get();
+                            } catch (final NullPointerException e2) {
+                                return "Test " + (char)index;
+                            }
                         }
                     });
-                    // TODO
-                    addScrollableComponentToContainer(jDialog, BorderLayout.CENTER, jList, new Insets(0, 0, 10, 0));
+                    jList.addMouseListener(new MouseAdapter() {
+                        @Override
+                        public final void mouseClicked(final MouseEvent e) {
+                            if (e.getClickCount() == 2) {
+                                closeWindow(jDialog);
+                            }
+                        }
+                    });
+                    jList.setSelectedIndex(0);
+                    jList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+                    jList.setVisibleRowCount(10);
+                    addScrollableComponentToContainer(jDialog, jList, BorderLayout.CENTER, new Insets(0, 0, 10, 0));
 
                     final JPanel southDialogPanel = createJPanel(new Insets(10, 0, 0, 0));
 
-                    final int fontSize = 15;
-
-                    final JButton okButton = createJButton("Ok", fontSize, e2 -> {
-                        jDialog.dispose();
-                        showTablePanel(tablePanelName);
-                    });
+                    final JButton okButton = createJButton("Ok", e2 -> closeWindow(jDialog));
 
                     southDialogPanel.add(okButton);
-                    southDialogPanel.add(createJButton("Anuluj", fontSize, e2 -> jDialog.dispose()));
+                    southDialogPanel.add(createJButton("Anuluj", e2 -> jDialog.dispose()));
 
                     jDialog.add(southDialogPanel, BorderLayout.SOUTH);
                     jDialog.pack();
@@ -127,7 +136,7 @@ final class TableView {
         mainButton.setMaximumSize(MainPanel.defaultJComponentDimension);
     }
 
-    private static void addScrollableComponentToContainer(@NotNull final Container container, final Object constraints, final Component component, final Insets borderInsets) {
+    private static void addScrollableComponentToContainer(@NotNull final Container container, final Component component, final Object constraints, final Insets borderInsets) {
         final JScrollPane jScrollPane = new JScrollPane(component);
         MainPanel.setJComponentEmptyBorder(jScrollPane, borderInsets);
         container.add(jScrollPane, constraints);
@@ -142,10 +151,20 @@ final class TableView {
     }
 
     private static JButton createJButton(final String text, final int fontSize, final ActionListener actionListener) {
-        final JButton jButton = new JButton(text);
+        final JButton jButton = createJButton(text, actionListener);
         DefaultView.setComponentFont(jButton, Font.PLAIN, fontSize);
+        return jButton;
+    }
+
+    private static JButton createJButton(final String text, final ActionListener actionListener) {
+        final JButton jButton = new JButton(text);
         jButton.addActionListener(actionListener);
         return jButton;
+    }
+
+    private void closeWindow(@NotNull final Window window) {
+        window.dispose();
+        showTablePanel(tablePanel.getName());
     }
 
     private void showTablePanel(final String tablePanelName) {

@@ -23,9 +23,6 @@ final class MainPanel extends JPanel {
 
 //    private final List<TableView> tableViews = new ArrayList<>();
 
-    /*@FunctionalInterface
-    interface ObjectSupplier extends Supplier<Object> {}*/
-
     private final JPanel cardsPanel = createJPanel(new CardLayout(), new Insets(0, 10, 0, 10));
     private final JPanel buttonsPanel = createJPanel(null, new Insets(10, 10, 10, 10));
 
