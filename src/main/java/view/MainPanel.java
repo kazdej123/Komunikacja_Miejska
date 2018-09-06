@@ -1,5 +1,6 @@
 package view;
 
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.Box;
@@ -13,6 +14,7 @@ import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Insets;
 import java.awt.LayoutManager;
+import java.awt.Window;
 
 final class MainPanel extends JPanel {
     static final int DEFAULT_FONT_SIZE = 18;
@@ -27,28 +29,27 @@ final class MainPanel extends JPanel {
     private final JPanel cardsPanel = createJPanel(new CardLayout(), new Insets(0, 10, 0, 10));
     private final JPanel buttonsPanel = createJPanel(null, new Insets(10, 10, 10, 10));
 
-    MainPanel(final String name) {
+    private final Window ownerWindow;
+
+    MainPanel(final Window ownerWindow, final String name) {
         super(new BorderLayout());
+        this.ownerWindow = ownerWindow;
 
         setName(name);
         setFocusCycleRoot(true);
         setJComponentEmptyBorder(this, new Insets(20, 10, 30, 10));
 
         cardsPanel.add(new JPanel(), null);
-        
         add(cardsPanel, BorderLayout.CENTER);
 
         buttonsPanel.setLayout(new BoxLayout(buttonsPanel, BoxLayout.Y_AXIS));
         buttonsPanel.add(DefaultView.createBoldJLabel("Wyświetl " + name.toLowerCase(), (int) (1.1 * DEFAULT_FONT_SIZE), defaultJComponentDimension));
-
         add(buttonsPanel, BorderLayout.EAST);
     }
 
     final void addTableView(@NotNull final TableView tableView) {
 //        tableViews.add(tableView);
-
         final JPanel tablePanel = tableView.getTablePanel();
-
         cardsPanel.add(tablePanel, tablePanel.getName());
 
         addGapToContainer(buttonsPanel, 0, 15);
@@ -72,5 +73,10 @@ final class MainPanel extends JPanel {
 
     final void showTablePanel(final String tablePanelName) {
         ((CardLayout) cardsPanel.getLayout()).show(cardsPanel, tablePanelName);
+    }
+
+    @Contract(pure = true)
+    final Window getOwnerWindow() {
+        return ownerWindow;
     }
 }
